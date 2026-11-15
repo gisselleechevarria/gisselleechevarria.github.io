@@ -1,0 +1,134 @@
+/* ===== DECODER v2 — IMMERSIVE HACKING MISSION ===== */
+
+/* === RESET & BASE === */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:"Press Start 2P",monospace}
+body{background:#050a05}
+/* Scanlines */
+body::before{content:"";position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,80,.015) 2px,rgba(0,255,80,.015) 4px);pointer-events:none;z-index:100}
+/* Phosphor glow */
+body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,255,100,.03),transparent 70%);pointer-events:none;z-index:100}
+.game-wrap{width:100vw;height:100vh;display:flex;flex-direction:column;position:relative;z-index:1;overflow:hidden}
+
+/* === HUD BAR === */
+.hud{flex-shrink:0;padding:5px 12px;display:flex;align-items:center;background:linear-gradient(180deg,#0d1a0d,#081408);border-bottom:2px solid #00aa44;gap:10px}
+.hud-left{display:flex;align-items:center;gap:6px}
+.hud-ico{color:#00ff88;font-size:clamp(8px,1vw,12px);animation:hudPulse 2s infinite}
+.hud-title{font-size:clamp(6px,.75vw,10px);color:#00ff88;letter-spacing:3px}
+.hud-sep{color:#2a4a2a;font-size:10px}
+.hud-file{font-size:clamp(5px,.6vw,8px);color:#44aa44;letter-spacing:1px}
+.hud-center{flex:1;display:flex;align-items:center;justify-content:center;gap:6px}
+.hud-pw-label{font-size:clamp(4px,.5vw,7px);color:#5a8a5a;letter-spacing:2px}
+.hud-slots{display:flex;gap:3px}
+.hud-slot{font-family:"Share Tech Mono",monospace;font-size:clamp(7px,.85vw,11px);color:#1a3a1a;background:#060d06;border:1px solid #1a3a1a;padding:2px 6px;min-width:clamp(36px,4.5vw,54px);text-align:center;letter-spacing:1px;transition:all .5s}
+.hud-slot.revealed{color:#00ff88;border-color:#00ff88;background:#0a1a0a;box-shadow:0 0 8px rgba(0,255,136,.4);animation:slotReveal .5s}
+.hud-right{display:flex;align-items:center;gap:8px}
+.hud-timer{font-family:"VT323",monospace;font-size:clamp(20px,2.8vw,34px);color:#00ff88;letter-spacing:3px;text-shadow:0 0 10px rgba(0,255,136,.5);background:#0a1a0a;border:2px solid #1a4a1a;padding:2px 10px;min-width:clamp(60px,8vw,90px);text-align:center}
+.hud-timer.warning{color:#ffcc00;text-shadow:0 0 8px rgba(255,200,0,.4)}
+.hud-timer.danger{color:#ff3344;text-shadow:0 0 8px rgba(255,50,60,.4);animation:timerPulse .5s infinite}
+.hud-status{display:flex;align-items:center;gap:4px}
+.hud-dot{width:6px;height:6px;background:#2a4a2a;box-shadow:none;transition:all .3s}
+.hud-dot.active{background:#00ff88;box-shadow:0 0 6px #00ff88;animation:dotPulse 1s infinite}
+.hud-dot.scanning{background:#ffcc00;box-shadow:0 0 6px #ffcc00;animation:dotPulse .5s infinite}
+.hud-status-text{font-size:clamp(4px,.5vw,7px);color:#5a8a5a;letter-spacing:1px}
+
+/* === MAIN AREA (split) === */
+.main-area{flex:1;display:flex;min-height:0;gap:2px;padding:2px}
+
+/* === LEFT: Passage Panel === */
+.panel-passage{flex:0 0 38%;display:flex;flex-direction:column;border:2px solid #1a3a1a;background:#060d06;min-height:0}
+.panel-header{padding:4px 10px;background:#0a1a0a;border-bottom:1px solid #1a3a1a;display:flex;justify-content:space-between;align-items:center}
+.panel-label{font-size:clamp(5px,.55vw,7px);color:#44aa44;letter-spacing:1px}
+.panel-title{font-size:clamp(5px,.55vw,7px);color:#88cc88;letter-spacing:2px}
+.panel-hint{font-size:clamp(4px,.45vw,6px);color:#2a6a2a;letter-spacing:1px;animation:hintBlink 2s infinite}
+.panel-body{flex:1;padding:clamp(10px,1.5vh,16px) clamp(10px,1.3vw,18px);font-family:"Share Tech Mono",monospace;font-size:clamp(9px,1vw,13px);color:#88cc88;line-height:2.1;overflow-y:auto}
+.panel-placeholder{color:#2a4a2a;font-style:italic;font-size:clamp(7px,.8vw,10px)}
+.panel-passage.hidden-panel{opacity:.15;filter:brightness(.3)}
+.panel-passage{transition:opacity .6s,filter .6s}
+.panel-decode.hidden-panel .decode-field{opacity:.15;filter:brightness(.3)}
+.panel-decode .decode-field{transition:opacity .6s,filter .6s}
+
+/* === RIGHT: Decode Field === */
+.panel-decode{flex:1;display:flex;flex-direction:column;border:2px solid #1a3a1a;background:#040a04;min-height:0;position:relative;overflow:hidden}
+.decode-field{flex:1;position:relative;overflow:hidden}
+/* Grid overlay */
+.decode-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,255,100,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,100,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;animation:gridDrift 20s linear infinite}
+/* Scanline sweep */
+.decode-scanline{position:absolute;left:0;right:0;height:3px;background:linear-gradient(180deg,transparent,rgba(0,255,136,.08),transparent);z-index:1;pointer-events:none;animation:scanSweep 4s linear infinite;box-shadow:0 0 20px rgba(0,255,136,.05)}
+
+/* === FRAGMENT NODES === */
+.frag-node{position:absolute;z-index:5;cursor:pointer;transition:transform .3s,box-shadow .3s}
+.frag-node.floating{animation:fragFloat 3s ease-in-out infinite}
+.frag-node.scroll-left{left:4px!important;width:47%!important}
+.frag-node.scroll-right{right:4px!important;left:auto!important;width:47%!important}
+.frag-node:nth-child(odd){animation-delay:-1.5s}
+.frag-node:nth-child(3){animation-delay:-.8s}
+.frag-inner{background:#0a140a;border:2px solid #1a3a1a;padding:0;min-width:clamp(160px,20vw,280px);max-width:clamp(200px,28vw,360px);position:relative;overflow:hidden}
+/* Scan sweep on hover */
+.frag-inner::before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(0,255,136,.1),transparent);z-index:2;pointer-events:none;transition:none}
+.frag-node:hover .frag-inner::before{animation:scanHover .4s forwards}
+.frag-node:hover .frag-inner{border-color:#00ff88;box-shadow:0 0 12px rgba(0,255,136,.2),inset 0 0 20px rgba(0,255,136,.05)}
+.frag-node:hover{transform:scale(1.02);z-index:10}
+.frag-node.decoded .frag-inner{border-color:#00aa66}
+.frag-node.correct .frag-inner{border-color:#00ff88;box-shadow:0 0 20px rgba(0,255,136,.4);animation:correctFlash .5s}
+.frag-node.wrong .frag-inner{border-color:#ff3344;box-shadow:0 0 20px rgba(255,50,60,.4);animation:wrongShake .5s}
+.frag-node.disabled{pointer-events:none;opacity:.2;filter:grayscale(1)}
+.frag-node.hinted .frag-inner{border-color:#ffcc00!important;box-shadow:0 0 16px rgba(255,200,0,.4),inset 0 0 12px rgba(255,200,0,.08)!important;animation:hintPulse 1s infinite!important}
+.frag-node.hinted .frag-dot{background:#ffcc00!important;box-shadow:0 0 6px #ffcc00!important}
+.frag-node.hinted .frag-label{color:#ffcc00!important}
+.frag-node.hinted .frag-status{color:#ffcc00!important}
+.frag-node.hinted .frag-body{color:#ffcc00!important}
+/* Node header */
+.frag-header{padding:3px 8px;background:#0d1a0d;border-bottom:1px solid #1a3a1a;display:flex;align-items:center;gap:5px}
+.frag-dot{width:5px;height:5px;background:#ff3344;box-shadow:0 0 4px #ff3344;animation:dotPulse 1.5s infinite;transition:all .3s}
+.frag-node:hover .frag-dot,.frag-node.decoded .frag-dot{background:#00ff88;box-shadow:0 0 4px #00ff88}
+.frag-label{font-size:clamp(4px,.45vw,6px);color:#5a8a5a;letter-spacing:2px;flex:1}
+.frag-node:hover .frag-label{color:#00ff88}
+.frag-status{font-size:clamp(3px,.35vw,5px);color:#3a2a2a;letter-spacing:1px}
+.frag-node:hover .frag-status{color:#00aa66}
+/* Node body */
+.frag-body{padding:clamp(10px,1.2vh,16px) clamp(12px,1.4vw,18px);font-family:"Share Tech Mono",monospace;font-size:clamp(9px,1vw,13px);color:#1a3a1a;line-height:1.8;letter-spacing:.5px;min-height:clamp(55px,7vh,80px);transition:color .3s}
+.frag-node:hover .frag-body{color:#00ff88}
+.frag-node.decoded .frag-body{color:#88cc88}
+
+/* === FEEDBACK OVERLAY === */
+.dc-feedback{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.dc-feedback.show{opacity:1;pointer-events:all}
+.dc-feedback.success{background:rgba(0,30,15,.9)}
+.dc-feedback.fail{background:rgba(30,0,0,.9)}
+.dc-feedback-text{font-family:"Press Start 2P",monospace;font-size:clamp(10px,1.8vw,22px);letter-spacing:4px;text-shadow:0 0 30px currentColor}
+.dc-feedback.success .dc-feedback-text{color:#00ff88}
+.dc-feedback.fail .dc-feedback-text{color:#ff3344}
+
+/* === DIALOG BAR === */
+.dc-dialog-wrap{flex-shrink:0;height:0;overflow:hidden;transition:height .4s ease-out}
+.dc-dialog-wrap.show{height:clamp(70px,11vh,110px)}
+.dc-dialog-inner{background:#0a1a0ef5;border-top:3px solid #00dd88;display:flex;align-items:stretch;height:100%;position:relative}
+.dc-dialog-portrait{width:clamp(55px,7vw,90px);background:#081408;border-right:3px solid #00dd88;display:flex;align-items:stretch;justify-content:center;overflow:hidden;flex-shrink:0}
+.dc-dialog-portrait img{width:110%;object-fit:cover;object-position:top center;image-rendering:pixelated}
+.dc-dialog-text-area{flex:1;padding:clamp(6px,.8vh,12px) clamp(8px,1vw,12px);display:flex;flex-direction:column;justify-content:center;position:relative}
+.dc-dialog-name{position:absolute;top:-12px;left:10px;background:#00dd88;color:#0a1a0e;font-size:clamp(4px,.45vw,6px);padding:2px 8px;letter-spacing:2px;z-index:10}
+.dc-dialog-msg{font-size:clamp(6px,.65vw,8px);color:#00dd88;line-height:1.8}
+.dc-dialog-msg .cur{display:inline-block;width:clamp(4px,.5vw,7px);height:clamp(6px,.8vw,10px);background:#00dd88;animation:blink .6s step-end infinite;vertical-align:middle;margin-left:2px}
+.dc-game-btn{font-family:"Press Start 2P";font-size:clamp(5px,.6vw,8px);color:#0a1a0e;background:#00ffaa;padding:clamp(4px,.5vh,7px) clamp(10px,1.3vw,20px);border:3px solid #00dd88;cursor:pointer;box-shadow:2px 2px 0 #008860;display:none;position:absolute;right:8px;bottom:4px;letter-spacing:1px}
+.dc-game-btn:hover{background:#44ffcc;transform:scale(1.06)}
+.dc-game-btn.show{display:block;animation:btnPulse 1s infinite}
+
+/* === ANIMATIONS === */
+@keyframes hudPulse{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes blink{50%{opacity:0}}
+@keyframes hintBlink{0%,70%,100%{opacity:1}80%{opacity:.3}}
+@keyframes btnPulse{0%,100%{box-shadow:2px 2px 0 #008860}50%{box-shadow:2px 2px 0 #008860,0 0 12px rgba(0,255,170,.35)}}
+@keyframes slotReveal{0%{transform:scale(1.4);filter:brightness(2.5)}100%{transform:scale(1);filter:brightness(1)}}
+@keyframes timerPulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes gridDrift{0%{background-position:0 0}100%{background-position:40px 40px}}
+@keyframes scanSweep{0%{top:-20px}100%{top:100%}}
+@keyframes scanHover{0%{left:-100%}100%{left:100%}}
+@keyframes fragFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes correctFlash{0%{filter:brightness(2.5)}100%{filter:brightness(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes hintPulse{0%,100%{border-color:#ffcc00;box-shadow:0 0 16px rgba(255,200,0,.4)}50%{border-color:#ffee66;box-shadow:0 0 24px rgba(255,200,0,.6)}}
+
+/* === REDUCED MOTION === */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}

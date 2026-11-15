@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MAINFRAME - Decoder</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/decrypt.css">
+</head>
+<body>
+<div class="game-wrap">
+
+  <!-- === HUD BAR === -->
+  <div class="hud">
+    <div class="hud-left">
+      <span class="hud-ico">&#9670;</span>
+      <span class="hud-title">DECODER v2.0</span>
+      <span class="hud-sep">|</span>
+      <span class="hud-file" id="hudFile">FILE 1/4</span>
+    </div>
+    <div class="hud-center">
+      <span class="hud-pw-label">PASSWORD:</span>
+      <div class="hud-slots">
+        <div class="hud-slot" id="slot0">____</div>
+        <div class="hud-slot" id="slot1">____</div>
+        <div class="hud-slot" id="slot2">____</div>
+        <div class="hud-slot" id="slot3">____</div>
+      </div>
+    </div>
+    <div class="hud-right">
+      <div class="hud-timer" id="hudTimer">2:00</div>
+      <div class="hud-status">
+        <span class="hud-dot" id="hudDot"></span>
+        <span class="hud-status-text" id="hudStatus">STANDBY</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- === MAIN AREA (split) === -->
+  <div class="main-area">
+
+    <!-- LEFT: Passage Reader -->
+    <div class="panel-passage">
+      <div class="panel-header">
+        <span class="panel-label">&#9632; INTERCEPTED FILE</span>
+        <span class="panel-title" id="passageTitle"></span>
+      </div>
+      <div class="panel-body" id="passageBody">
+        <div class="panel-placeholder">Awaiting file data...</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Decode Field -->
+    <div class="panel-decode">
+      <div class="panel-header">
+        <span class="panel-label">&#9632; DECODE FIELD</span>
+        <span class="panel-hint">HOVER TO DECRYPT</span>
+      </div>
+      <div class="decode-field" id="decodeField">
+        <!-- Grid overlay -->
+        <div class="decode-grid"></div>
+        <!-- Scanline -->
+        <div class="decode-scanline"></div>
+        <!-- Fragment nodes inserted by JS -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- === FEEDBACK OVERLAY === -->
+  <div class="dc-feedback" id="dcFeedback">
+    <div class="dc-feedback-text" id="dcFeedbackText"></div>
+  </div>
+
+  <!-- === DIALOG BAR === -->
+  <div class="dc-dialog-wrap" id="dcDialogWrap">
+    <div class="dc-dialog-inner">
+      <div class="dc-dialog-portrait"><img id="dcPort" alt="Byte"></div>
+      <div class="dc-dialog-text-area">
+        <div class="dc-dialog-name">BYTE</div>
+        <div class="dc-dialog-msg" id="dcMsg"></div>
+        <button class="dc-game-btn" id="dcNextBtn">NEXT &#9654;</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/decrypt-audio.js"></script>
+<script src="js/decrypt.js"></script>
+</body>
+</html>

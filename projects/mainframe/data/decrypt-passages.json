@@ -1,0 +1,96 @@
+{
+  "tutorial": {
+    "title": "Dogs as Pets",
+    "text": "Dogs have been loyal companions to humans for thousands of years. They can be trained to follow commands, do tricks, and even help people with disabilities. Dogs need daily exercise, fresh water, and nutritious food to stay healthy. Many families choose dogs as pets because they are friendly, playful, and protective of the people they love.",
+    "options": [
+      {"text": "Dogs are popular pets because they are loyal, trainable, and make great companions for families.", "correct": true},
+      {"text": "Dogs need daily exercise and fresh water to stay healthy.", "correct": false},
+      {"text": "Many families choose dogs because they are friendly and playful.", "correct": false},
+      {"text": "Dogs can be trained to follow commands and do tricks.", "correct": false},
+      {"text": "Some dogs help people who have disabilities.", "correct": false},
+      {"text": "Dogs have been companions to humans for thousands of years.", "correct": false},
+      {"text": "Nutritious food is important for keeping dogs healthy.", "correct": false},
+      {"text": "Dogs are known for being protective of the people they love.", "correct": false},
+      {"text": "Training a dog takes time, patience, and consistency.", "correct": false},
+      {"text": "Many dog breeds were originally bred for specific jobs like herding.", "correct": false}
+    ]
+  },
+  "passages": [
+    {
+      "title": "Ocean Coral Reefs",
+      "text": "Coral reefs are underwater ecosystems built by tiny animals called coral polyps. These polyps produce a hard limestone skeleton that forms the structure of the reef over hundreds of years. Coral reefs are home to about 25 percent of all ocean species, even though they cover less than one percent of the ocean floor. Fish, sea turtles, sharks, and thousands of other creatures depend on coral reefs for food and shelter. Unfortunately, rising ocean temperatures and pollution are causing many reefs to bleach and die, threatening the survival of countless marine species.",
+      "options": [
+        {"text": "Coral reefs are important underwater ecosystems that support a huge variety of ocean life.", "correct": true},
+        {"text": "Coral polyps are tiny animals that build hard limestone skeletons over time.", "correct": false},
+        {"text": "Rising ocean temperatures are causing coral reefs to bleach and die.", "correct": false},
+        {"text": "Fish, turtles, and sharks all live near coral reefs in the ocean.", "correct": false},
+        {"text": "Coral reefs cover less than one percent of the ocean floor.", "correct": false},
+        {"text": "Pollution is one of the biggest threats to coral reef survival.", "correct": false},
+        {"text": "Reef structures are made of limestone produced by polyps.", "correct": false},
+        {"text": "About 25 percent of ocean species depend on coral reefs.", "correct": false},
+        {"text": "Sea turtles use coral reefs as a source of food and shelter.", "correct": false},
+        {"text": "Coral bleaching happens when water temperatures get too high.", "correct": false},
+        {"text": "Thousands of different creatures call coral reefs home.", "correct": false},
+        {"text": "It takes hundreds of years for a coral reef to fully form.", "correct": false}
+      ],
+      "passwordPart": "WHAT"
+    },
+    {
+      "title": "The Secret Life of Honey Bees",
+      "text": "A honey bee colony works like a well-organized city, with every bee playing a specific role to keep the hive alive. The queen lays up to 2,000 eggs per day, while worker bees gather nectar, build honeycomb, and guard the entrance. Scout bees perform a special waggle dance to tell other bees exactly where to find the best flowers. Bees must visit about two million flowers just to make one pound of honey. Without honey bees pollinating crops, humans would lose about one-third of the foods we eat every day.",
+      "options": [
+        {"text": "Every bee in a colony has a specific job that helps the whole hive survive.", "correct": true},
+        {"text": "Scout bees do a waggle dance to communicate with other bees.", "correct": false},
+        {"text": "Bees need to visit two million flowers to produce one pound of honey.", "correct": false},
+        {"text": "The queen bee can lay up to 2,000 eggs in a single day.", "correct": false},
+        {"text": "Worker bees gather nectar and build honeycomb structures.", "correct": false},
+        {"text": "Humans would lose one-third of their food without bee pollination.", "correct": false},
+        {"text": "Guard bees protect the entrance of the hive from intruders.", "correct": false},
+        {"text": "Honey bees are essential pollinators for many food crops.", "correct": false},
+        {"text": "A bee colony is organized like a small, busy city.", "correct": false},
+        {"text": "The waggle dance tells bees the exact location of flowers.", "correct": false},
+        {"text": "Making honey requires an incredible amount of work from bees.", "correct": false},
+        {"text": "Without pollination, many plants cannot produce fruits or seeds.", "correct": false}
+      ],
+      "passwordPart": "IT'S"
+    },
+    {
+      "title": "How Earthquakes Happen",
+      "text": "The surface of the Earth is made up of giant slabs of rock called tectonic plates that are constantly moving, though usually too slowly for us to feel. When two plates push against each other, pull apart, or slide sideways, pressure builds up along the edges. Eventually the pressure becomes too great and the rocks suddenly snap or shift, releasing energy in the form of seismic waves. These waves travel through the ground and cause the shaking we feel during an earthquake. Scientists use instruments called seismographs to measure how strong an earthquake is and to help predict where future quakes might occur.",
+      "options": [
+        {"text": "Earthquakes happen when moving tectonic plates build up and release pressure along their edges.", "correct": true},
+        {"text": "Seismographs are instruments scientists use to measure earthquake strength.", "correct": false},
+        {"text": "Tectonic plates are giant slabs of rock that make up Earth's surface.", "correct": false},
+        {"text": "The energy released during an earthquake travels as seismic waves.", "correct": false},
+        {"text": "Tectonic plates move so slowly that we usually cannot feel them.", "correct": false},
+        {"text": "Scientists try to predict where future earthquakes might happen.", "correct": false},
+        {"text": "Rocks snap and shift when too much pressure builds up underground.", "correct": false},
+        {"text": "Plates can push together, pull apart, or slide sideways.", "correct": false},
+        {"text": "Seismic waves cause the ground to shake during an earthquake.", "correct": false},
+        {"text": "Earth's crust is broken into many large tectonic plates.", "correct": false},
+        {"text": "The edges of tectonic plates are where most earthquakes occur.", "correct": false},
+        {"text": "Pressure along plate boundaries can build for years before releasing.", "correct": false}
+      ],
+      "passwordPart": "MOSTLY"
+    },
+    {
+      "title": "The Printing Press Changed Everything",
+      "text": "Before Johannes Gutenberg invented the printing press around 1440, every book in Europe had to be copied by hand, which took months and made books extremely expensive. Gutenberg's machine used small metal letters that could be arranged into words, inked, and pressed onto paper to create identical copies quickly. Within fifty years, millions of books were printed across Europe, and suddenly ordinary people could afford to read. The printing press helped spread new ideas about science, religion, and government faster than ever before. Many historians believe it was one of the most important inventions in human history because it changed how knowledge was shared forever.",
+      "options": [
+        {"text": "The printing press transformed how knowledge was shared and made books available to everyone.", "correct": true},
+        {"text": "Gutenberg used small metal letters arranged into words to print books.", "correct": false},
+        {"text": "Before the printing press, books were copied by hand and very expensive.", "correct": false},
+        {"text": "Millions of books were printed within fifty years of the invention.", "correct": false},
+        {"text": "The printing press was invented by Johannes Gutenberg around 1440.", "correct": false},
+        {"text": "New ideas about science and religion spread faster because of printing.", "correct": false},
+        {"text": "Ordinary people could finally afford to own and read books.", "correct": false},
+        {"text": "Historians consider the printing press one of history's most important inventions.", "correct": false},
+        {"text": "Copying a book by hand could take several months to complete.", "correct": false},
+        {"text": "Metal letters could be rearranged and reused for different pages.", "correct": false},
+        {"text": "The spread of books helped increase literacy across Europe.", "correct": false},
+        {"text": "Gutenberg's invention made it possible to create identical book copies.", "correct": false}
+      ],
+      "passwordPart": "ABOUT"
+    }
+  ]
+}

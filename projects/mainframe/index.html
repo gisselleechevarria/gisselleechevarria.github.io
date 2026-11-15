@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAINFRAME</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700;800;900&family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/mainframe.css">
+</head>
+<body>
+<!-- DEV: Clean state reset function (remove before release) -->
+<script>
+function devCleanState() {
+  window.agentCode = 'Tester';
+  /* Initialize audio context (skip buttons bypass login where this normally happens) */
+  initAudio();
+  /* Stop all audio */
+  var bgm = document.getElementById('bgm'); bgm.pause(); bgm.currentTime = 0;
+  var evil = document.getElementById('evilBgm'); evil.pause(); evil.currentTime = 0;
+  if (window.scannerAudioCtx) { try { window.scannerAudioCtx.close(); } catch(e) {} window.scannerAudioCtx = null; }
+  /* Hide overlays */
+  document.getElementById('loginPage').style.display = 'none';
+  var frame = document.getElementById('scannerFrame'); frame.classList.remove('show'); frame.src = '';
+  document.getElementById('passwordPrompt').classList.remove('show');
+  var co = document.getElementById('chainsOverlay'); co.classList.remove('show', 'clickable'); co.innerHTML = '';
+  document.getElementById('monster').classList.remove('show'); document.getElementById('monster').classList.add('hide');
+  var dec = document.getElementById('decryptorIcon'); if (dec) { dec.style.display = 'none'; dec.classList.remove('highlight'); }
+  /* Reset speech */
+  document.getElementById('speechBox').classList.remove('show');
+  document.getElementById('speechText').innerHTML = '';
+  window.gamePhase = null;
+  /* Set corrupted desktop */
+  var eI = ['assets/icons/eDoc.png','assets/icons/eFolder.png','assets/icons/ePhoto.png','assets/icons/eLock.png','assets/icons/eDoc.png','assets/icons/eFolder.png'];
+  var icons = document.querySelectorAll('.desk-icon');
+  for (var i = 0; i < 6; i++) { document.getElementById('fi'+i).src = eI[i]; icons[i].classList.remove('locked','highlight','cleaning'); icons[i].classList.add('corrupted'); }
+  document.getElementById('secStatus').innerHTML = '<span class=dt style=background:#ff3355></span>BREACH!';
+  document.getElementById('secStatus').style.color = '#ff5577';
+  document.getElementById('mascot').classList.add('show');
+  document.getElementById('monsterImg').src = 'assets/mascot/ebug.png';
+}
+</script>
+<!-- DEV SKIP BUTTON (remove before release) -->
+<button id="devSkip" onclick="
+  devCleanState();
+  document.getElementById('desktopPage').classList.add('show');
+  var icons=document.querySelectorAll('.desk-icon');
+  icons[0].classList.add('highlight');
+  var sb=document.getElementById('speechBox');sb.classList.add('show');
+  document.getElementById('speechName').textContent='BYTE';
+  document.getElementById('speechText').innerHTML='Click on <b>Virus Scanner</b> to start your first mission!';
+  document.getElementById('mascotImg').src='assets/mascot/cmd.png';
+  this.remove();
+" style="display:none;position:fixed;top:5px;right:5px;z-index:9999;background:#ff0;color:#000;font-weight:bold;padding:8px 16px;cursor:pointer;font-size:14px;border:2px solid #000;">SKIP TO SCANNER</button>
+<!-- DEV SKIP 2: Skip directly to post-scanner return (remove before release) -->
+<button onclick="
+  devCleanState();
+  document.getElementById('devSkip').remove();
+  this.remove();
+  window.onScannerComplete();
+" style="display:none;position:fixed;top:5px;right:180px;z-index:9999;background:#f80;color:#000;font-weight:bold;padding:8px 16px;cursor:pointer;font-size:14px;border:2px solid #000;">SKIP TO RETURN</button>
+<!-- DEV SKIP 3: Skip to decoder game (remove before release) -->
+<button onclick="
+  devCleanState();
+  document.getElementById('desktopPage').classList.remove('show');
+  window.scannerAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  var frame=document.getElementById('decoderFrame');
+  frame.src='decrypt.html';
+  frame.classList.add('show');
+  if(document.getElementById('devSkip'))document.getElementById('devSkip').remove();
+  this.remove();
+" style="display:none;position:fixed;top:5px;right:360px;z-index:9999;background:#0a8;color:#fff;font-weight:bold;padding:8px 16px;cursor:pointer;font-size:14px;border:2px solid #000;">SKIP TO DECODER</button>
+<div class="scene">
+
+<!-- ===== LOGIN PAGE ===== -->
+<div id="loginPage">
+<div class="monitor">
+  <div class="bz-top"><div class="tl"><div class="px-led"></div><div class="px-led-off"></div><div class="px-dot"></div><div class="px-dot"></div></div><div class="tr"><div class="px-btn-g"></div><div class="px-btn-y"></div></div></div>
+  <div class="sf"><div class="sb"><div class="scr">
+    <div class="sl"></div><div class="sbar"></div><div class="rb" id="rB"></div>
+    <div class="hl" style="top:10%"></div><div class="hl" style="top:28%;animation-delay:1.2s"></div><div class="hl" style="top:46%;animation-delay:2.4s"></div><div class="hl" style="top:64%;animation-delay:3.6s"></div><div class="hl" style="top:82%;animation-delay:4.8s"></div>
+    <div class="mp" id="musicPrompt" style="display:none"><div class="mp-i"><span class="ico">&#9654;</span><span class="txt">CLICK TO BEGIN</span></div></div>
+    <div class="ct">
+      <div class="sys f1">// System Terminal v4.2.1</div>
+      <div class="ttl f2" data-text="MAINFRAME">MAINFRAME</div>
+      <div class="sub f3">Cyber Defense Unit</div>
+      <div class="dv f4"></div>
+      <div class="tm f5">
+        <div class="ln" style="animation-delay:1.4s"><span class="pr">&gt;</span> Good morning, Agent.</div>
+        <div class="ln" style="animation-delay:1.8s"><span class="pr">&gt;</span> Welcome to your <span class="hi">first day</span> at Mainframe HQ.</div>
+        <div class="ln" style="animation-delay:2.2s"><span class="pr">&gt;</span> Identify yourself to continue.<span class="cbk"></span></div>
+      </div>
+      <div class="lf f6">
+        <div class="fr">
+          <span class="fl">CODENAME &gt;</span>
+          <input class="fi" id="codeName" type="text" placeholder="Letters only (A-Z)" maxlength="20" autocomplete="off" spellcheck="false">
+          <div class="err-msg" id="errMsg">REJECTED. Try again, Agent.</div>
+        </div>
+        <div class="fr">
+          <span class="fl">CLEARANCE &gt;</span>
+          <select class="fi" id="clearance">
+            <option value="">Select Level</option>
+            <option value="3">Level 3 - Junior Agent</option>
+            <option value="2">Level 2 - Senior Agent</option>
+            <option value="1">Level 1 - Commander</option>
+          </select>
+        </div>
+      </div>
+      <div class="ba f7"><div class="bw"><button class="lb" id="loginBtn" disabled>LOG IN</button><div class="cn ctl"></div><div class="cn ctr"></div><div class="cn cbl"></div><div class="cn cbr"></div></div></div>
+      <div class="st f7"><span><span class="dt"></span>SYSTEM ONLINE</span><span><span class="dt"></span>NETWORK SECURE</span><span><span class="dt"></span>AGENT CONNECTED</span></div>
+    </div>
+    <div class="sh" id="sndTog">SOUND: ON</div>
+  </div></div></div>
+  <div class="bz-bot">
+    <div class="bl"><div class="px-sq px-sq-g"></div><div class="px-sq px-sq-y"></div><div class="px-sq px-sq-r"></div><div class="px-sq px-sq-p"></div><div class="spk"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="bc"><div class="gd"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="gd"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="br"><div class="px-ry"></div><div class="px-rb"></div><div class="px-rg"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+  </div>
+  <div class="bz-bot-e"></div><div class="st-n"></div><div class="st-b"></div>
+</div></div>
+
+<!-- ===== DESKTOP PAGE ===== -->
+<div id="desktopPage">
+<div class="monitor">
+  <div class="bz-top"><div class="tl"><div class="px-led"></div><div class="px-led-off"></div><div class="px-dot"></div><div class="px-dot"></div></div><div class="tr"><div class="px-btn-g"></div><div class="px-btn-y"></div></div></div>
+  <div class="sf"><div class="sb"><div class="scr" id="dScr">
+    <div class="sl"></div><div class="sbar"></div>
+    <div class="desktop" id="desktop">
+      <div class="taskbar" id="topBar">
+        <div class="tb-logo">MAINFRAME</div><div class="tb-sep"></div><div class="tb-item">Files</div><div class="tb-item">System</div>
+        <div class="tb-right"><div class="tb-status" id="secStatus"><span class="dt"></span>SECURE</div><div class="tb-clock" id="clock">08:00</div></div>
+      </div>
+      <div class="desk-area">
+        <div class="desk-icons" id="deskIcons" style="position:relative">
+          <div class="desk-icon" data-i="0"><img id="fi0" src="" alt="Virus Scanner"><span>Virus Scanner</span></div>
+          <div class="desk-icon" data-i="1"><img id="fi1" src="" alt="Firewall Builder"><span>Firewall Builder</span></div>
+          <div class="desk-icon" data-i="2"><img id="fi2" src="" alt="Decrypt Msg"><span>Decrypt Msg</span></div>
+          <div class="desk-icon" data-i="3"><img id="fi3" src="" alt="Data Recovery"><span>Data Recovery</span></div>
+          <div class="desk-icon" data-i="4"><img id="fi4" src="" alt="Network Trace"><span>Network Trace</span></div>
+          <div class="desk-icon" data-i="5"><img id="fi5" src="" alt="Code Breaker"><span>Code Breaker</span></div>
+          <div class="desk-icon" data-i="6" id="decryptorIcon" style="display:none"><img id="fi6" src="" alt="Decoder"><span>Decoder</span></div>
+          <!-- Chains overlay wraps locked icons -->
+          <div class="chains-overlay" id="chainsOverlay"></div>
+        </div>
+        <div class="mascot-wrap" id="mascot"><img class="mascot-img" id="mascotImg" src="" alt="Byte"></div>
+        <div class="monster-wrap" id="monster"><img class="monster-img" id="monsterImg" src="" alt="Corruptus"></div>
+      </div>
+      <div class="speech-box" id="speechBox">
+        <div class="speech-inner" id="speechInner">
+          <div class="speech-name" id="speechName">BYTE</div>
+          <div class="speech-text" id="speechText"></div>
+          <div class="speech-next" id="speechNext">NEXT &#9660;</div>
+          <div class="speech-skip" id="speechSkip">click to skip</div>
+        </div>
+      </div>
+      <div class="glitch-overlay" id="glitchOvr"></div>
+      <div class="taskbar-bot" id="botBar">
+        <div class="tb-status"><span class="dt"></span>NETWORK: ACTIVE</div>
+        <div class="tb-status" id="fwStatus"><span class="dt"></span>FIREWALL: ONLINE</div>
+        <div class="tb-status" id="agentStatus"></div>
+      </div>
+    </div>
+  </div></div></div>
+  <div class="bz-bot">
+    <div class="bl"><div class="px-sq px-sq-g"></div><div class="px-sq px-sq-y"></div><div class="px-sq px-sq-r"></div><div class="px-sq px-sq-p"></div><div class="spk"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="bc"><div class="gd"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="gd"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="br"><div class="px-ry"></div><div class="px-rb"></div><div class="px-rg"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+  </div>
+  <div class="bz-bot-e"></div><div class="st-n"></div><div class="st-b"></div>
+</div></div>
+
+</div>
+
+<!-- Audio (external files instead of base64) -->
+<audio id="bgm" loop preload="auto"><source src="assets/audio/bgm.mp3" type="audio/mpeg"></audio>
+<audio id="evilBgm" loop preload="auto"><source src="assets/audio/evilBgm.mp3" type="audio/mpeg"></audio>
+
+<!-- HEALTH BAR -->
+<div class="health-bar-wrap" id="healthBar">
+  <img class="hb-icon" id="hbIcon" src="" alt="Corruptus">
+  <span class="hb-label">CORRUPTUS</span>
+  <div class="hb-track"><div class="hb-fill" id="hbFill" style="width:100%"></div></div>
+  <span class="hb-pct" id="hbPct">100%</span>
+</div>
+
+<!-- PASSWORD PROMPT — FILE ACCESS MANAGER -->
+<div class="password-prompt" id="passwordPrompt">
+  <div class="pp-outer"><div class="pp-frame">
+    <div class="pp-titlebar">
+      <span class="pp-lock-ico">&#128274;</span>
+      <span class="pp-titlebar-text">FILE ACCESS MANAGER</span>
+      <span class="pp-red-dot"></span>
+      <button class="pp-close" id="ppClose">X</button>
+    </div>
+    <div class="pp-body">
+      <div class="pp-status">
+        <div class="pp-status-line">STATUS: <span class="pp-val-red">FILES LOCKED</span></div>
+        <div class="pp-status-line">ENCRYPTION LEVEL: <span class="pp-val-green">HIGH</span></div>
+      </div>
+      <div class="pp-input-area">
+        <div class="pp-input-label">ENTER MASTER PASSWORD:</div>
+        <div class="pp-input-field">
+          <span class="pp-input-text">The main idea is</span>
+          <span class="pp-entered" id="ppEntered"></span>
+          <span class="pp-blank" id="ppBlank">________________</span>
+          <span class="pp-cursor"></span>
+        </div>
+      </div>
+      <div class="pp-words" id="ppWords"></div>
+      <div class="pp-buttons">
+        <button class="pp-btn pp-submit" id="ppSubmit" disabled>SUBMIT</button>
+        <button class="pp-btn pp-cancel" id="ppCancel">CANCEL</button>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- SCAN TRANSITION -->
+<div class="scan-transition" id="scanTransition">
+  <div class="scan-line"></div>
+  <div class="scan-label">OPENING FILE...</div>
+</div>
+
+<!-- VIRUS SCANNER (loaded as iframe mini-game) -->
+<iframe id="scannerFrame" class="scanner-frame" src="" title="Virus Scanner Mini-Game" allow="autoplay"></iframe>
+
+<!-- DECODER (loaded as iframe mini-game) -->
+<iframe id="decoderFrame" class="scanner-frame" src="" title="Decoder Mini-Game" allow="autoplay"></iframe>
+
+<!-- Scripts loaded at end of body -->
+<script src="js/mainframe-audio.js"></script>
+<script src="js/mainframe.js"></script>
+<script>/* portfolio copy: no click-to-begin screen; music starts on first click */
+document.addEventListener("pointerdown",function f(){document.removeEventListener("pointerdown",f,true);var m=document.getElementById("musicPrompt");if(m)m.click();},true);
+</script>
+</body>
+</html>

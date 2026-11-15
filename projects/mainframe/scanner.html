@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MAINFRAME - Virus Scanner</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/scanner.css">
+</head>
+<body>
+<div class="game-wrap">
+
+  <!-- HP BAR -->
+  <div class="hb-wrap">
+    <div class="hb-monster"><img id="monsterImg" alt="Corruptus"></div>
+    <div class="hb-bar-area">
+      <div class="hb-label"><span class="hb-name">CORRUPTUS</span><span class="hb-pct" id="hbPct">100%</span></div>
+      <div class="hb-frame" id="hbFrame"><svg width="100%" height="100%" viewBox="0 0 540 42" preserveAspectRatio="none">
+        <rect x="14" y="39" width="512" height="3" fill="#04041a" opacity=".6"/>
+        <rect x="8" y="2" width="524" height="38" fill="#1e2040"/>
+        <rect x="0" y="12" width="4" height="18" fill="#2e3268"/><rect x="2" y="10" width="4" height="22" fill="#2a2e60"/><rect x="4" y="8" width="4" height="26" fill="#272b58"/><rect x="6" y="4" width="4" height="34" fill="#242850"/>
+        <rect x="536" y="12" width="4" height="18" fill="#181a38"/><rect x="534" y="10" width="4" height="22" fill="#1a1d3c"/><rect x="532" y="8" width="4" height="26" fill="#1c1f40"/><rect x="530" y="4" width="4" height="34" fill="#1e2144"/>
+        <rect x="10" y="2" width="520" height="2" fill="#424680"/><rect x="10" y="4" width="520" height="1" fill="#383c72"/>
+        <rect x="0" y="14" width="2" height="14" fill="#505498"/><rect x="2" y="12" width="2" height="18" fill="#424680"/>
+        <rect x="10" y="38" width="520" height="2" fill="#0c0e22"/><rect x="538" y="14" width="2" height="14" fill="#0a0c1e"/>
+        <rect x="0" y="19" width="3" height="4" fill="#6068aa"/><rect x="1" y="20" width="1" height="2" fill="#8890dd"/><rect x="537" y="19" width="3" height="4" fill="#2a2e58"/>
+        <rect x="9" y="5" width="4" height="4" fill="#3e4272"/><rect x="10" y="6" width="2" height="2" fill="#5a60a0"/>
+        <rect x="527" y="5" width="4" height="4" fill="#2a2e55"/><rect x="528" y="6" width="2" height="2" fill="#3e4272"/>
+        <rect x="9" y="33" width="4" height="4" fill="#2a2e55"/><rect x="527" y="33" width="4" height="4" fill="#1a1e3a"/>
+        <rect x="14" y="8" width="512" height="26" fill="#08081a"/>
+        <rect x="14" y="8" width="512" height="2" fill="#161635"/><rect x="14" y="32" width="512" height="2" fill="#040412"/>
+        <rect x="14" y="10" width="512" height="1" fill="#ff44aa18"/><rect x="14" y="31" width="512" height="1" fill="#ff44aa0c"/>
+        <g id="hpFill"></g>
+      </svg></div>
+    </div>
+  </div>
+
+  <!-- PROGRAM CHROME -->
+  <div class="prog-outer"><div class="prog-border1"><div class="prog-border2">
+    <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+    <div class="title-bar">
+      <div class="ico"><div></div></div>
+      <span class="ttl">MAINFRAME EDITOR</span>
+      <div class="win-btns">
+        <div class="win-btn wb-min">_</div>
+        <div class="win-btn wb-max">&#9633;</div>
+        <div class="win-btn wb-close">X</div>
+      </div>
+    </div>
+    <div class="menu-bar">
+      <span class="menu-item">File</span><span class="menu-item">Edit</span><span class="menu-item">View</span>
+      <span class="menu-item">Scan</span><span class="menu-item">Tools</span><span class="menu-item">Help</span>
+    </div>
+    <div class="toolbar">
+      <div class="tb-btn" style="background:#1133aa;outline-color:#0a1a66"><svg width="12" height="12" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" fill="#3366dd"/><rect x="3" y="1" width="8" height="5" fill="#1a2266"/><rect x="8" y="2" width="2" height="3" fill="#5588ee"/><rect x="3" y="9" width="10" height="6" fill="#ccc"/><rect x="5" y="10" width="6" height="1" fill="#888"/><rect x="5" y="12" width="6" height="1" fill="#888"/></svg></div>
+      <div class="tb-btn" style="background:#0a4433;outline-color:#063322"><svg width="12" height="12" viewBox="0 0 16 16"><rect x="7" y="1" width="2" height="4" fill="#44ffaa"/><rect x="7" y="11" width="2" height="4" fill="#44ffaa"/><rect x="1" y="7" width="4" height="2" fill="#44ffaa"/><rect x="11" y="7" width="4" height="2" fill="#44ffaa"/><rect x="5" y="5" width="6" height="6" fill="none" stroke="#44ffaa" stroke-width="1"/><rect x="7" y="7" width="2" height="2" fill="#44ffaa"/></svg></div>
+      <div class="tb-btn" style="background:#441188;outline-color:#330066"><svg width="12" height="12" viewBox="0 0 16 16"><rect x="3" y="2" width="10" height="2" fill="#cc44ff"/><rect x="2" y="4" width="12" height="4" fill="#cc44ff"/><rect x="3" y="8" width="10" height="2" fill="#aa33dd"/><rect x="4" y="10" width="8" height="2" fill="#8822bb"/><rect x="5" y="12" width="6" height="1" fill="#6611aa"/><rect x="6" y="13" width="4" height="1" fill="#6611aa"/><rect x="7" y="14" width="2" height="1" fill="#6611aa"/></svg></div>
+      <div class="tb-sep"></div>
+      <div class="tb-btn" style="background:#2222cc;outline-color:#0a0a77"><svg width="10" height="10" viewBox="0 0 12 12"><rect x="2" y="1" width="2" height="10" fill="#aabbff"/><rect x="4" y="1" width="4" height="2" fill="#aabbff"/><rect x="4" y="5" width="4" height="2" fill="#aabbff"/><rect x="4" y="9" width="4" height="2" fill="#aabbff"/><rect x="8" y="2" width="2" height="3" fill="#aabbff"/><rect x="8" y="7" width="2" height="2" fill="#aabbff"/></svg></div>
+      <div class="tb-btn" style="background:#2222cc;outline-color:#0a0a77"><svg width="10" height="10" viewBox="0 0 10 12"><rect x="3" y="1" width="6" height="2" fill="#aabbff"/><rect x="4" y="1" width="2" height="10" fill="#aabbff"/><rect x="2" y="9" width="8" height="2" fill="#aabbff"/></svg></div>
+      <div class="tb-btn" style="background:#2222cc;outline-color:#0a0a77"><svg width="10" height="10" viewBox="0 0 10 14"><rect x="2" y="1" width="2" height="8" fill="#aabbff"/><rect x="6" y="1" width="2" height="8" fill="#aabbff"/><rect x="3" y="9" width="4" height="2" fill="#aabbff"/><rect x="1" y="12" width="8" height="2" fill="#aabbff"/></svg></div>
+      <div class="tb-sep"></div>
+      <div class="tb-select"><span>Courier New</span><span class="arr">&#9660;</span></div>
+      <div class="tb-select"><span>12</span><span class="arr">&#9660;</span></div>
+      <div class="tb-sep"></div>
+      <div class="tb-btn" style="background:#881022;outline-color:#660011"><svg width="10" height="12" viewBox="0 0 12 14"><rect x="4" y="0" width="4" height="2" fill="#ffccdd"/><rect x="2" y="2" width="2" height="2" fill="#ffccdd"/><rect x="8" y="2" width="2" height="2" fill="#ffccdd"/><rect x="1" y="4" width="2" height="4" fill="#ffccdd"/><rect x="9" y="4" width="2" height="4" fill="#ffccdd"/><rect x="3" y="6" width="6" height="2" fill="#ffccdd"/><rect x="0" y="8" width="2" height="2" fill="#ffccdd"/><rect x="10" y="8" width="2" height="2" fill="#ffccdd"/><rect x="0" y="11" width="4" height="2" fill="#ff4466"/><rect x="4" y="11" width="4" height="2" fill="#ffaa44"/><rect x="8" y="11" width="4" height="2" fill="#ffee44"/></svg></div>
+      <div class="tb-btn" style="background:#886600;outline-color:#664400"><svg width="10" height="12" viewBox="0 0 12 14"><rect x="7" y="0" width="3" height="2" fill="#ffee55"/><rect x="5" y="2" width="4" height="2" fill="#ffcc00"/><rect x="4" y="4" width="4" height="2" fill="#ffcc00"/><rect x="3" y="6" width="4" height="2" fill="#ddaa00"/><rect x="2" y="8" width="4" height="2" fill="#bb8800"/><rect x="1" y="10" width="3" height="2" fill="#996600"/><rect x="0" y="12" width="2" height="2" fill="#664400"/></svg></div>
+      <div style="flex:1"></div>
+      <div class="tb-threat" id="tbThreat">&#9888; 1 THREAT</div>
+    </div>
+    <div class="ruler"></div>
+
+    <!-- DOCUMENT AREA -->
+    <div class="doc-area">
+      <div class="gutter"></div>
+      <div class="doc-vp" id="docVp">
+        <div class="begin-scan-overlay" id="beginScanOverlay">
+          <div class="begin-scan-label">READY TO SCAN</div>
+          <button class="begin-scan-btn" id="beginScanBtn">BEGIN SCAN</button>
+        </div>
+        <div class="scan-track" id="scanTrack"></div>
+        <div class="scan-glow" id="scanGlow"></div>
+        <div class="lock-flash" id="lockFlash"></div>
+        <div class="result-box" id="resultBox">
+          <div class="rb-main">
+            <div class="rb-hdr">
+              <span style="color:#cc88ff"><span style="display:inline-block;width:7px;height:7px;background:#00ff88;margin-right:5px"></span>SCAN RESULTS</span>
+              <span style="color:#00ff8866" id="rbHint">CLICK INFECTED DATA</span>
+            </div>
+            <div class="rb-body"><div class="para" id="rbPara"></div></div>
+            <div class="rb-foot"><span id="rbFoot">6 ENTRIES LOADED</span></div>
+          </div>
+          <div class="rb-side">
+            <div><div class="lb">STATUS</div><div class="vl" style="font-size:clamp(6px,.6vw,9px);color:#ff6688" id="rbStatus">ACTIVE</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;background:#0a0520;padding:6px 4px;border:1px solid #ff335544">
+              <div class="lb" style="text-align:center;color:#ff8899cc;font-size:clamp(5px,.55vw,8px)">THREATS</div>
+              <div id="rbThreats" style="font-family:monospace;font-size:clamp(22px,3vw,36px);color:#ff3355;font-weight:bold;line-height:1">1</div>
+              <div style="font-family:monospace;font-size:clamp(6px,.6vw,8px);color:#ff6688" id="rbThreatSub">of 1</div>
+              <div id="rbClearedTag" style="font-family:monospace;font-size:clamp(5px,.55vw,7px);color:#00ff88;border:1px solid #00ff8866;padding:2px 6px;margin-top:4px;display:none;letter-spacing:1px">CLEARED</div>
+            </div>
+            <div><div class="lb">ENTRIES</div><div class="vl" style="font-size:clamp(10px,1.2vw,15px);color:#66ddff;font-weight:bold" id="rbEntries">6</div></div>
+            <div><div class="lb">FILE</div><div class="vl" style="font-size:clamp(8px,.9vw,11px);color:#44ffaa;font-weight:bold" id="rbFile">1/5</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-gutter">
+        <div class="sc-up"><svg width="6" height="4" viewBox="0 0 8 6"><rect x="3" y="0" width="2" height="2" fill="#aa88ff"/><rect x="1" y="2" width="6" height="2" fill="#aa88ff"/></svg></div>
+        <div class="sc-track"><div class="sc-thumb" id="scThumb" style="top:4px"></div></div>
+        <div class="sc-down"><svg width="6" height="4" viewBox="0 0 8 6"><rect x="1" y="0" width="6" height="2" fill="#aa88ff"/><rect x="3" y="2" width="2" height="2" fill="#aa88ff"/></svg></div>
+      </div>
+    </div>
+    <div class="status-bar">
+      <div class="st-dot st-green"></div><span class="st-text">CONNECTED</span>
+      <div style="width:1px;height:6px;background:#4400aa"></div><span class="st-text">UTF-8</span>
+      <div style="flex:1"></div>
+      <span class="st-text" style="color:#ffcc4488">SCAN MODE</span><div class="st-dot st-red"></div>
+    </div>
+  </div></div></div>
+
+  <!-- DIALOG -->
+  <div class="dialog-spacer"></div>
+  <div class="dialog-wrap" id="dialogWrap">
+    <div class="dialog-inner">
+      <div class="dialog-portrait"><img id="dPort" alt="Byte mascot"></div>
+      <div class="dialog-text-area">
+        <div class="dialog-name">BYTE</div>
+        <div class="dialog-msg" id="dMsg"></div>
+        <button class="game-btn" id="nextBtn">NEXT FILE &#9654;</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Scripts loaded at end of body -->
+<script src="js/audio.js"></script>
+<script src="js/scanner.js"></script>
+</body>
+</html>

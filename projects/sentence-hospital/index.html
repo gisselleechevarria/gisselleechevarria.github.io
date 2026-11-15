@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sentence Hospital: fixing run-on sentences</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--mint:#8CCBB2;--mintd:#5FAF93;--coral:#EE6A55;--cream:#FBF0DA;--mustard:#F2B83B;--teal:#2E7F79;--brown:#4A2A20;--paper:#FFF8EA}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#1d2b2a;overflow:hidden;font-family:Nunito,system-ui,sans-serif}
+#fit{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1280px;height:720px;flex:none;position:relative;overflow:hidden;color:var(--brown);transform-origin:center;background:var(--mint)}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity .35s ease}
+.slide.on{opacity:1}
+.slide>*{position:absolute}
+.bg{inset:0;width:100%;height:100%;object-fit:cover}
+.lil{font-family:'Lilita One',sans-serif;font-weight:400}
+h1,h2{font-family:'Lilita One',sans-serif;font-weight:400;margin:0;line-height:1.02}
+.ttl{background:var(--cream);border:4px solid var(--brown);border-radius:22px;box-shadow:0 5px 0 var(--brown);padding:12px 24px 14px}
+.ttl h1{font-size:44px!important;margin-top:8px!important}
+.card{background:var(--cream);border:4px solid var(--brown);border-radius:24px;box-shadow:0 6px 0 var(--brown)}
+.pill{border:3px solid var(--brown);border-radius:999px;box-shadow:0 4px 0 var(--brown)}
+.tag{display:inline-block;font:900 13px Nunito;letter-spacing:.1em;text-transform:uppercase;padding:6px 14px;border-radius:999px;background:var(--mustard);border:3px solid var(--brown)}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible{outline:4px solid var(--mustard);outline-offset:3px}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--cream);color:var(--brown);border:4px solid var(--brown);border-radius:20px;box-shadow:0 6px 0 var(--brown);padding:10px 22px 10px 12px;font:900 19px Nunito;transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--brown)}
+.btn img{width:46px;height:46px;object-fit:contain}
+.btn.big{font-size:24px;padding:14px 28px 14px 14px}.btn.big img{width:60px;height:60px}
+.btn.coral{background:var(--coral);color:var(--cream)}.btn.teal{background:var(--teal);color:var(--cream)}.btn.mustard{background:var(--mustard)}
+.btn[disabled]{opacity:.45;cursor:default;transform:none}
+/* builds */
+[data-step]{transition:opacity .35s,transform .35s}
+.hide-step{opacity:0;transform:translateY(14px);pointer-events:none}
+/* strip */
+.strip{display:inline-flex;align-items:stretch;position:relative;height:var(--h,104px);font-family:'Lilita One',sans-serif;font-size:var(--fs,36px);white-space:nowrap;filter:drop-shadow(0 6px 0 rgba(74,42,32,.22));transition:transform .7s cubic-bezier(.3,1.5,.5,1)}
+.strip .capl,.strip .capr{height:100%;width:auto;flex:none;display:block}
+.strip .capl{width:calc(var(--h,104px)*.62);object-fit:cover;object-position:left center;margin-right:-2px}
+.strip .capr{width:calc(var(--h,104px)*.5);object-fit:cover;object-position:right center;margin-left:-2px}
+.strip.hasface .capl{width:calc(var(--h,104px)*1.12)}
+.strip .mid{display:flex;align-items:center;background:url(art/mid.png) center/100% 100% no-repeat;padding:0 4px 4px}
+.strip .face{position:absolute;left:-16px;top:50%;width:calc(var(--h,104px)*1.06);height:calc(var(--h,104px)*1.06);margin-top:calc(var(--h,104px)*-.53);object-fit:contain;transition:transform .3s;z-index:2}
+.strip .face.pop{animation:pop .5s}
+.w{display:inline-block;transition:color .3s,background .3s;border-radius:8px;padding:0 3px}
+.w.hl1{background:rgba(140,203,178,.75)}.w.hl2{background:rgba(242,184,59,.6)}
+.gap{display:inline-block;width:24px;height:52px;vertical-align:middle;position:relative;border:none;background:none;padding:0;margin:0}
+.gap::after{content:'';position:absolute;left:10px;top:8px;width:4px;height:36px;border-radius:2px;background:transparent}
+.gap.live::after{background:rgba(74,42,32,.22)}
+.gap.live{cursor:pointer}.gap.live:hover::after{background:var(--coral);width:6px;left:9px}
+.gap.live:hover::before{content:'';position:absolute;left:-18px;top:-62px;width:60px;height:60px;background:url(art/scissors.png) center/contain no-repeat;transform:rotate(90deg)}
+.gap.miss::after{background:var(--coral)}
+.punct{display:inline-block;color:var(--coral);animation:pop .5s}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.5)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-12px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+.shake{animation:shake .45s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.bob{animation:bob 1.6s ease-in-out infinite}
+/* labels */
+.lab{position:absolute;font:900 14px Nunito;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:999px;border:3px solid var(--brown);white-space:nowrap}
+/* cart */
+.cart{position:absolute;left:0;top:0;width:1280px;height:720px;transition:transform 1.1s cubic-bezier(.45,1.25,.55,1)}
+.cart.off-left{transform:translateX(-1500px)}.cart.off-right{transform:translateX(1500px);transition:transform 1s cubic-bezier(.55,0,.8,.6)}
+.gurney{position:absolute;left:340px;top:330px;width:600px}
+.slot{position:absolute;left:0;right:0;top:318px;display:flex;justify-content:center;align-items:center;gap:0}
+.slot .strip+.strip{margin-left:56px}
+/* hud */
+.hud-step{display:flex;gap:8px;align-items:center}
+.hud-step span{font:900 15px Nunito;padding:7px 14px;border:3px solid var(--brown);border-radius:999px;background:var(--cream);opacity:.6}
+.hud-step span.done{background:var(--teal);color:var(--cream);opacity:1}.hud-step span.now{background:var(--mustard);opacity:1;transform:scale(1.08)}
+.bubble{background:#fff;border:4px solid var(--brown);border-radius:22px;padding:12px 18px;font:800 18px Nunito;box-shadow:0 5px 0 var(--brown);max-width:330px}
+.bubble::after{content:'';position:absolute;left:-18px;bottom:22px;border:12px solid transparent;border-right:18px solid var(--brown)}
+.bubble.up::after{left:40px;bottom:-30px;border:13px solid transparent;border-top:17px solid var(--brown)}
+/* chrome */
+#nav{position:absolute;left:14px;bottom:12px;z-index:50;display:flex;gap:6px;align-items:center}
+#nav button{width:40px;height:40px;border-radius:50%;border:3px solid var(--brown);background:var(--cream);font:900 18px Nunito;color:var(--brown);box-shadow:0 3px 0 var(--brown)}
+#nav .count{font:900 12px Nunito;letter-spacing:.08em;background:rgba(251,240,218,.9);padding:5px 10px;border-radius:999px}
+#notes{position:absolute;right:0;top:0;bottom:0;width:390px;background:#FFFDF6;border-left:5px solid var(--brown);z-index:60;transform:translateX(100%);transition:transform .3s;padding:22px 24px;overflow:auto;font-size:15.5px;line-height:1.5}
+#notes.on{transform:none}
+#notes h3{font-family:'Lilita One';font-weight:400;font-size:24px;margin:0 0 6px;color:var(--teal)}
+#notes .k{font:900 11px Nunito;letter-spacing:.1em;color:var(--coral);margin-top:14px}
+#notes ul{margin:4px 0 0;padding-left:18px}
+#modal{position:absolute;inset:0;z-index:70;background:rgba(29,43,42,.6);display:none;align-items:center;justify-content:center}
+#modal.on{display:flex}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:40}
+.confetti i{position:absolute;top:-30px;width:14px;height:20px;border:2px solid var(--brown);border-radius:3px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(820px) rotate(600deg)}}
+.cue{display:flex;align-items:center;gap:8px;background:#fff;padding:5px 16px 5px 6px;font:900 15px Nunito}
+.cue img{width:38px;height:38px;object-fit:contain}
+.timer{min-width:56px;text-align:center;font:900 16px Nunito;color:var(--coral)}
+</style></head><body>
+<div id="fit"><div id="stage">
+ <div id="slides"></div>
+ <div id="nav"><button id="prev" aria-label="Previous">‹</button><button id="nxt" aria-label="Next">›</button><span class="count" id="count"></span><button id="mute" aria-label="Sound on or off" title="Sound (M)">♪</button><button id="nbtn" aria-label="Teacher notes" title="Teacher notes (N)">N</button></div>
+ <aside id="notes" aria-label="Teacher notes"></aside>
+ <div id="modal" role="dialog" aria-modal="true"></div>
+</div></div>
+<script>
+const $=s=>document.querySelector(s);
+/* ---------- sound ---------- */
+let AC=null,muted=false;
+function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();return AC}
+function tone(f,d,type='sine',vol=.18,t0=0,slide){const a=ac();if(!a||muted)return;const o=a.createOscillator(),g=a.createGain(),t=a.currentTime+t0;o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(slide,t+d);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(a.destination);o.start(t);o.stop(t+d+.05)}
+function noise(d,f1,f2,vol=.25,t0=0,q=1){const a=ac();if(!a||muted)return;const n=a.createBufferSource(),b=a.createBuffer(1,a.sampleRate*d,a.sampleRate),c=b.getChannelData(0);for(let i=0;i<c.length;i++)c[i]=Math.random()*2-1;n.buffer=b;const fl=a.createBiquadFilter();fl.type='bandpass';fl.Q.value=q;const t=a.currentTime+t0;fl.frequency.setValueAtTime(f1,t);fl.frequency.exponentialRampToValueAtTime(f2,t+d);const g=a.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+d);n.connect(fl).connect(g).connect(a.destination);n.start(t)}
+const SFX={
+ snip(){noise(.06,6000,3000,.5,0,3);noise(.07,5000,2500,.5,.12,3)},
+ roll(){noise(1.0,300,900,.18,0,.7);for(let i=0;i<6;i++)tone(140+i*6,.05,'triangle',.06,i*.14)},
+ rollout(){noise(.9,900,250,.18,0,.7)},
+ ding(){tone(880,.18,'sine',.2);tone(1320,.35,'sine',.18,.12)},
+ boop(){tone(260,.28,'square',.08,0,150)},
+ pop(){tone(500,.12,'triangle',.25,0,1200)},
+ bandage(){noise(.25,1200,400,.2,0,1.2);tone(660,.12,'sine',.12,.2)},
+ click(){tone(1200,.04,'square',.05)},
+ fanfare(){[523,659,784,1047].forEach((f,i)=>tone(f,.3,'triangle',.16,i*.13));tone(1047,.6,'sine',.12,.55)},
+ tick(){tone(1500,.03,'square',.05)}};
+/* ---------- helpers ---------- */
+const A=n=>`art/${n}.${['room','title'].includes(n)?'jpg':'png'}`;
+function wordsHTML(ws,opts={}){let h='';ws.forEach((w,i)=>{h+=`<span class="w" data-i="${i}">${w}</span>`;if(i<ws.length-1)h+=`<button class="gap ${opts.live?'live':''}" data-g="${i}" aria-label="Cut after ${w.replace(/[^\w']/g,'')}" ${opts.live?'':'tabindex="-1"'}></button>`});return h}
+function strip(ws,face='face_fever',opts={}){const st=(opts.size?`--fs:${opts.size}px;--h:${Math.round(opts.size*2.9)}px;`:'');return `<div class="strip ${face?'hasface':''}" ${opts.id?`id="${opts.id}"`:''} style="${st}">${face?`<img class="face" src="${A(face)}" alt="">`:''}<img class="capl" src="${A(opts.tornL?'torn_l':'cap_l')}" alt=""><div class="mid">${opts.raw||wordsHTML(ws,opts)}</div><img class="capr" src="${A(opts.tornR?'torn_r':'cap_r')}" alt=""></div>`}
+function confetti(n=60){const c=document.createElement('div');c.className='confetti';const C=['#EE6A55','#F2B83B','#8CCBB2','#2E7F79','#FBF0DA'];for(let k=0;k<n;k++){const i=document.createElement('i');i.style.left=Math.random()*100+'%';i.style.background=C[k%5];i.style.animationDuration=(1.8+Math.random()*1.6)+'s';i.style.animationDelay=(Math.random()*.5)+'s';c.appendChild(i)}$('#stage').appendChild(c);setTimeout(()=>c.remove(),4200)}
+function cue(icon,text,timer){return `<div class="cue pill">${icon?`<img src="${A(icon)}" alt="">`:''}<span>${text}</span>${timer?`<button class="btn" style="padding:4px 10px 4px 6px;font-size:14px;border-width:3px;box-shadow:0 3px 0 var(--brown);margin-left:4px" onclick="startTimer(this,${timer})"><img src="${A('stopwatch')}" style="width:26px;height:26px" alt="">${timer}s</button>`:''}</div>`}
+let timerIv=null;
+function startTimer(btn,sec){clearInterval(timerIv);let s=sec;btn.lastChild.textContent=' '+s+'s';timerIv=setInterval(()=>{s--;btn.lastChild.textContent=' '+s+'s';if(s<=3&&s>0)SFX.tick();if(s<=0){clearInterval(timerIv);btn.lastChild.textContent=' done!';SFX.ding()}},1000)}
+/* ---------- patients ---------- */
+const POOL=[
+ {w:['The','bell','rang','the','kids','ran','outside.'],cut:2,conj:['and','so'],fix:'comma'},
+ {w:['I','wanted','pancakes','we','had','cereal.'],cut:2,conj:['but'],fix:'comma'},
+ {w:['It','started','to','rain','we','went','inside.'],cut:3,conj:['so'],fix:'comma'},
+ {w:['Maya','loves','soccer','her','brother','loves','art.'],cut:2,conj:['and','but'],fix:'either'},
+ {w:['The','oven','beeped','the','cookies','were','ready.'],cut:2,conj:['and','so'],fix:'period'},
+ {w:['My','shoe','came','untied','I','tripped','on','the','lace.'],cut:3,conj:['and','so'],fix:'comma'},
+ {w:['Leo','tried','to','whistle','no','sound','came','out.'],cut:3,conj:['but'],fix:'comma'},
+ {w:['The','lights','went','out','everyone','screamed.'],cut:3,conj:['and','so'],fix:'period'},
+ {w:['We','planted','seeds','in','May','flowers','bloomed','in','June.'],cut:4,conj:['and'],fix:'either'},
+ {w:['Grandpa','told','a','joke','we','all','laughed.'],cut:3,conj:['and','so'],fix:'comma'},
+ {w:['The','tired','puppy','fell','asleep','on','the','warm','rug.'],healthy:true},
+ {w:['After','lunch,','our','class','read','a','funny','book.'],healthy:true},
+ {w:['My','little','brother','and','I','built','a','giant','blanket','fort.'],healthy:true},
+ {w:['The','huge','yellow','school','bus','rumbled','down','the','street.'],healthy:true}];
+const FACES=['face_fever','face_sleepy','face_grumpy','face_sneeze','face_dizzy'];
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function newRound(){const ro=shuffle(POOL.filter(p=>!p.healthy)),he=shuffle(POOL.filter(p=>p.healthy));
+ let pick=[...ro.filter(p=>p.fix==='comma').slice(0,2),...ro.filter(p=>p.fix!=='comma').slice(0,2),...he.slice(0,2)];
+ pick=shuffle(pick);while(pick[0].healthy)pick=shuffle(pick);return pick.map((p,i)=>Object.assign({},p,{face:FACES[i%FACES.length]}))}
+let GAME=newRound();
+const ORDER={comma:'Bonus challenge: try a comma bandage for a star!'};
+const HINT={diagnose:'Look for who did what. Then look again. Do you see TWO of them?',operate:'Find the end of the first thought: who did what. Cut right after it.',treat:'Both fixes work! For a comma bandage, try and, but or so out loud. Which one makes sense?',conj:'Read it aloud with each word. Which one makes sense?'};
+/* engine used by practice slides and the game */
+function Patient(root,p,mode,done){
+ const S={step:'diagnose',p,root,mode,lives:3};
+ const isGame=mode==='game';
+ root.innerHTML=`<div class="cart off-left" id="cart"><img class="gurney" src="${A('gurney')}" alt=""><div class="slot" id="slot">${strip(p.w,p.face,{id:'st'})}</div></div>
+  <div id="ctrl" style="position:absolute;left:0;right:0;top:590px;display:flex;justify-content:center;gap:18px"></div>`;
+ const cart=root.querySelector('#cart'),ctrl=root.querySelector('#ctrl');
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{cart.classList.remove('off-left');SFX.roll()}));
+ function setCtrl(h){ctrl.innerHTML=h}
+ function say(t,pose){S.onSay&&S.onSay(t,pose)}
+ function wrong(t){SFX.boop();root.querySelector('#st')?.classList.add('shake');setTimeout(()=>root.querySelector('#st')?.classList.remove('shake'),500);if(isGame&&!S.bonus){S.lives--;S.onLives&&S.onLives(S.lives);if(S.lives<=0){say('Dr. Dot will help! '+HINT[S.step],'dot_clip');S.lives=3;setTimeout(()=>S.onLives&&S.onLives(3),900);return}}say(t,'dot_sorry')}
+ function diagnose(){S.step='diagnose';S.onStep&&S.onStep(0);setCtrl(`<button class="btn big coral" id="bRun"><img src="${A('face_fever')}" alt="">Run-on (sick)</button><button class="btn big teal" id="bOk"><img src="${A('face_proud')}" alt="">Healthy</button>`);
+  ctrl.querySelector('#bRun').onclick=()=>{if(p.healthy)return wrong('Look again. Is there a second "who did what"?');SFX.ding();say('Good diagnosis! Two thoughts, no stop.','dot_thumb');operate()};
+  ctrl.querySelector('#bOk').onclick=()=>{if(!p.healthy)return wrong('Hmm. Count the thoughts. Who did what? Anyone else?');cureHealthy()}}
+ function cureHealthy(){SFX.ding();const st=root.querySelector('#st');const f=st.querySelector('.face');f.src=A('face_proud');f.classList.add('pop');say('Healthy! Long sentences can be correct. One complete thought.','dot_thumb');S.onStep&&S.onStep(3);finish()}
+ function operate(){S.step='operate';S.onStep&&S.onStep(1);setCtrl(`<div class="pill cue" style="font-size:18px">Tap the spot where the first thought ends.</div>`);
+  const st=root.querySelector('#st');st.querySelectorAll('.gap').forEach(g=>{g.classList.add('live');g.tabIndex=0;g.onclick=()=>{const gi=+g.dataset.g;if(gi!==p.cut){g.classList.add('miss');setTimeout(()=>g.classList.remove('miss'),600);return wrong('Not quite. Does the first part have a who AND a did what?')}cut()}})}
+ function cut(){SFX.snip();const slot=root.querySelector('#slot');const L=p.w.slice(0,p.cut+1),R=p.w.slice(p.cut+1);
+  slot.innerHTML=strip(L,p.face,{id:'sL',tornR:true})+strip(R,null,{id:'sR',tornL:true});const sL=slot.querySelector('#sL'),sR=slot.querySelector('#sR');
+  sL.style.transform='translateX(20px) rotate(0)';sR.style.transform='translateX(-20px)';requestAnimationFrame(()=>{sL.style.transform='translateX(-6px) rotate(-3deg)';sR.style.transform='translateX(6px) rotate(3deg)'});
+  say('Snip! Now how do we fix it?','dot_scissors');treat()}
+ function treat(){S.step='treat';S.onStep&&S.onStep(2);const ord=p.fix==='comma'&&!S.bonus?`<div class="pill cue" style="position:absolute;top:-58px;left:50%;transform:translateX(-50%);font-size:17px;white-space:nowrap"><img src="${A('star')}" alt="">${ORDER[p.fix]}</div>`:'';setCtrl(ord+`<button class="btn big" id="bP"><img src="${A('stitch')}" alt="">Period stitch</button><button class="btn big" id="bC"><img src="${A('comma_bandage')}" alt="">Comma bandage</button>`);
+  ctrl.querySelector('#bP').onclick=period;ctrl.querySelector('#bC').onclick=pickConj}
+ function period(){S.fixedBy='period';SFX.pop();const sL=root.querySelector('#sL'),sR=root.querySelector('#sR');const last=sL.querySelectorAll('.w');last[last.length-1].insertAdjacentHTML('beforeend','<span class="punct">.</span>');
+  const first=sR.querySelector('.w');setTimeout(()=>{first.style.transition='transform .3s';first.style.transform='rotateX(90deg)';setTimeout(()=>{first.textContent=first.textContent.charAt(0).toUpperCase()+first.textContent.slice(1);first.style.color='var(--coral)';first.style.transform='none';SFX.pop()},300)},350);
+  sL.style.transform='translateX(-14px) rotate(-1deg)';sR.style.transform='translateX(14px) rotate(1deg)';cured('Two healthy sentences! A period and a capital letter.')}
+ function pickConj(){SFX.click();setCtrl(['and','but','so'].map(c=>`<button class="btn big mustard" data-c="${c}" style="min-width:150px;justify-content:center;padding-left:22px">, ${c}</button>`).join('')+(S.bonus?'':`<button class="btn" id="bBack" style="align-self:center">‹ back</button>`));
+  ctrl.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{const c=b.dataset.c;if(!p.conj.includes(c))return wrong(`Read it with "${c}". Does that make sense here?`);bandage(c)});const bb=ctrl.querySelector('#bBack');if(bb)bb.onclick=treat}
+ function bandage(c){SFX.bandage();const slot=root.querySelector('#slot');const L=p.w.slice(0,p.cut+1),R=p.w.slice(p.cut+1);
+  const raw=`${L.map(w=>`<span class="w">${w}</span>`).join(' ')}<span class="punct" style="margin:0 6px 0 0">,</span><span class="w" style="position:relative;color:var(--teal);margin:0 22px 0 18px"><img src="${A('bandage')}" alt="" style="position:absolute;left:-16px;top:-4px;width:calc(100% + 32px);height:54px;object-fit:fill;z-index:0"><span style="position:relative;z-index:1">${c}</span></span> ${R.map(w=>`<span class="w">${w}</span>`).join(' ')}`;slot.innerHTML=strip([],p.face,{id:'sJ',raw});
+  const j=slot.querySelector('#sJ');j.style.transform='scale(.9)';requestAnimationFrame(()=>j.style.transform='none');const star=p.fix==='comma';if(star){S.bonusDone=true;S.onStar&&S.onStar()}S.fixedBy='comma';cured(`Bandaged with ", ${c}." One healthy sentence!${star?' You earned a bonus star!':''}`)}
+ function cured(msg){setTimeout(()=>{SFX.ding();root.querySelectorAll('.strip .face').forEach(f=>{f.src=A('face_super');f.classList.add('pop')});const sR=root.querySelector('#sR');if(sR&&!sR.querySelector('.face')){sR.classList.add('hasface');sR.insertAdjacentHTML('afterbegin',`<img class="face pop" src="${A('face_happy')}" alt="">`)}confetti(30)},700);say(msg,'dot_cheer');S.onStep&&S.onStep(3);finish()}
+ function finish(){const offer=p.fix==='comma'&&S.fixedBy==='period'&&!S.bonusDone;const bonusBtn=offer?`<button class="btn big mustard" id="bBonus"><img src="${A('star')}" alt="">Bonus: try a comma bandage</button>`:'';setCtrl(bonusBtn+(isGame?`<button class="btn big teal" id="bNext"><img src="${A('gurney')}" alt="">Next patient</button>`:`<span class="pill cue" style="font-size:18px"><img src="${A('star')}" alt="">Patient healed!</span>`));
+  if(offer)ctrl.querySelector('#bBonus').onclick=()=>{S.bonus=true;const slot=root.querySelector('#slot');slot.innerHTML=strip(p.w.slice(0,p.cut+1),p.face,{id:'sL',tornR:true})+strip(p.w.slice(p.cut+1),null,{id:'sR',tornL:true});say('Same patient, new treatment. Which helper word fits?','dot_think');pickConj()};
+  if(isGame)ctrl.querySelector('#bNext').onclick=()=>{SFX.rollout();cart.classList.add('off-right');setCtrl('');setTimeout(done,950)}}
+ diagnose();
+ return S}
+/* ---------- slides ---------- */
+const SL=[];
+SL.push({id:'title',steps:0,html:()=>`<img class="bg" src="${A('title')}" alt="A cheerful retro hospital with Dr. Dot waving at the door.">
+ <div style="left:0;right:0;top:40px;text-align:center"><div class="tag" style="background:var(--coral);color:var(--cream)">Grade 3 grammar · Run-on sentences</div>
+  <h1 style="font-size:104px;color:var(--cream);-webkit-text-stroke:4px var(--brown);paint-order:stroke fill;text-shadow:0 8px 0 var(--brown);margin-top:12px">Sentence Hospital</h1></div>`,
+ notes:{t:'Welcome to Sentence Hospital',say:['"Today our classroom is a hospital, and you are the surgeons. Some sentences came in feeling sick, and we\'re going to find out what\'s wrong and fix them."'],tips:['Optional: hand out "surgeon badges" (sticky notes) to build the role-play.'],ans:[]}});
+SL.push({id:'hook',steps:1,html:()=>`<img class="bg" src="${A('room')}" alt="">
+ <div class="ttl" style="left:40px;top:24px"><div class="tag">The breath test</div><h1 style="font-size:52px;margin-top:10px">Read this in ONE breath!</h1></div>
+ <div style="left:60px;right:60px;top:190px;display:flex;justify-content:center">${strip(['My','dog','ate','my','homework','my','teacher','did','not','believe','me','I','had','to','do','it','again'],'face_dizzy',{size:17})}</div>
+ <div data-step="1" style="left:0;right:0;top:360px;display:flex;justify-content:center"><div class="card" style="padding:18px 28px;display:flex;gap:20px;align-items:center;max-width:820px"><img src="${A('dot_oops')}" style="height:150px" alt=""><div><h2 style="font-size:38px;color:var(--coral)">Out of breath?</h2><div style="font:800 21px Nunito;margin-top:6px">That sentence is sick! It's a <b>run-on sentence</b>, and today we'll learn how to fix it.</div></div></div></div>
+ <div style="left:60px;bottom:70px">${cue('speech','WHOLE CLASS: try it together!')}</div>`,
+ notes:{t:'Hook: the breath test',say:['Read the strip aloud with the class without pausing. Exaggerate running out of air.','"Why was that hard to read? What would help?" Take 2 or 3 answers.','Click to reveal: "That sentence is sick. It\'s a run-on."'],tips:['Students may say "it needs commas." Accept it for now. You\'ll show when commas work later.'],ans:[]}});
+SL.push({id:'goal',steps:0,html:()=>`<img class="bg" src="${A('room')}" alt="">
+ <div class="card" style="left:150px;top:120px;width:640px;padding:34px 40px"><div class="tag" style="background:var(--teal);color:var(--cream)">Today's goal</div>
+  <h1 style="font-size:58px;margin-top:14px">I can find and fix run-on sentences.</h1>
+  <div style="font:800 18px Nunito;margin-top:16px;color:var(--teal)">Florida B.E.S.T. · ELA.3.C.3.1 (conventions of standard English)</div></div>
+ <img src="${A('dot_wave')}" style="left:830px;top:150px;height:380px" class="bob" alt="Dr. Dot waving.">`,
+ notes:{t:'Learning goal',say:['Read the goal together. "By the end, you\'ll be able to spot a sick sentence and operate on it."'],tips:['Point to the goal again before the game and at the exit ticket.'],ans:[]}});
+SL.push({id:'healthy',steps:3,html:()=>`<img class="bg" src="${A('room')}" alt="">
+ <div class="ttl" style="left:40px;top:24px"><div class="tag">Mini-lesson</div><h1 style="font-size:52px;margin-top:10px">What makes a sentence healthy?</h1></div>
+ <div style="left:0;right:0;top:250px;display:flex;justify-content:center">${strip(['The','puppy','barked','at','the','mail','truck.'],'face_proud',{id:'hs'})}</div>
+ <div data-step="1" class="lab" style="left:395px;top:200px;background:var(--mint)">Who or what?</div>
+ <div data-step="2" class="lab" style="left:600px;top:200px;background:var(--mustard)">Did what?</div>
+ <div data-step="3" style="left:0;right:0;top:420px;display:flex;justify-content:center"><div class="card" style="padding:16px 26px;font:800 22px Nunito;display:flex;gap:16px;align-items:center"><img src="${A('stethoscope')}" style="width:64px" alt=""><div>A healthy sentence has a <b style="color:var(--teal)">who or what</b> + <b style="color:#C98A00">what they did</b>, and it tells <b>one complete thought</b>.</div></div></div>`,
+ onStep:(s,el)=>{const w=el.querySelectorAll('#hs .w');w.forEach(x=>x.classList.remove('hl1','hl2'));if(s>=1){w[0].classList.add('hl1');w[1].classList.add('hl1')}if(s>=2){w[2].classList.add('hl2')}},
+ notes:{t:'What makes a sentence healthy?',say:['Click 1: "Who is this sentence about?" (the puppy)','Click 2: "What did the puppy do?" (barked)','Click 3: read the rule together.'],tips:['Use "who or what" and "did what" rather than "subject" and "predicate" for now. Add the terms later if your class is ready.'],ans:['Who: The puppy · Did what: barked']}});
+SL.push({id:'runon',steps:3,html:()=>`<img class="bg" src="${A('room')}" alt="">
+ <div class="ttl" style="left:40px;top:24px"><div class="tag">Mini-lesson</div><h1 style="font-size:52px;margin-top:10px">So what's a run-on?</h1></div>
+ <div style="left:0;right:0;top:250px;display:flex;justify-content:center">${strip(['The','puppy','barked','the','cat','ran','away.'],'face_fever',{id:'rs'})}</div>
+ <div data-step="1" class="lab" style="left:440px;top:200px;background:var(--mint)">Thought 1</div>
+ <div data-step="2" class="lab" style="left:690px;top:200px;background:var(--mustard)">Thought 2</div>
+ <div data-step="3" style="left:0;right:0;top:420px;display:flex;justify-content:center"><div class="card" style="padding:16px 26px;font:800 22px Nunito;display:flex;gap:16px;align-items:center;max-width:900px"><img src="${A('face_fever')}" style="width:64px" alt=""><div>A <b style="color:var(--coral)">run-on</b> is two complete thoughts squished together with <b>no stop</b> between them.</div></div></div>`,
+ onStep:(s,el)=>{const w=el.querySelectorAll('#rs .w');w.forEach(x=>x.classList.remove('hl1','hl2'));if(s>=1)[0,1,2].forEach(i=>w[i].classList.add('hl1'));if(s>=2)[3,4,5,6].forEach(i=>w[i].classList.add('hl2'))},
+ notes:{t:'What is a run-on?',say:['Click 1: "Here\'s one complete thought: the puppy barked."','Click 2: "But wait, there\'s another: the cat ran away."','Click 3: "Two thoughts, no stop. That\'s a run-on."'],tips:['Misconception: "run-on means too long." Plant the seed now that it\'s about the number of thoughts, not the length.'],ans:[]}});
+SL.push({id:'checkup',steps:3,html:()=>`<img class="bg" src="${A('room')}" alt="">
+ <div class="ttl" style="left:40px;top:24px"><div class="tag">Dr. Dot's checkup</div><h1 style="font-size:52px;margin-top:10px">How to diagnose a sentence</h1></div>
+ <div style="left:60px;right:300px;top:170px;display:flex;flex-direction:column;gap:16px">
+  ${[['magnifier','Find a who or what + did what.','That\'s one thought.'],['magnifier','Keep reading. Is there ANOTHER who + did what?','Look after the first one ends.'],['face_fever','Two thoughts, no stop? It\'s a run-on!','One thought? It\'s healthy.']].map((x,i)=>`<div class="card" data-step="${i+1}" style="padding:14px 20px;display:flex;align-items:center;gap:16px;position:relative"><span class="lil" style="width:54px;height:54px;border-radius:50%;background:${['var(--mint)','var(--mustard)','var(--coral)'][i]};border:4px solid var(--brown);display:flex;align-items:center;justify-content:center;font-size:30px;flex:none">${i+1}</span><div><div class="lil" style="font-size:28px">${x[1]}</div><div style="font:800 17px Nunito;opacity:.8">${x[2]}</div></div><img src="${A(x[0])}" style="width:62px;margin-left:auto" alt=""></div>`).join('')}</div>
+ <img src="${A('dot_clip')}" style="right:50px;top:200px;height:360px" alt="Dr. Dot with a clipboard.">
+ <div style="left:60px;bottom:70px">${cue('thumb_up','THUMBS CHECK: Thumbs up if you can explain step 2 to a partner.')}</div>`,
+ notes:{t:'Dr. Dot\'s checkup',say:['Reveal each step. Model it with the puppy and cat sentence from the last slide.','Have students repeat the steps with hand motions: magnifying glass, look again, two fingers.'],tips:['If many thumbs are sideways, re-model step 2 with a new sentence before moving on.'],ans:[]}});
+SL.push({id:'treat',steps:2,html:()=>`<img class="bg" src="${A('room')}" alt="">
+ <div class="ttl" style="left:40px;top:24px"><div class="tag">Mini-lesson</div><h1 style="font-size:52px;margin-top:10px">Two ways to fix a run-on</h1></div>
+ <div class="card" data-step="1" style="left:60px;top:160px;width:560px;padding:20px 24px">
+  <div style="display:flex;align-items:center;gap:14px"><img src="${A('stitch')}" style="width:76px" alt=""><div><div class="lil" style="font-size:34px;color:var(--teal)">Period stitch</div><div style="font:800 16px Nunito">Make two sentences. Add a period, then a capital letter.</div></div></div>
+  <div style="margin-top:14px;font:800 20px Nunito;background:#fff;border:3px dashed var(--brown);border-radius:16px;padding:12px 16px">The puppy barked<b style="color:var(--coral)">.</b> <b style="color:var(--coral)">T</b>he cat ran away.</div>
+  <div style="display:flex;align-items:center;gap:8px;margin-top:12px;font:900 15px Nunito"><img src="${A('fist')}" style="width:44px" alt="">HAND SIGNAL: make a fist, like a dot.</div></div>
+ <div class="card" data-step="2" style="left:660px;top:160px;width:560px;padding:20px 24px">
+  <div style="display:flex;align-items:center;gap:14px"><img src="${A('comma_bandage')}" style="width:76px" alt=""><div><div class="lil" style="font-size:34px;color:var(--coral)">Comma bandage</div><div style="font:800 16px Nunito">Keep one sentence. Add a comma plus <b>and</b>, <b>but</b> or <b>so</b>.</div></div></div>
+  <div style="margin-top:14px;font:800 20px Nunito;background:#fff;border:3px dashed var(--brown);border-radius:16px;padding:12px 16px">The puppy barked<b style="color:var(--coral)">, so</b> the cat ran away.</div>
+  <div style="display:flex;align-items:center;gap:8px;margin-top:12px;font:900 15px Nunito"><img src="${A('two_fingers')}" style="width:44px" alt="">HAND SIGNAL: two fingers, a comma and a word.</div></div>
+ <div style="left:60px;bottom:70px">${cue('speech','TURN & TALK: Which fix sounds better for this sentence? Why?',30)}</div>`,
+ notes:{t:'Two treatments',say:['Reveal the period stitch. "We cut it into two sentences. Every new sentence starts with a capital."','Reveal the comma bandage. "A comma alone is not enough. It needs a helper word: and, but or so."','Practice the hand signals together: fist = period stitch, two fingers = comma bandage.'],tips:['Big misconception: a comma by itself fixes a run-on (a comma splice). Stress that the bandage is the comma AND the word.','Both fixes are correct. The comma bandage just needs the helper word that makes sense.'],ans:['Both work. "so" shows the cat ran because the puppy barked.']}});
+SL.push({id:'comma',steps:4,html:()=>`<img class="bg" src="${A('room')}" alt="">
+ <div class="ttl" style="left:40px;top:24px"><div class="tag" style="background:var(--coral);color:var(--cream)">Comma bandage</div><h1 style="font-size:52px;margin-top:10px">How to use a comma bandage</h1></div>
+ <div class="card" style="left:70px;right:70px;top:172px;padding:6px 22px;display:flex;align-items:center;gap:14px;font:800 18px Nunito">
+  <img src="${A('comma_bandage')}" style="width:42px" alt=""><div><b>Recipe:</b> thought 1 <b style="color:var(--coral);font-size:26px">,</b> <b style="color:var(--teal)">helper word</b> thought 2. The comma goes right <b>before</b> the helper word.</div></div>
+ <div style="left:70px;right:70px;top:268px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px">
+  ${[['and','Adds more','We ate pizza<b style="color:var(--coral)">,</b> <b style="color:var(--teal)">and</b> we played.','var(--mint)'],['but','A surprise or opposite','I studied hard<b style="color:var(--coral)">,</b> <b style="color:var(--teal)">but</b> I felt nervous.','var(--mustard)'],['so','Tells what happened next','It rained<b style="color:var(--coral)">,</b> <b style="color:var(--teal)">so</b> we stayed inside.','var(--coral)']].map((x,k)=>`<div class="card" data-step="${k+1}" style="padding:12px 16px"><div style="display:flex;align-items:center;gap:10px"><span class="lil" style="background:${x[3]};border:4px solid var(--brown);border-radius:14px;padding:2px 14px;font-size:34px">${x[0]}</span><b style="font:900 17px Nunito">${x[1]}</b></div><div style="font:800 17px Nunito;margin-top:10px;background:#fff;border:3px dashed var(--brown);border-radius:14px;padding:8px 12px">${x[2]}</div></div>`).join('')}</div>
+ <div class="card" data-step="4" style="left:70px;right:70px;top:450px;padding:6px 20px;display:flex;align-items:center;gap:16px;background:#FDE3DC">
+  <img src="${A('dot_oops')}" style="height:72px" alt=""><div><div class="lil" style="font-size:28px;color:var(--coral)">A comma all alone can't fix it!</div><div style="font:800 18px Nunito;margin-top:4px"><s>It rained, we stayed inside.</s> &nbsp;✗ &nbsp;A bandage needs the comma <b>and</b> the helper word.</div></div></div>
+ <div style="left:60px;bottom:66px">${cue('speech','TURN & TALK: Which helper word would you pick for "The bell rang ___ the kids ran outside"?',30)}</div>`,
+ notes:{t:'How to use a comma bandage',say:['Read the recipe: thought 1, comma, helper word, thought 2.','Reveal and, but, so one at a time. For each, ask: "What does this word tell us?"','Reveal the warning: a comma alone makes a comma splice. The bandage only works with the helper word.'],tips:['Have students say the helper words with a gesture: and = hands together, but = hands apart, so = point forward.','Choose the helper word by meaning. Read the sentence aloud with each option.'],ans:['Turn & talk: "and" or "so" both work for the bell sentence.']}});
+function practiceSlide(id,tagTxt,title,p,cueTxt,notes){return {id,steps:0,html:()=>`<img class="bg" src="${A('room')}" alt="">
+ <div class="ttl" style="left:40px;top:24px"><div class="tag">${tagTxt}</div><h1 style="font-size:48px;margin-top:10px">${title}</h1></div>
+ <div id="pz" style="left:0;top:0;width:1280px;height:720px"></div>
+ <div id="dotz" style="left:20px;bottom:60px;width:320px;display:flex;flex-direction:column-reverse;align-items:flex-start"></div>
+ <div style="right:30px;bottom:66px;display:flex;flex-direction:column;gap:10px;align-items:flex-end">${cue('fist',cueTxt)}<button class="btn" onclick="passScalpel()"><img src="${A('scissors')}" alt="">Pass the scalpel</button></div>`,
+ onEnter:(el)=>{const pz=el.querySelector('#pz'),dz=el.querySelector('#dotz');const P=Patient(pz,p,'practice');P.onSay=(t,pose)=>{dz.innerHTML=`<img src="${A(pose)}" style="height:150px;display:block" alt=""><div class="bubble up" style="position:relative;margin-bottom:8px">${t}</div>`}},notes}}
+SL.push({id:'ido',steps:4,html:()=>`<img class="bg" src="${A('room')}" alt="">
+ <div class="ttl" style="left:40px;top:24px"><div class="tag">I do</div><h1 style="font-size:48px;margin-top:10px">Watch me operate</h1></div>
+ <img class="gurney" src="${A('gurney')}" style="position:absolute;left:340px;top:330px;width:600px" alt="">
+ <div id="ido" style="left:0;right:0;top:318px;display:flex;justify-content:center">${strip(['My','sister','sang','a','song','everyone','clapped.'],'face_sneeze',{id:'is'})}</div>
+ <div style="left:60px;right:60px;top:180px;display:flex;justify-content:center;gap:14px">
+  ${['1. Find who + did what','2. Look again: another one?','3. Snip!','4. Stitch it'].map((t,i)=>`<div class="pill" data-step="${i+1}" style="background:${['var(--mint)','var(--mustard)','var(--coral)','var(--teal)'][i]};color:${i>1?'var(--cream)':'var(--brown)'};padding:10px 18px;font:900 18px Nunito">${t}</div>`).join('')}</div>
+ <img src="${A('dot_clip')}" style="left:30px;top:500px;height:190px" alt="">`,
+ onStep:(s,el)=>{const box=el.querySelector('#ido');const ws=['My','sister','sang','a','song','everyone','clapped.'];
+  if(s<3){box.innerHTML=strip(ws,'face_sneeze',{id:'is'});const w=box.querySelectorAll('.w');if(s>=1)[0,1,2,3,4].forEach(i=>w[i].classList.add('hl1'));if(s>=2)[5,6].forEach(i=>w[i].classList.add('hl2'))}
+  if(s===3){SFX.snip();box.innerHTML=strip(ws.slice(0,5),'face_sneeze',{id:'a',tornR:true})+'<span style="width:56px"></span>'+strip(ws.slice(5),null,{id:'b',tornL:true})}
+  if(s===4){SFX.pop();box.innerHTML=strip(['My','sister','sang','a','song<span class="punct">.</span>'],'face_super',{tornR:true})+'<span style="width:56px"></span>'+strip(['<span style="color:var(--coral)">E</span>veryone','clapped.'],'face_happy',{tornL:true});confetti(30)}},
+ notes:{t:'I do: think-aloud',say:['Click 1: "Who did something? My sister. What did she do? Sang a song. That\'s one thought."','Click 2: "I keep reading. Everyone clapped. Everyone is a who, clapped is a did what. That\'s a second thought!"','Click 3: "Two thoughts, no stop. I\'ll cut right after song."','Click 4: "Period stitch: a period after song, and a capital E."'],tips:['Think aloud slowly. Let students see you hesitate and check yourself.','You could also show the comma bandage: "My sister sang a song, and everyone clapped."'],ans:['Cut after "song." Fixes: "...a song. Everyone clapped." or "...a song, and everyone clapped."']}});
+SL.push(practiceSlide('wedo1','We do','Operate together',{w:['We','went','to','the','zoo','I','saw','a','giraffe.'],cut:4,conj:['and'],face:'face_grumpy'},'SIGNAL: fist or two fingers?',{t:'We do: patient 1',say:['Read the sentence together. "Thumbs up if it\'s a run-on, thumbs down if healthy." Then click the answer the class chose.','"Where does the first thought end?" Call a student up with Pass the scalpel to tap the cut.','"Show me your signal: fist for period stitch, two fingers for comma bandage." Pick one and finish.'],tips:['If the class chooses the comma bandage, have them try each helper word aloud before choosing.'],ans:['Run-on. Cut after "zoo." Period stitch, or comma bandage with "and."']}));
+SL.push(practiceSlide('wedo2','We do','One more together',{w:['I','studied','hard','I','still','felt','nervous.'],cut:2,conj:['but'],fix:'comma',face:'face_dizzy'},'TRY IT: which helper word fits?',{t:'We do: patient 2',say:['Same routine: diagnose, operate, treat.','The period stitch works, but go for the bonus comma bandage too. This one is perfect for "but" because the second part is a surprise. Ask: "Does and make sense? Does so? Does but?"'],tips:['Students often pick "and" for everything. Reading each option aloud builds the habit of checking meaning.'],ans:['Run-on. Cut after "hard." Best bandage: ", but."']}));
+SL.push({id:'trick',steps:1,html:()=>`<img class="bg" src="${A('room')}" alt="">
+ <div class="ttl" style="left:40px;top:24px"><div class="tag" style="background:var(--coral);color:var(--cream)">Trick case!</div><h1 style="font-size:50px;margin-top:10px">Is this patient sick?</h1></div>
+ <div style="left:0;right:0;top:220px;display:flex;justify-content:center">${strip(['On','Saturday','morning,','my','little','brother','and','I','built','a','giant','blanket','fort.'],'face_dizzy',{id:'ts',size:28})}</div>
+ <div style="left:0;right:0;top:360px;display:flex;justify-content:center">${cue('thumb_up','THUMBS UP = run-on · THUMBS DOWN = healthy')}</div>
+ <div data-step="1" style="left:0;right:0;top:440px;display:flex;justify-content:center"><div class="card" style="padding:16px 26px;display:flex;gap:18px;align-items:center;max-width:900px"><img src="${A('dot_thumb')}" style="height:140px" alt=""><div><h2 style="font-size:34px;color:var(--teal)">Healthy! Long is not the same as sick.</h2><div style="font:800 19px Nunito;margin-top:6px">Who? <b>My little brother and I.</b> Did what? <b>Built a giant blanket fort.</b> Just ONE thought.</div></div></div></div>`,
+ onStep:(s,el)=>{if(s>=1){const f=el.querySelector('#ts .face');f.src=A('face_proud');f.classList.add('pop');SFX.ding()}},
+ notes:{t:'Trick case: long but healthy',say:['"Thumbs up if this is a run-on, down if healthy." Most students will vote run-on because it\'s long.','Reveal: "Let\'s check. Who? My brother and I. Did what? Built a fort. Is there another who + did what? No. Healthy!"'],tips:['This is the most important misconception slide. Length does not make a run-on.'],ans:['Healthy: one complete thought.']}});
+SL.push({id:'ready',steps:0,html:()=>`<img class="bg" src="${A('room')}" alt="">
+ <div class="card" style="left:170px;top:90px;width:940px;padding:30px 40px;text-align:center"><div class="tag">Teacher check-in</div>
+  <h1 style="font-size:56px;margin-top:12px">Ready for surgery?</h1>
+  <div style="display:flex;justify-content:center;gap:18px;margin-top:16px;font:800 20px Nunito;align-items:center"><img src="${A('thumb_up')}" style="width:70px" alt="">Ask the class for a thumbs check.</div>
+  <div style="display:flex;justify-content:center;gap:24px;margin-top:26px">
+   <button class="btn big teal" onclick="goId('howto')"><img src="${A('thumb_up')}" alt="">Mostly thumbs up: start ER Rush</button>
+   <button class="btn big mustard" onclick="goId('bonus')"><img src="${A('dot_clip')}" alt="">Need more: bonus patient</button></div></div>
+ <img src="${A('dot_think')}" style="left:540px;top:440px;height:240px" alt="">`,
+ notes:{t:'Decision point',say:['"Thumbs up if you feel ready to operate on your own. Sideways if you\'re a little unsure. Down if you need more practice."'],tips:['If more than a few students are sideways or down, go to the bonus patient first. It returns here after.'],ans:[]}});
+SL.push(Object.assign(practiceSlide('bonus','Bonus practice','Bonus patient',{w:['The','sun','came','out','we','played','tag.'],cut:3,conj:['so','and'],face:'face_sneeze'},'TRY IT: fist or two fingers?',{t:'Bonus patient',say:['Run this one slowly, thinking aloud with students. Then press next to return to the check-in.'],tips:['Have a confident student explain each step to the class.'],ans:['Run-on. Cut after "out." Period stitch, or ", so" / ", and."']}),{next:'ready'}));
+SL.push({id:'howto',steps:0,html:()=>`<img class="bg" src="${A('room')}" alt="">
+ <div class="ttl" style="left:40px;top:24px"><div class="tag" style="background:var(--coral);color:var(--cream)">Game time</div><h1 style="font-size:56px;margin-top:10px">How to play ER Rush</h1></div>
+ <div style="left:60px;right:60px;top:150px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+  ${[['face_fever','1. Diagnose','Is the patient a run-on or healthy?'],['scissors','2. Operate','Tap the spot where the first thought ends.'],['comma_bandage','3. Treat','Period stitch or comma bandage?']].map(x=>`<div class="card" style="padding:22px;text-align:center"><img src="${A(x[0])}" style="height:110px" alt=""><div class="lil" style="font-size:34px;margin-top:8px">${x[1]}</div><div style="font:800 18px Nunito;margin-top:4px">${x[2]}</div></div>`).join('')}</div>
+ <div class="card" style="left:110px;right:110px;top:486px;padding:12px 20px;display:flex;justify-content:space-around;gap:20px;align-items:center;font:900 20px Nunito">
+  <span style="display:flex;align-items:center;gap:8px"><img src="${A('heart1')}" style="width:40px" alt="">Wrong moves cost a heart</span>
+  <span style="display:flex;align-items:center;gap:8px"><img src="${A('clipboard')}" style="width:40px" alt="">Save all 6 patients</span>
+  <span style="display:flex;align-items:center;gap:8px"><img src="${A('star')}" style="width:44px" alt="">Comma bonus = star</span>
+  <span style="display:flex;align-items:center;gap:8px"><img src="${A('bulb')}" style="width:44px" alt="">Stuck? Ask Dr. Dot</span></div>
+ <div style="left:0;right:0;top:590px;display:flex;justify-content:center"><button class="btn big coral" onclick="GAME=newRound();go(cur+1)"><img src="${A('gurney')}" alt="">Start ER Rush</button></div>`,
+ notes:{t:'How to play',say:['Explain the 3 steps. "Some patients are healthy, so diagnose carefully!"','Whole-class mode: students answer with hand signals and thumbs, and you or a chosen student click.'],tips:['Independent mode: open this deck on student devices and jump to the game slide.'],ans:[]}});
+SL.push({id:'game',steps:0,html:()=>`<img class="bg" src="${A('room')}" alt="">
+ <div class="pill lil" style="left:24px;top:16px;background:var(--coral);color:var(--cream);font-size:34px;padding:6px 22px 4px 64px;line-height:1">ER Rush</div>
+ <img src="${A('scissors')}" style="left:14px;top:4px;width:66px;transform:rotate(-20deg)" alt="">
+ <div class="hud-step" id="hs" style="left:440px;top:22px"><span>1 Diagnose</span><span>2 Operate</span><span>3 Treat</span></div>
+ <div style="right:24px;top:12px;display:flex;align-items:center;gap:14px"><div id="lives" style="display:flex;gap:2px"></div>
+  <div style="display:flex;align-items:center;gap:4px"><img src="${A('star')}" style="width:52px" alt=""><div class="lil" id="stars" style="font-size:30px">0</div></div><div style="position:relative;width:132px;height:62px"><img src="${A('clipboard')}" style="position:absolute;left:0;top:-6px;width:56px" alt=""><div style="position:absolute;left:66px;top:4px;line-height:1"><div class="lil" id="saved" style="font-size:30px">0/6</div><div style="font:900 11px Nunito;letter-spacing:.06em">SAVED</div></div></div></div>
+ <div class="card" id="gtitle" style="left:330px;top:92px;width:620px;padding:10px 20px;text-align:center"><div class="lil" style="font-size:30px;color:var(--teal)" id="gt">Patient #1 is here!</div><div style="font:800 17px Nunito" id="gs">Diagnose: is it a run-on or healthy?</div></div>
+ <div id="gz" style="left:0;top:0;width:1280px;height:720px"></div>
+ <div id="gdot" style="left:20px;bottom:60px;width:320px;display:flex;flex-direction:column-reverse;align-items:flex-start"><img src="${A('dot_wave')}" style="height:150px;display:block" alt=""></div>
+ <div style="right:24px;bottom:60px;display:flex;flex-direction:column;gap:10px;z-index:5">
+  <button class="btn" id="askdot"><img src="${A('bulb')}" alt="">Ask Dr. Dot</button>
+  <button class="btn" onclick="passScalpel()"><img src="${A('scissors')}" alt="">Pass the scalpel</button></div>`,
+ onEnter:(el)=>startGame(el),
+ notes:{t:'ER Rush',say:['Read each patient aloud with the class. Students show thumbs for diagnose, point for operate, and fist or two fingers for treat.','Use Pass the scalpel to bring students up to click.'],tips:['Ask Dr. Dot gives a hint for the current step. Use it when you want to scaffold.','Losing all hearts doesn\'t end the game: Dr. Dot steps in with a hint and the hearts refill.','Wrong helper words during a bonus try don\'t cost hearts.'],ans:['Patients are picked at random from a pool of 14 each time you play. Every round has 2 healthy patients and 4 run-ons. Both fixes are always accepted. On 2 patients, Dr. Dot offers a bonus star for using a comma bandage. See the teacher guide answer key for all 14.']}});
+SL.push({id:'end',steps:0,html:()=>`<img class="bg" src="${A('title')}" alt="">
+ <div style="left:0;right:0;top:34px;text-align:center"><div class="tag" style="background:var(--teal);color:var(--cream)">Discharge day</div>
+  <h1 style="font-size:84px;color:var(--cream);-webkit-text-stroke:4px var(--brown);paint-order:stroke fill;text-shadow:0 7px 0 var(--brown);margin-top:10px">All patients saved!</h1>
+  <div class="pill" style="display:inline-flex;align-items:center;gap:8px;background:var(--cream);padding:4px 18px 4px 6px;margin-top:8px;font:900 20px Nunito"><img src="${A('star')}" style="width:44px" alt="">Bonus stars: ${window.__stars||0}</div></div>
+ <div class="card" style="left:300px;top:250px;width:680px;padding:22px 30px;display:flex;gap:20px;align-items:center"><img src="${A('whiteboard')}" style="width:110px" alt=""><div><div class="tag">Exit ticket</div><div style="font:800 21px Nunito;margin-top:8px">On a sticky note, fix this patient two ways:</div><div class="lil" style="font-size:28px;margin-top:6px;color:var(--coral)">The game ended we lined up.</div></div></div>
+ <div style="right:40px;bottom:60px;display:flex;flex-direction:column;gap:12px">
+  <button class="btn big coral" onclick="GAME=newRound();goId('game')"><img src="${A('gurney')}" alt="">Play again (new patients)</button>
+  <button class="btn big" onclick="go(0)"><img src="${A('dot_wave')}" alt="">Restart the lesson</button></div>`,
+ onEnter:()=>{SFX.fanfare();confetti(90)},
+ notes:{t:'Exit ticket',say:['"Fix this run-on two ways: once with a period stitch and once with a comma bandage."'],tips:['Sort tickets into: got both, got one, needs reteach. Use the groups for tomorrow\'s warm-up.'],ans:['The game ended. We lined up. / The game ended, so we lined up. (also ", and")']}});
+/* ---------- game ---------- */
+function startGame(el){let idx=0,saved=0,stars=0;window.__stars=0;const gz=el.querySelector('#gz'),gd=el.querySelector('#gdot');
+ const drawLives=n=>{el.querySelector('#lives').innerHTML=[0,1,2].map(i=>`<img src="${A('heart1')}" style="width:42px;${i>=n?'filter:grayscale(1) opacity(.4)':''}" alt="">`).join('')};drawLives(3);
+ const setStep=s=>{el.querySelectorAll('#hs span').forEach((x,i)=>{x.className=i<s?'done':i===s?'now':''});const G=el.querySelector('#gs');G.textContent=['Diagnose: is it a run-on or healthy?','Operate: tap where the first thought ends.','Treat: period stitch or comma bandage?','Great surgery! Roll in the next patient.'][s]||''};
+ let P=null;
+ function next(){if(idx>=GAME.length){goId('end');return}el.querySelector('#gt').textContent=`Patient #${idx+1} is here!`;
+  P=Patient(gz,GAME[idx],'game',()=>{saved++;el.querySelector('#saved').textContent=saved+'/6';idx++;next()});
+  P.onSay=(t,pose)=>{gd.innerHTML=`<img src="${A(pose)}" style="height:150px;display:block" alt=""><div class="bubble up" style="position:relative;margin-bottom:8px">${t}</div>`};
+  P.onLives=drawLives;P.onStar=()=>{stars++;window.__stars=stars;el.querySelector('#stars').textContent=stars;SFX.fanfare()};P.onStep=s=>{setStep(s);if(s===3)el.querySelector('#gt').textContent=`Patient #${idx+1} is healed!`};setStep(0);gd.innerHTML=`<img src="${A('dot_wave')}" style="height:150px;display:block" alt="">`}
+ el.querySelector('#askdot').onclick=()=>{if(!P)return;SFX.click();P.onSay(HINT[P.step]||HINT.diagnose,'dot_think')};
+ next()}
+/* ---------- pass the scalpel ---------- */
+function loadNames(){try{return localStorage.getItem('sh_names')||''}catch(e){return window.__names||''}}
+function saveNames(v){try{localStorage.setItem('sh_names',v)}catch(e){window.__names=v}}
+function passScalpel(){const m=$('#modal');m.innerHTML=`<div class="card" style="width:560px;padding:26px 30px;position:relative"><button class="btn" style="position:absolute;right:16px;top:14px;padding:6px 14px" onclick="$('#modal').classList.remove('on')">✕</button>
+ <div class="tag">Pass the scalpel</div><h2 style="font-size:36px;margin:10px 0">Who's operating?</h2>
+ <div id="pick" class="lil" style="font-size:54px;color:var(--coral);text-align:center;min-height:70px">?</div>
+ <label style="font:900 12px Nunito;letter-spacing:.08em">CLASS LIST (ONE NAME PER LINE)</label>
+ <textarea id="names" style="width:100%;height:110px;margin-top:6px;border:3px solid var(--brown);border-radius:14px;padding:10px;font:700 16px Nunito">${loadNames()}</textarea>
+ <div style="display:flex;justify-content:center;margin-top:12px"><button class="btn coral" id="spin"><img src="${A('dice')}" alt="">Pick a surgeon</button></div></div>`;m.classList.add('on');
+ $('#spin').onclick=()=>{const v=$('#names').value;saveNames(v);const L=v.split('\n').map(s=>s.trim()).filter(Boolean);if(!L.length){$('#pick').textContent='Add names first!';return}let k=0,n=14+Math.floor(Math.random()*8);const iv=setInterval(()=>{$('#pick').textContent=L[Math.floor(Math.random()*L.length)];SFX.tick();if(++k>=n){clearInterval(iv);SFX.ding()}},90)}}
+/* ---------- deck engine ---------- */
+let cur=0,step=0;
+function render(){const s=SL[cur];const box=$('#slides');const el=document.createElement('section');el.className='slide';el.innerHTML=s.html();box.innerHTML='';box.appendChild(el);
+ requestAnimationFrame(()=>el.classList.add('on'));step=0;applyStep(el);s.onEnter&&s.onEnter(el);$('#count').textContent=`${cur+1} / ${SL.length}`;drawNotes()}
+function applyStep(el){el=el||$('#slides .slide');el.querySelectorAll('[data-step]').forEach(x=>x.classList.toggle('hide-step',+x.dataset.step>step));const s=SL[cur];s.onStep&&s.onStep(step,el)}
+function nextStep(){ac();const s=SL[cur];if(step<s.steps){step++;SFX.click();applyStep()}else if(s.next)goId(s.next);else go(cur+1)}
+function prevStep(){if(step>0){step--;applyStep()}else go(cur-1)}
+function go(i){if(i<0||i>=SL.length)return;clearInterval(timerIv);cur=i;render()}
+function goId(id){go(SL.findIndex(s=>s.id===id))}
+function drawNotes(){const n=SL[cur].notes;if(!n){$('#notes').innerHTML='';return}$('#notes').innerHTML=`<div style="font:900 11px Nunito;letter-spacing:.1em;opacity:.6">SLIDE ${cur+1} · TEACHER NOTES</div><h3>${n.t}</h3>
+ <div class="k">WHAT TO SAY AND DO</div><ul>${n.say.map(x=>`<li>${x}</li>`).join('')}</ul>
+ ${n.tips.length?`<div class="k">WATCH FOR</div><ul>${n.tips.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
+ ${n.ans.length?`<div class="k">ANSWERS</div><ul>${n.ans.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
+ <div style="margin-top:18px;font:800 12px Nunito;opacity:.6">Keys: → next · ← back · N notes · M sound · F full screen</div>`}
+$('#nxt').onclick=nextStep;$('#prev').onclick=prevStep;
+$('#nbtn').onclick=()=>$('#notes').classList.toggle('on');
+$('#mute').onclick=()=>{muted=!muted;$('#mute').textContent=muted?'×':'♪'};
+document.addEventListener('keydown',e=>{if(e.target.tagName==='TEXTAREA')return;if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextStep()}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevStep()}else if(e.key==='n'||e.key==='N'){$('#notes').classList.toggle('on')}else if(e.key==='m'||e.key==='M'){$('#mute').click()}else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}else if(e.key==='Escape'){$('#modal').classList.remove('on')}});
+document.addEventListener('pointerdown',()=>ac(),{once:true});
+function fit(){const s=Math.min(innerWidth/1280,innerHeight/720);$('#stage').style.transform=`scale(${s})`}
+addEventListener('resize',fit);fit();render();
+</script></body></html>

@@ -1,0 +1,82 @@
+{
+  "passages": [
+    {
+      "title": "Antarctic Penguins",
+      "sentences": [
+        {"text": "Emperor penguins live in Antarctica, one of the coldest places on Earth.", "correct": true},
+        {"text": "They huddle together in large groups to stay warm during harsh winter storms.", "correct": true},
+        {"text": "Penguins have excellent hearing and can find their chicks by the sound of their call.", "correct": true},
+        {"text": "Female penguins lay one egg and then leave to hunt for fish in the sea.", "correct": true},
+        {"text": "Antarctica's thick ice sheets hold about 70 percent of the world's fresh water supply.", "correct": false},
+        {"text": "During the summer months, penguins build small nests out of pebbles and stones that they collect from the rocky shore.", "correct": false},
+        {"text": "The male penguin keeps the egg warm on his feet for about two months.", "correct": true}
+      ]
+    },
+    {
+      "title": "The Science of Baking",
+      "sentences": [
+        {"text": "Baking is a science that requires careful measuring of ingredients to get the right results.", "correct": true},
+        {"text": "Flour gives baked goods their structure by forming a stretchy protein called gluten when mixed with water.", "correct": true},
+        {"text": "Baking soda and baking powder are leavening agents that create tiny gas bubbles, making dough rise.", "correct": true},
+        {"text": "Eggs help hold ingredients together and add moisture, richness, and flavor to cakes and cookies.", "correct": true},
+        {"text": "Kneading bread dough for ten minutes builds arm strength and can count as a form of light exercise.", "correct": false},
+        {"text": "Sugar does more than add sweetness \u2014 it also helps cookies spread, crusts turn golden, and cakes stay moist.", "correct": true},
+        {"text": "Oven temperature matters because baking too hot can burn the outside while leaving the inside raw.", "correct": true},
+        {"text": "Many professional bakers wake up before sunrise because their shops need fresh bread ready by the time customers arrive.", "correct": false}
+      ]
+    },
+    {
+      "title": "Ancient Egyptian Pyramids",
+      "sentences": [
+        {"text": "The ancient Egyptians built the Great Pyramids over 4,500 years ago as tombs for their pharaohs.", "correct": true},
+        {"text": "Workers moved massive limestone blocks across the desert, sometimes from quarries many miles away.", "correct": true},
+        {"text": "The Great Pyramid of Giza contains about 2.3 million stone blocks, each weighing several tons.", "correct": true},
+        {"text": "Ancient Egyptians also invented one of the first writing systems, using small pictures called hieroglyphics to record important events.", "correct": false},
+        {"text": "Egyptians used ramps, levers, and the strength of thousands of workers to stack the enormous stones.", "correct": true},
+        {"text": "The pyramids were originally covered in smooth white limestone that gleamed brightly in the sunlight.", "correct": true}
+      ]
+    },
+    {
+      "title": "How Video Games Are Made",
+      "sentences": [
+        {"text": "Making a video game requires a team of artists, programmers, writers, and musicians working together for months or even years.", "correct": true},
+        {"text": "Programmers write thousands of lines of code to control how characters move, jump, and interact with the world around them.", "correct": true},
+        {"text": "Artists design everything the player sees, from the heroes and villains to the landscapes, buildings, and smallest menu icons.", "correct": true},
+        {"text": "Players often spend hours customizing their characters\u2019 outfits, hairstyles, and accessories before starting the main story.", "correct": false},
+        {"text": "Sound designers create music and effects that make explosions rumble, footsteps echo, and the game world feel alive.", "correct": true},
+        {"text": "Before a game is released, testers play through it hundreds of times to find and fix bugs that could ruin the experience.", "correct": true},
+        {"text": "Some gaming competitions offer prize pools worth millions of dollars, attracting top players from around the world.", "correct": false},
+        {"text": "Game designers write the rules that determine how difficult each level is and what rewards players earn for completing challenges.", "correct": true},
+        {"text": "Some of the most popular games in history were created by very small teams with big imaginations and limited budgets.", "correct": true},
+        {"text": "Many popular games let friends team up online to complete missions and defeat enemies together in real time.", "correct": false}
+      ]
+    },
+    {
+      "title": "The Life of Harriet Tubman",
+      "sentences": [
+        {"text": "Harriet Tubman was born into slavery in Maryland around 1822 and endured harsh conditions from a very young age.", "correct": true},
+        {"text": "In 1849, she escaped to freedom by traveling north using a secret network of safe houses called the Underground Railroad.", "correct": true},
+        {"text": "After reaching safety, Tubman risked her life by returning to the South thirteen times to rescue about seventy enslaved people.", "correct": true},
+        {"text": "She used the stars, rivers, and songs with hidden messages to guide groups through dangerous territory at night.", "correct": true},
+        {"text": "Many enslaved people worked long hours picking cotton on large plantations across the southern states.", "correct": false},
+        {"text": "During the Civil War, Tubman served as a spy, scout, and nurse for the Union Army, becoming the first woman to lead an armed raid.", "correct": true},
+        {"text": "The Underground Railroad got its name because people used railroad terms like \u201Cconductor\u201D and \u201Cstation\u201D as secret code words.", "correct": false},
+        {"text": "Harriet Tubman spent her later years in Auburn, New York, where she opened a home to care for elderly and sick people in need.", "correct": true}
+      ]
+    }
+  ],
+  "decoys": [
+    "The ancient Silk Road was a network of trade routes connecting China to the Mediterranean Sea. Merchants carried silk, spices, gold, and ideas across thousands of miles of mountains and deserts. These journeys could take months or even years, and the cultural exchange between civilizations shaped the modern world.",
+    "When you play a musical instrument, your brain lights up in ways that almost no other activity can match. Musicians develop stronger connections between the left and right sides of their brains, which helps with problem-solving, memory, and creativity throughout their lives.",
+    "Soccer is the most popular sport in the world, played by over 250 million people in more than 200 countries. The rules are simple enough for anyone to learn, but mastering the game takes years of practice, teamwork, and dedication to the craft.",
+    "Computers store all information using just two numbers: zero and one. Every photo you take, every song you listen to, and every text message you send is really just a long string of binary code that your device translates into something meaningful.",
+    "During the Middle Ages, castles were not just royal homes but fully functioning military fortresses. They were surrounded by deep moats, protected by thick stone walls, and designed with narrow windows so archers could fire arrows while staying hidden from enemy attacks.",
+    "Lightning strikes the Earth about 100 times every single second. A single bolt of lightning can reach temperatures five times hotter than the surface of the sun, and thunder is the sound of air rapidly expanding from that extreme burst of heat.",
+    "The human body contains about 206 bones, but babies are actually born with around 270. As children grow older, many of these smaller bones gradually fuse together to form the larger, stronger bones that adults have.",
+    "The Amazon rainforest produces roughly 20 percent of the world's oxygen supply and is home to more species of plants and animals than any other place on the entire planet. Indigenous communities have lived there for thousands of years.",
+    "Honeybees are among the most important creatures on Earth because they pollinate roughly one-third of all the food that humans eat. A single beehive can contain up to 60,000 bees, each one with its own specialized job to do.",
+    "Volcanoes are dramatic openings in Earth's surface where hot melted rock called magma escapes from deep underground. When a volcano erupts, it can shoot lava, ash, and poisonous gases miles into the sky.",
+    "The invention of the printing press by Johannes Gutenberg around 1440 changed the world forever. Before the press, books had to be copied by hand, making them extremely rare and expensive. Afterward, knowledge could spread faster than ever before.",
+    "Sharks have been swimming in Earth's oceans for over 400 million years, making them older than dinosaurs and even older than most trees. Despite their fearsome reputation, most shark species are harmless to humans and play a vital role in ocean ecosystems."
+  ]
+}

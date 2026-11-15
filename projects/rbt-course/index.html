@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RBT exam prep: why did that happen?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600;700&family=Kalam&display=swap" rel="stylesheet">
+<style>
+:root{--plum:#24123F;--purple:#3A2163;--violet:#6E4A9E;--lilac:#B79BD9;--gold:#F2BE3C;--cream:#FBF1DC;--ink:#2A1648;--soft:#E9DDF7}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#140a24;overflow:hidden;font-family:Inter,system-ui,sans-serif}
+#fit{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1280px;height:800px;flex:none;position:relative;overflow:hidden;background:var(--purple);color:var(--cream);transform-origin:center center;border-radius:14px}
+#bgwrap,#screen{position:absolute;inset:0}
+.bglayer{position:absolute;inset:0;transition:opacity .45s ease}
+.bglayer.fresh{opacity:0}
+#screen>*{transition:opacity .18s ease,transform .18s ease}
+#screen.leaving>*{opacity:0;transform:translateY(-10px)}
+#screen>.enter{animation:drop .42s cubic-bezier(.2,.8,.25,1) both}
+@keyframes drop{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.flip{transform:scaleX(-1)}
+.shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(36,18,63,.92) 0,rgba(36,18,63,.82) 560px,rgba(36,18,63,0) 760px);pointer-events:none}
+.shadeT{position:absolute;inset:0;background:linear-gradient(180deg,rgba(36,18,63,.85) 0,rgba(36,18,63,.55) 200px,rgba(36,18,63,.2) 440px);pointer-events:none}
+.hero{position:absolute;top:0;left:200px;width:1080px;height:800px;object-fit:cover;object-position:60% 40%}
+.heroshade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#24123F 0,rgba(36,18,63,.9) 520px,rgba(36,18,63,0) 700px)}
+h1,h2,.disp{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;margin:0}
+.chip{display:inline-block;align-self:flex-start;background:var(--gold);color:var(--ink);font:700 12px Inter,sans-serif;letter-spacing:.12em;padding:7px 12px;border-radius:999px}
+.col{position:absolute;z-index:2;left:60px;top:62px;width:500px;display:flex;flex-direction:column;gap:16px}
+.lead{margin:0;font-size:18px;line-height:1.55;color:var(--soft)}
+button{font-family:inherit}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+/* answers (option A) */
+.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+.answers.one{grid-template-columns:1fr}
+.ans{border:none;border-radius:999px;background:url(b/ans.png) center/100% 100% no-repeat;color:var(--ink);font:700 17px/1.2 'Bricolage Grotesque',sans-serif;height:70px;padding:0 34px;display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer;overflow:hidden;transition:transform .15s,opacity .2s}
+.answers.one .ans{height:72px;font:600 15px/1.3 Inter,sans-serif;padding:0 46px}
+.ans:hover:not(:disabled){transform:translateY(-2px)}
+.ans:disabled{cursor:default}
+.ans.sel{background-image:url(b/ans_sel.png)}
+.ans.wrong{filter:grayscale(1);opacity:.45;text-decoration:line-through}
+.ans.dim{filter:grayscale(.7);opacity:.75}
+.pill{border:none;border-radius:999px;background:url(b/ans_sel.png) center/100% 100% no-repeat;color:var(--ink);font:800 18px 'Bricolage Grotesque',sans-serif;height:62px;padding:0 44px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
+.pill.alt{background-image:url(b/ans.png)}
+.fb{display:flex;gap:14px;align-items:center;background:rgba(36,18,63,.92);border:1px solid rgba(251,241,220,.18);border-radius:18px;padding:12px 16px}
+.fb img{width:54px;flex:none}
+.fb strong{font:800 19px 'Bricolage Grotesque',sans-serif;display:block;margin-bottom:2px}
+.fb span{font-size:15px;line-height:1.45}
+.fb.ok{background:var(--cream);color:var(--ink);border-color:transparent}
+/* secondary button */
+.btn{border:none;border-radius:999px;background:var(--purple);color:var(--cream);font:800 16px 'Bricolage Grotesque',sans-serif;height:50px;padding:0 26px;cursor:pointer;box-shadow:0 4px 0 #1E0F36;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.light{background:#FFF8E6;color:var(--ink);border:3px solid var(--gold);box-shadow:0 4px 0 #D9A22A}
+/* off plan */
+.chip.off{background:#F08A7E;color:#3A0F12}
+.win.off .l2{background:#F08A7E}
+.win.off{animation:shake .45s ease .25s both}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-10px) rotate(-.6deg)}40%{transform:translateX(8px) rotate(.5deg)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+.win.off img{filter:saturate(.8)}
+.offtag{position:absolute;left:18px;top:18px;z-index:2;background:#F08A7E;color:#3A0F12;font:800 13px Inter,sans-serif;letter-spacing:.1em;padding:8px 14px;border-radius:999px;box-shadow:0 6px 14px rgba(20,8,40,.35)}
+.win.on .l2{background:#9ED9A8}
+/* confetti */
+.confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:30}
+.confetti i{position:absolute;top:-40px;width:14px;height:22px;border-radius:3px;animation:fall linear forwards;box-shadow:1px 2px 2px rgba(20,8,40,.25)}
+@keyframes fall{to{transform:translateY(900px) rotate(720deg)}}
+/* framed scene */
+.win{position:absolute;left:600px;top:70px;width:630px;height:420px}
+.win.tall{left:620px;width:600px;height:496px}
+.win .l1,.win .l2{position:absolute;inset:0;border-radius:30px}
+.win .l1{background:var(--lilac);transform:rotate(2.5deg) translate(10px,8px)}
+.win .l2{background:var(--gold);transform:rotate(-1.5deg) translate(4px,3px)}
+.win img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:30px;box-shadow:0 16px 36px rgba(20,8,40,.5)}
+/* chrome */
+#lessonTag{position:absolute;left:60px;top:22px;font:700 12px Inter,sans-serif;letter-spacing:.14em;color:var(--soft);z-index:20;text-shadow:0 2px 8px rgba(20,8,40,.6)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(242,190,60,.75)}50%{box-shadow:0 0 0 16px rgba(242,190,60,0)}}
+#binderBtn.pulse{animation:pulse 1.4s ease infinite}
+.callout{position:absolute;right:104px;top:20px;z-index:21;width:250px;background:var(--cream);color:var(--ink);border-radius:18px;padding:12px 16px;font-size:14px;line-height:1.4;box-shadow:0 10px 24px rgba(20,8,40,.45)}
+.callout b{display:block;font:800 17px 'Bricolage Grotesque',sans-serif}
+.callout:after{content:'';position:absolute;right:-10px;top:22px;border:10px solid transparent;border-right:0;border-left-color:var(--cream)}
+#binderBtn{position:absolute;right:26px;top:14px;width:60px;height:60px;border:none;border-radius:50%;background:url(a/ico_binder.png) center/contain no-repeat;cursor:pointer;z-index:20;filter:drop-shadow(0 6px 10px rgba(20,8,40,.45))}
+#bottom{position:absolute;left:0;right:0;bottom:0;height:118px;z-index:20;background:linear-gradient(rgba(20,8,40,0),rgba(20,8,40,.7) 60%)}
+#prog{position:absolute;left:40px;bottom:8px;width:600px;height:104px}
+#prog .track{position:absolute;left:0;top:6px;width:600px;height:79px}
+.leaf{position:absolute;top:14px;width:44px;height:50px;margin-left:-22px;background:center/contain no-repeat;filter:drop-shadow(0 3px 4px rgba(20,8,40,.5));transition:transform .3s}
+.leaf.now{transform:scale(1.18)}
+.leaf.pop{animation:pop .7s ease}
+@keyframes pop{0%{transform:scale(.5) rotate(-20deg)}60%{transform:scale(1.4) rotate(6deg)}100%{transform:scale(1.18)}}
+.lbl{position:absolute;top:84px;width:104px;margin-left:-52px;text-align:center;font:700 11px Inter,sans-serif;letter-spacing:.1em;color:#D9CCEE;text-transform:uppercase;text-shadow:0 2px 6px rgba(20,8,40,.8);transition:color .3s}
+.lbl.now{color:var(--gold);font-size:12px}
+.navs{position:absolute;right:40px;bottom:22px;display:flex;gap:14px}
+.round{width:74px;height:74px;border:none;border-radius:50%;background:center/contain no-repeat;cursor:pointer;filter:drop-shadow(0 6px 12px rgba(20,8,40,.6));transition:transform .15s,opacity .2s}
+.round:hover:not(:disabled){transform:scale(1.07)}
+.round:disabled{opacity:.3;cursor:default}
+#back{background-image:url(b/nav_back.png)}#next{background-image:url(b/nav_next.png)}
+/* opener */
+.ring{position:absolute;border-radius:50%}
+/* ABC */
+.abc{position:absolute;top:196px;left:60px;right:60px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.abccard{border:none;padding:0;background:none;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:10px;color:inherit}
+.abccard:disabled{cursor:default}
+.abccard .pic{position:relative;height:240px;border-radius:24px;overflow:hidden;box-shadow:0 12px 26px rgba(20,8,40,.45);background:var(--cream)}
+.abccard .pic img{width:100%;height:100%;object-fit:cover;object-position:50% 40%;transition:filter .3s}
+.abccard.locked .pic img{filter:brightness(.35) saturate(.5)}
+.abccard .tag{position:absolute;left:12px;top:12px}
+.abccard .tap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:800 22px 'Bricolage Grotesque',sans-serif;color:var(--cream)}
+.abccard .cap{min-height:84px;font-size:15px;line-height:1.45;color:var(--soft);opacity:0;transition:opacity .3s;background:rgba(36,18,63,.85);border-radius:16px;padding:10px 14px}
+.abccard.open .cap{opacity:1}
+.abccard .cap b{color:var(--gold);display:block;font:800 17px 'Bricolage Grotesque',sans-serif}
+/* reinforcement cards */
+.rcards{position:absolute;left:60px;right:60px;top:196px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.rcard{background:var(--cream);color:var(--ink);border-radius:26px;display:grid;grid-template-columns:200px minmax(0,1fr);gap:20px;padding:18px;box-shadow:0 14px 30px rgba(20,8,40,.45)}
+.rcard img{width:200px;height:200px;object-fit:cover;border-radius:18px}
+.rcard .eq{display:inline-flex;gap:8px;align-items:center;font:700 13px Inter,sans-serif;background:var(--soft);color:var(--ink);border-radius:999px;padding:6px 12px;align-self:flex-start}
+/* function tiles (option A) */
+.tiles{position:absolute;left:60px;top:182px;display:flex;gap:16px}
+.tile{position:relative;width:132px;height:122px;border:none;background:url(b/tile.png) center/100% 100% no-repeat;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding-bottom:4px;transition:transform .2s}
+.tile b{font:800 44px 'Bricolage Grotesque',sans-serif;line-height:1}
+.tile span{font:700 14px Inter,sans-serif}
+.tile.sel{transform:translateY(-6px) scale(1.04);filter:drop-shadow(0 0 14px rgba(242,190,60,.7))}
+.tile .seen{position:absolute;right:12px;top:10px;width:12px;height:12px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px var(--cream)}
+.detail{position:absolute;left:60px;right:60px;top:336px;height:322px;background:var(--cream);color:var(--ink);border-radius:28px;display:grid;grid-template-columns:290px minmax(0,1fr);gap:30px;padding:22px;box-shadow:0 16px 36px rgba(20,8,40,.45)}
+.detail img{width:290px;height:278px;object-fit:cover;object-position:50% 30%;border-radius:20px}
+/* same behavior */
+.chains{position:absolute;left:390px;right:50px;top:200px;display:flex;flex-direction:column;gap:14px}
+.chain{background:var(--cream);color:var(--ink);border-radius:22px;padding:14px 18px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;box-shadow:0 10px 22px rgba(20,8,40,.4)}
+.chain .what{font-size:16px;line-height:1.4}
+.chain .what b{display:block;font:700 11px Inter,sans-serif;letter-spacing:.1em;color:var(--violet);margin-bottom:2px}
+.mini{display:flex;gap:6px}
+.mini button{height:42px;padding:0 13px;border:3px solid var(--gold);border-radius:999px;background:#FFF8E6;box-shadow:0 3px 0 #D9A22A;font:700 13px Inter,sans-serif;color:var(--ink);cursor:pointer;transition:transform .15s,opacity .2s}
+.mini button:hover:not(:disabled){transform:translateY(-2px)}
+.mini button.ok{background:var(--gold);filter:drop-shadow(0 0 8px rgba(242,190,60,.8))}
+.mini button.no{opacity:.35;filter:grayscale(1)}
+.mini button:disabled{cursor:default}
+.verdict{font:700 13px Inter,sans-serif;margin-top:4px}
+/* compare table */
+.cmp{position:absolute;left:60px;width:640px;top:186px;background:var(--cream);color:var(--ink);border-radius:26px;padding:20px 24px;box-shadow:0 14px 30px rgba(20,8,40,.45)}
+.cmp table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.4}
+.cmp th{font:800 19px 'Bricolage Grotesque',sans-serif;text-align:left;padding:4px 10px 10px}
+.cmp td{padding:9px 10px;border-top:2px dotted #CDB8E6;vertical-align:top}
+.cmp td:first-child{font:700 11px Inter,sans-serif;letter-spacing:.08em;color:var(--violet);width:110px}
+/* binder modal */
+#modal{position:absolute;inset:0;z-index:40;background:rgba(20,8,40,.62);display:none;align-items:center;justify-content:center}
+#modal.on{display:flex}
+#modalBox{position:relative;width:1010px;height:560px;margin-bottom:60px}
+#closeBtn{position:absolute;right:-6px;top:-22px;width:58px;height:58px;border:none;border-radius:50%;background:url(a/btn_9.png) center/contain no-repeat;cursor:pointer;z-index:5}
+.binder{position:absolute;left:0;top:0;width:880px;height:560px;border-radius:22px;background:var(--plum);box-shadow:0 22px 50px rgba(20,8,40,.55)}
+.bpage{position:absolute;top:14px;bottom:14px;background:var(--cream);color:var(--ink);overflow:hidden;z-index:2}
+.bl{left:14px;width:400px;border-radius:14px 4px 4px 14px}
+.br{left:414px;width:452px;border-radius:4px 14px 14px 4px;padding:30px 40px 26px 34px;display:flex;flex-direction:column;box-shadow:inset 14px 0 18px -14px rgba(42,22,72,.35)}
+.tabs{position:absolute;left:842px;top:40px;display:flex;flex-direction:column;gap:4px;z-index:1}
+.tab{position:relative;width:84px;height:108px;border:none;background:none;cursor:pointer;padding:0;transition:transform .2s}
+.tab img{position:absolute;left:50%;top:50%;width:108px;height:51px;margin:-25.5px 0 0 -54px;transform:rotate(90deg);filter:drop-shadow(2px 3px 4px rgba(20,8,40,.4))}
+.tab b{position:absolute;left:34px;top:50%;transform:translateY(-50%);font:800 28px 'Bricolage Grotesque',sans-serif}
+.tab.on{transform:translateX(10px)}
+.flabel{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--violet);padding-top:12px}
+.fval{font-size:16px;line-height:1.45;padding:3px 0 10px;border-bottom:2px dotted #CDB8E6}
+/* supervisor note (option A) */
+#noteWrap{position:absolute;inset:0;z-index:35;background:rgba(20,8,40,.55);display:none;align-items:center;justify-content:center}
+#noteWrap.on{display:flex}
+.note{position:relative;width:430px;min-height:360px;background:url(b/note.png) center/100% 100% no-repeat;padding:100px 52px 62px 46px;color:#3a2a10;display:flex;flex-direction:column;gap:12px;margin-bottom:70px;transform:rotate(-1.5deg)}
+.note small{font:700 12px Inter,sans-serif;letter-spacing:.12em;color:#8a6a20}
+.note p{margin:0;font:400 22px/1.3 Kalam,cursive}
+.note .row{margin-top:auto;padding-top:14px;display:flex;gap:10px}
+.note .pill{height:52px;padding:0 20px;font-size:15px}
+/* steps */
+.steps{display:flex;flex-direction:column;gap:10px}
+.step{display:grid;grid-template-columns:48px minmax(0,1fr);gap:14px;align-items:center;background:rgba(251,241,220,.08);border:1px solid rgba(251,241,220,.14);border-radius:16px;padding:8px 14px}
+.step img{width:48px;height:48px;object-fit:contain}
+.step b{display:block;font:800 17px 'Bricolage Grotesque',sans-serif;color:var(--gold)}
+.step span{font-size:14px;line-height:1.4;color:var(--soft)}
+/* debrief */
+.dlist{display:flex;flex-direction:column;gap:8px;max-height:450px;overflow:auto;padding-right:6px}
+.drow{display:grid;grid-template-columns:40px minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:center;background:var(--cream);color:var(--ink);border-radius:14px;padding:10px 14px}
+.drow img{width:40px}
+.drow b{font:700 11px Inter,sans-serif;letter-spacing:.08em;color:var(--violet);display:block}
+.drow span{font-size:13.5px;line-height:1.4}
+select{font:600 15px Inter,sans-serif;color:var(--ink);background:var(--cream);border:2px solid var(--gold);border-radius:12px;padding:10px 12px;width:100%}
+label.abcl{display:flex;flex-direction:column;gap:6px;font:700 12px Inter,sans-serif;letter-spacing:.1em;color:var(--soft)}
+.dots{display:flex;gap:8px;align-items:center;font:600 13px Inter,sans-serif;color:var(--soft)}
+.dot{width:14px;height:14px;border-radius:50%;background:var(--violet)}
+.dot.on{background:var(--gold)}
+/* exam */
+.exam{position:absolute;left:140px;right:140px;top:64px;background:var(--cream);color:var(--ink);border-radius:30px;padding:26px 40px;box-shadow:0 20px 44px rgba(20,8,40,.5);display:flex;flex-direction:column;gap:14px}
+.exam .ans,.exam .ans.sel{background:#FFF8E6;border:3px solid var(--gold);border-radius:18px;box-shadow:0 4px 0 #D9A22A}
+.exam .ans.sel{background:var(--gold)}
+.exam .ans:hover:not(:disabled){transform:translateY(-1px)}
+.qdots{display:flex;gap:6px}
+.qdots i{width:28px;height:6px;border-radius:3px;background:#DCCDF0}
+.qdots i.on{background:var(--violet)}.qdots i.r{background:#3E9B6A}.qdots i.w{background:#C9534F}
+/* cheat sheet */
+.cheat{position:absolute;left:60px;right:60px;top:170px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.cheat .c{background:var(--cream);color:var(--ink);border-radius:24px;overflow:hidden;box-shadow:0 12px 28px rgba(20,8,40,.45);display:flex;flex-direction:column}
+.cheat .c img{width:100%;height:268px;object-fit:cover}
+.cheat .c div{padding:12px 16px 14px;display:flex;flex-direction:column;gap:4px}
+</style>
+</head>
+<body>
+<div id="fit"><div id="stage">
+  <div id="bgwrap"></div>
+  <div id="screen"></div>
+  <span id="lessonTag"></span><button id="binderBtn" aria-label="Open the reference binder"></button>
+  <div id="bottom"><div id="prog" aria-label="Lesson progress"><img class="track" src="b/vine_track.png" alt=""></div>
+   <div class="navs"><button class="round" id="back" aria-label="Back"></button><button class="round" id="next" aria-label="Next"></button></div></div>
+  <div id="noteWrap" role="dialog" aria-modal="true" aria-label="Note from your supervisor"></div>
+  <div id="modal" role="dialog" aria-modal="true" aria-label="Reference binder"><div id="modalBox"><button id="closeBtn" aria-label="Close"></button><div id="modalBody"></div></div></div>
+</div></div>
+<script>
+const $=s=>document.querySelector(s);
+const SECTIONS=['Start','The ABCs','Functions','Practice','Simulation','Final check'];
+const LEAFX=[0.083,0.25,0.417,0.583,0.75,0.917];
+const F=[
+ {k:'S',name:'Sensory',img:'b/spot_sensory.jpg',pos:'50% 25%',def:'Also called automatic reinforcement. The behavior produces its own reinforcement, so it keeps happening even when no one else is involved.',ex:'Camila rocks and hums on the beanbag during free time, even when no one is watching.',gets:'Automatic reinforcement: it feels good on its own',see:'Rocking, humming, hand flapping, even alone',plan:'Offer an activity that gives a similar sensation',note:'Happens with nobody around? Think sensory.'},
+ {k:'E',name:'Escape',img:'b/spot_escape.jpg',pos:'50% 60%',def:'The behavior is negatively reinforced: it removes or delays something the person doesn\'t want, like a task, a noise or a demand.',ex:'Camila pushes her worksheet away. It gets removed, and she settles down.',gets:'Removal of a task, demand or situation',see:'Pushing work away, bolting at transitions',plan:'Teach a way to request a break, and keep the task going',note:'Worksheet removed, Camila calm. That\'s escape.'},
+ {k:'A',name:'Attention',img:'b/spot_attention.jpg',pos:'50% 40%',def:'The behavior is positively reinforced by social attention: people look, talk, react or come over. Reprimands count as attention too.',ex:'Camila calls out while the adults are talking. Both of them turn around.',gets:'Social attention, positive or negative',see:'Calling out when adults are busy',plan:'Give attention for appropriate behavior, keep reactions to the problem behavior minimal',note:'A reprimand still counts as attention.'},
+ {k:'T',name:'Tangible',img:'b/spot_tangible.jpg',pos:'50% 40%',def:'The behavior is positively reinforced by access to a preferred item or activity.',ex:'Camila reaches for the tablet until it\'s handed back.',gets:'Access to a preferred item or activity',see:'Reaching or crying until the tablet comes back',plan:'Teach how to request the item, and deliver it for appropriate requests',note:'Watch what she reaches for after.'}];
+const FOUR=['Attention','Escape','Tangible','Sensory'];
+const HOOKOPT={Attention:'She wants me to notice her',Escape:'She doesn\'t want to do math',Tangible:'She wants something else',Sensory:'It just feels good to her'};
+
+const QC=[
+ {img:'b/qc_tangible.jpg',who:'Jalen, 13',text:'When tablet time ends, Jalen hugs the tablet and turns away from his RBT. Last week, after a few minutes of this, he got ten more minutes with it.',ans:'Tangible',why:{Tangible:['Yes, tangible.','Look at what happened after: he got more time with the tablet. That\'s access to a preferred item.'],Escape:['Turning away is a trap.','It looks like avoiding, but no task was taken away. What did he end up with?'],Attention:['Not quite.','His RBT was already paying attention before he held on. The new thing he got was more tablet time.'],Sensory:['Not this time.','This depends on an adult handing over more time, so it isn\'t automatic.']}},
+ {img:'b/qc_sensory.jpg',who:'Ollie, 5',text:'Ollie flaps his hands and hums on the rug. His team tried ignoring it, giving attention for it and pausing demands. The rate stayed about the same every time.',ans:'Sensory',why:{Sensory:['Yes, sensory.','Nothing the adults changed affected the behavior, so it\'s most likely maintained by automatic reinforcement.'],Escape:['Not quite.','Pausing demands didn\'t change anything, so getting out of work isn\'t what keeps it going.'],Attention:['Not quite.','Ignoring it and attending to it made no difference.'],Tangible:['Not this time.','He isn\'t getting an item or activity from it.']}},
+ {img:'b/qc_attention.jpg',who:'Nia, 9',text:'During independent work, Nia taps her pencil loudly, but only once the adults start chatting with each other. Each time, they stop and tell her to quiet down.',ans:'Attention',why:{Attention:['Yes, attention.','The tapping starts when the adults look away, and it brings their focus right back to her. "Quiet down" still counts.'],Escape:['The worksheet is a trap.','She keeps working, and nothing is taken away. What changes right after she taps?'],Tangible:['Not quite.','She doesn\'t get an item. She gets the adults to turn around.'],Sensory:['Not this time.','She only taps when the adults are busy, so it depends on them.']}}];
+
+const SAME=[{c:'The adults stop their conversation and come over to talk with her.',a:'Attention'},{c:'The worksheet is put away for the rest of the session.',a:'Escape'},{c:'She\'s handed the tablet "to help her calm down."',a:'Tangible'}];
+const CMPQ={q:'Camila\'s data now points to attention. She pushes her worksheet off the table. Which response fits an attention plan best?',o:['Pick it up with minimal eye contact and words, then praise her the moment she works','Take the worksheet away and offer her a short break','Kneel down and calmly explain why we keep work on the table','Prompt the break card and honor it right away'],ans:0,fb:{0:['Yes.','Keep your reaction to the behavior boring, and save your attention for when she\'s doing what you want.'],1:['That\'s the escape mistake.','Removing the work doesn\'t fit attention, and it teaches her shoving gets her out of math.'],2:['Kind, but it backfires.','A calm explanation is still a lot of attention right after the behavior.'],3:['That\'s from the escape plan.','A break card answers escape. Here, the function is attention.']}};
+
+const EXS=[
+ {q:'An RBT notices that a client hits the table each time a difficult puzzle is presented. After the client hits the table, the puzzle is removed. Which function is most likely maintaining the behavior?',o:['Access to tangibles','Escape','Attention','Automatic reinforcement'],a:1,why:'The puzzle is removed after the behavior, so it\'s maintained by escape (negative reinforcement).'},
+ {q:'A client flicks the light switch on and off during free play. The behavior occurs at similar rates whether or not anyone is in the room. Which function is most likely?',o:['Attention','Escape','Automatic reinforcement','Access to tangibles'],a:2,why:'It happens the same with or without people around and no demand is involved, so it\'s most likely automatic.'},
+ {q:'A client screams whenever the parent turns to talk with the RBT. The parent turns back and says, "Shh, you\'re okay." The screaming has increased over the past month. What is maintaining it?',o:['Escape from the conversation','Social attention','Access to tangibles','Automatic reinforcement'],a:1,why:'The scream gets the parent to turn back and talk to the client. Soothing words are attention too.'},
+ {q:'A client\'s plan states that throwing materials is maintained by escape. During a matching task, the client throws a card. Which response is most consistent with the plan?',o:['End the task and give a short break so the client can calm down','Re-present the task with minimal attention and prompt the replacement behavior','Explain why throwing is not safe before continuing','Offer a preferred toy to help the client regulate'],a:1,why:'For escape, the task stays. Keep reactions low and prompt the skill the plan is teaching, like asking for a break.'},
+ {q:'Which of the following is an example of negative reinforcement?',o:['A child gets a sticker for cleaning up, and starts cleaning up more often','A parent gives candy to stop a child\'s whining, and starts giving candy more often','A child loses tablet time for hitting, and hits less often','A child is reprimanded for calling out, and calls out more often'],a:1,why:'The parent\'s behavior (giving candy) removes the whining, and it increases. Something removed, behavior up: negative reinforcement. Option C is punishment, and D is positive reinforcement by attention.'}];
+
+const st={i:0,hook:null,abc:0,rf:null,rfw:[],seen:new Set([0]),fsel:0,p4:null,p4w:[],same:{},samew:{0:[],1:[],2:[]},cmp:null,cmpw:[],qc:{},qcw:{0:[],1:[],2:[]},ex:{i:0,picks:[]},sim:null,simRuns:0,btab:1};
+let canNext=true;
+function ansGrid(list,sel,wrong,fn,opt){opt=opt||{};const lock=opt.lock;return `<div class="answers ${opt.one?'one':''}">`+list.map(v=>{const isSel=sel===v;return `<button class="ans ${isSel?'sel':''} ${wrong.includes(v)?'wrong':''} ${lock&&!isSel&&!wrong.includes(v)?'dim':''}" onclick="${fn}('${v}')" ${lock||wrong.includes(v)?'disabled':''}>${opt.labels?opt.labels[v]:v}</button>`}).join('')+'</div>'}
+function fb(ok,[h,t],cls){return `<div class="fb ${ok?'ok':''}" role="status"><img src="a/ico_${ok?'correct':'tryagain'}.png" alt="${ok?'Correct':'Try again'}"><div><strong>${h}</strong><span>${t}</span></div></div>`}
+function win(src,alt,tall){return `<div class="win ${tall?'tall':''}"><div class="l1"></div><div class="l2"></div><img src="${src}" alt="${alt||''}"></div>`}
+const BG='<img class="bgimg" src="a/bg.jpg" alt="">',BGF='<img class="bgimg flip" src="a/bg.jpg" alt="">';
+const HERO='<div class="heroshade"></div><img class="hero" src="a/hero.jpg" alt="Camila, frustrated, pushes her worksheet off the table while her RBT watches calmly.">';
+
+const L=[
+ {sec:0,tag:'LESSON 02 · BEHAVIOR REDUCTION',r:opener,nonext:true},
+ {sec:0,tag:'LESSON 02 · FIRST THOUGHTS',r:hook,gate:()=>st.hook!==null},
+ {sec:1,tag:'LESSON 02 · THE ABCS',r:abcScreen,gate:()=>st.abc>=3},
+ {sec:1,tag:'LESSON 02 · REINFORCEMENT 101',r:reinf,gate:()=>st.rf==='Negative reinforcement'},
+ {sec:2,tag:'LESSON 02 · FUNCTIONS OF BEHAVIOR',r:functions,gate:()=>st.seen.size>=4},
+ {sec:2,tag:'LESSON 02 · BACK TO CAMILA',r:back2,gate:()=>st.p4==='Escape'},
+ {sec:2,tag:'LESSON 02 · SAME BEHAVIOR, DIFFERENT FUNCTION',r:same,gate:()=>SAME.every((x,k)=>st.same[k]===x.a)},
+ {sec:2,tag:'LESSON 02 · FUNCTION DRIVES THE PLAN',r:cmp,gate:()=>st.cmp===0},
+ {sec:3,tag:'LESSON 02 · PRACTICE',r:practiceIntro},
+ {sec:3,tag:'LESSON 02 · QUICK CHECK 1 OF 3',r:()=>quick(0),gate:()=>st.qc[0]===QC[0].ans},
+ {sec:3,tag:'LESSON 02 · QUICK CHECK 2 OF 3',r:()=>quick(1),gate:()=>st.qc[1]===QC[1].ans},
+ {sec:3,tag:'LESSON 02 · QUICK CHECK 3 OF 3',r:()=>quick(2),gate:()=>st.qc[2]===QC[2].ans},
+ {sec:3,tag:'LESSON 02 · YOUR SEAT CHEAT SHEET',r:cheat},
+ {sec:4,tag:'SIMULATION · A SESSION WITH CAMILA',r:simView,sim:true,gate:()=>!!(st.sim&&st.sim.stage==='debrief'&&abcOk())},
+ {sec:5,tag:'LESSON 02 · FINAL CHECK',r:finalIntro},
+ {sec:5,tag:'LESSON 02 · FINAL CHECK',r:exam,gate:()=>st.ex.picks.length>=EXS.length},
+ {sec:5,tag:'LESSON 02 · COMPLETE',r:complete,nonext:true}];
+const SIMI=L.findIndex(x=>x.sim);
+
+function opener(){return BG+`
+ <div class="col" style="top:150px;width:560px;gap:20px">
+  <h1 style="font-size:88px;line-height:.94;letter-spacing:-.02em">Why did that <span style="color:var(--gold)">happen?</span></h1>
+  <p class="lead" style="width:460px">Every behavior serves a function. Learn to spot it, and the behavior plan starts making sense.</p>
+  <div><button class="pill" onclick="go(1)">Start the lesson</button></div></div>
+ <div style="position:absolute;left:730px;top:110px;width:440px;height:440px">
+  <div class="ring" style="inset:0;background:var(--cream);box-shadow:0 18px 40px rgba(20,8,40,.45)"></div>
+  <div class="ring" style="inset:15px;background:var(--gold)"></div>
+  <div class="ring" role="img" aria-label="Camila pushes her worksheet off the table while her RBT watches calmly." style="inset:32px;background:url(a/hero.jpg) -196px -22px/612px auto no-repeat;box-shadow:inset 0 8px 18px rgba(20,8,40,.5)"></div></div>`}
+
+function hook(){const lock=st.hook!==null;return HERO+`
+ <div class="col"><span class="chip">SESSION 3 · MATH TIME</span>
+  <h1 style="font-size:42px;line-height:1.05">You set a worksheet down. Camila pushes it off the table.</h1>
+  <p class="lead">Before we learn anything, go with your gut. Why do you think she did that?</p>
+  ${ansGrid(FOUR,st.hook,[],'pickHook',{labels:HOOKOPT,lock})}
+  ${lock?`<div class="fb ok"><img src="a/ico_hint.png" alt=""><div><strong>Locked in. Let's test that guess.</strong><span>There's no wrong answer yet. Next, you'll slow the moment down and look at what the data says.</span></div></div>`:''}</div>`}
+function pickHook(v){if(st.hook!==null)return;st.hook=v;draw()}
+
+function abcScreen(){const caps=[['Antecedent','What happens right before. You present a math worksheet.'],['Behavior','What she does. Camila pushes the worksheet off the table.'],['Consequence','What happens right after. The worksheet is removed, and she calms down.']];
+ const guess=st.hook?`You guessed <b style="color:var(--gold)">"${HOOKOPT[st.hook].toLowerCase()}."</b> `:'';
+ const follow=st.hook==='Escape'?'Your guess lines up with the data.':st.hook?'Does the consequence support your guess? Hold onto that question.':'';
+ return BGF+`<div class="shadeT"></div>
+ <div class="col" style="width:1100px;gap:10px"><h1 style="font-size:46px;line-height:1">To test it, break the moment into its <span style="color:var(--gold)">ABCs.</span></h1>
+ <p class="lead" style="width:960px">${guess}RBTs look at what came before and after a behavior, not just the behavior itself. Tap each card in order.</p></div>
+ <div class="abc">${[0,1,2].map(i=>{const open=i<st.abc,nx=i===st.abc;return `<button class="abccard ${open?'open':''} ${!open&&!nx?'locked':''}" onclick="tapAbc(${i})" ${!nx?'disabled':''} aria-label="${caps[i][0]}">
+  <div class="pic"><img src="b/abc_${i}.jpg" alt=""><span class="chip tag">${'ABC'[i]} · ${caps[i][0].toUpperCase()}</span>${nx?'<span class="tap">Tap to reveal</span>':''}</div>
+  <div class="cap"><b>${caps[i][0]}</b>${caps[i][1]}</div></button>`}).join('')}</div>
+ ${st.abc>=3?`<div class="fb ok" style="position:absolute;left:60px;right:60px;top:580px"><img src="a/ico_hint.png" alt=""><div><strong>The consequence is the clue.</strong><span>The worksheet was removed right after the behavior, and she calmed down. Removing something she didn't want made the behavior more likely next time. ${follow}</span></div></div>`:''}`}
+function tapAbc(i){if(i===st.abc){st.abc++;draw()}}
+
+function reinf(){const p=st.rf,ok=p==='Negative reinforcement';const RFO=['Positive reinforcement','Negative reinforcement','Punishment'];
+ return BG+`<div class="shadeT"></div>
+ <div class="col" style="width:1100px;gap:8px"><h1 style="font-size:44px;line-height:1">Reinforcement makes a behavior <span style="color:var(--gold)">more likely.</span></h1>
+ <p class="lead" style="width:1000px">Positive and negative don't mean good and bad. Think math: positive <b>adds</b> something, negative <b>takes something away</b>. Either way, the behavior goes up.</p></div>
+ <div class="rcards">
+  <div class="rcard"><img src="c/sim_08_good_ending.jpg" alt="Camila high-fives her RBT next to a full token board." style="object-position:72% 40%"><div style="display:flex;flex-direction:column;gap:8px">
+   <span class="eq">+ add something → behavior goes up</span><span class="disp" style="font-size:28px">Positive reinforcement</span>
+   <span style="font-size:15px;line-height:1.45">Camila finishes three problems and gets a token. She finishes problems more often.</span></div></div>
+  <div class="rcard"><img src="b/abc_2.jpg" alt="Camila relaxes after the worksheet is removed." style="object-position:55% 35%"><div style="display:flex;flex-direction:column;gap:8px">
+   <span class="eq">− take something away → behavior goes up</span><span class="disp" style="font-size:28px">Negative reinforcement</span>
+   <span style="font-size:15px;line-height:1.45">Camila pushes the worksheet away and it's removed. She pushes work away more often.</span></div></div></div>
+ <div style="position:absolute;left:60px;right:60px;top:452px;display:grid;grid-template-columns:minmax(0,1fr) 560px;gap:24px;align-items:start">
+  <div style="display:flex;flex-direction:column;gap:6px"><span class="chip">YOUR TURN</span><span style="font-size:17px;line-height:1.45;font-weight:600">Your car beeps until you buckle your seatbelt. Now you buckle up the second you sit down. What's happening to your buckling?</span>
+  ${p?fb(ok,ok?['Yes, negative reinforcement.','Buckling takes away the beeping, so you buckle faster. Something removed, behavior up.']:p==='Punishment'?['Not quite.','Punishment makes a behavior less likely. Your buckling went up.']:['Close.','Nothing is added when you buckle. What gets taken away?']):''}</div>
+  ${ansGrid(RFO,p,st.rfw,'pickRf',{one:true,lock:ok})}</div>`}
+function pickRf(v){if(st.rf==='Negative reinforcement')return;st.rf=v;if(v!=='Negative reinforcement'&&!st.rfw.includes(v))st.rfw.push(v);draw()}
+
+function functions(){const f=F[st.fsel];return BG+`<div class="shadeT"></div>
+ <div class="col" style="width:1100px;gap:8px"><h1 style="font-size:46px;line-height:1">Every behavior serves a <span style="color:var(--gold)">function.</span></h1>
+ <p class="lead">There are four, remembered as <b style="color:var(--gold)">SEAT</b>. Tap each one.</p></div>
+ <div class="tiles">${F.map((x,i)=>`<button class="tile ${i===st.fsel?'sel':''}" onclick="pickF(${i})" aria-pressed="${i===st.fsel}"><b>${x.k}</b><span>${x.name}</span>${st.seen.has(i)&&i!==st.fsel?'<i class="seen" aria-hidden="true"></i>':''}</button>`).join('')}</div>
+ <div class="detail"><img src="${f.img}" alt="${f.ex}" style="object-position:${f.pos}"><div style="display:flex;flex-direction:column;gap:10px;padding:8px 10px 0 0">
+  <span class="chip" style="background:var(--purple);color:var(--cream)">${f.k} · ${f.name.toUpperCase()}</span>
+  <span class="disp" style="font-size:36px">${f.name}</span>
+  <span style="font-size:18px;line-height:1.5">${f.def}</span>
+  <span style="font-size:15px;line-height:1.45"><b style="color:var(--violet);font-size:12px;letter-spacing:.1em">WHAT IT GETS</b><br>${f.gets}</span>
+  <span style="font-size:15px;line-height:1.5;color:#4A3470;border-left:4px solid var(--gold);padding-left:12px">${f.ex}</span></div></div>`}
+function pickF(i){st.fsel=i;st.seen.add(i);draw()}
+
+const P4FB={Escape:['Yes, escape.','The worksheet was removed and Camila calmed down. Pushing it got her out of the task, so the behavior is maintained by negative reinforcement.'],Attention:['Not quite.','Nobody gave Camila extra attention. Look at the consequence: the worksheet was removed.'],Tangible:['Close, but no.','She didn\'t gain an item. She got rid of one. Which function is about removing something?'],Sensory:['Not this time.','Automatic reinforcement doesn\'t depend on anyone. This behavior worked because the task was removed.']};
+function back2(){const p=st.p4,ok=p==='Escape';return HERO+`
+ <div class="col"><span class="chip">BACK TO CAMILA</span>
+  <h1 style="font-size:40px;line-height:1.05">The worksheet is removed, and Camila calms down.</h1>
+  <p class="lead">${st.hook?`Your gut said "${HOOKOPT[st.hook].toLowerCase()}." `:''}Now that you know SEAT, which function is maintaining the behavior?</p>
+  ${ansGrid(FOUR,p,st.p4w,'pickP4',{lock:ok})}
+  ${p?fb(ok,P4FB[p]):''}</div>`}
+function pickP4(v){if(st.p4==='Escape')return;st.p4=v;if(v!=='Escape'&&!st.p4w.includes(v))st.p4w.push(v);draw()}
+
+function same(){const all=SAME.every((x,k)=>st.same[k]===x.a);return BG+`<div class="shadeT"></div>
+ <div class="col" style="width:1100px;gap:8px"><h1 style="font-size:44px;line-height:1">Same behavior. <span style="color:var(--gold)">Different function.</span></h1>
+ <p class="lead" style="width:1000px">What a behavior looks like doesn't tell you why it happens. The consequence does. Pick the function for each version of the day.</p></div>
+ <div style="position:absolute;left:60px;top:200px;width:310px;display:flex;flex-direction:column;gap:10px">
+  <div style="border-radius:24px;overflow:hidden;height:260px;box-shadow:0 12px 26px rgba(20,8,40,.45)"><img src="b/abc_1.jpg" alt="Camila pushes the worksheet off the table." style="width:100%;height:100%;object-fit:cover;object-position:50% 40%"></div>
+  <span style="font-size:15px;line-height:1.45;color:var(--soft);background:rgba(36,18,63,.85);border-radius:16px;padding:10px 14px"><b style="color:var(--gold)">Every time:</b> Camila pushes the worksheet off the table. Then...</span></div>
+ <div class="chains">${SAME.map((x,k)=>{const p=st.same[k],ok=p===x.a;return `<div class="chain"><div class="what"><b>DAY ${k+1} · CONSEQUENCE</b>${x.c}${p?`<div class="verdict" style="color:${ok?'#2F7D55':'#B4433F'}">${ok?'Yes: '+x.a.toLowerCase()+'.':p+' doesn\'t fit. Look at what she ends up with.'}</div>`:''}</div>
+  <div class="mini" role="group" aria-label="Function for day ${k+1}">${F.map(f=>`<button class="${p===f.name&&ok?'ok':''} ${st.samew[k].includes(f.name)||(ok&&p!==f.name)?'no':''}" onclick="pickSame(${k},'${f.name}')" ${ok||st.samew[k].includes(f.name)?'disabled':''} aria-label="${f.name}">${f.name}</button>`).join('')}</div></div>`}).join('')}
+ ${all?`<div class="fb ok"><img src="a/ico_hint.png" alt=""><div><strong>One behavior, three functions.</strong><span>That's why plans are written from data, and why the same behavior can need a totally different response.</span></div></div>`:''}</div>`}
+function pickSame(k,v){if(st.same[k]===SAME[k].a)return;st.same[k]=v;if(v!==SAME[k].a&&!st.samew[k].includes(v))st.samew[k].push(v);draw()}
+
+function cmp(){const p=st.cmp,ok=p===0;const rows=[['PREVENTION','Smaller chunks of work, first-then board, choices','Check in with attention often, before she has to "ask" for it'],['TEACH INSTEAD','Asking for a break with the break card','Getting attention the right way, like "Look at my work!"'],['WHEN IT HAPPENS','Keep the task going, minimal words, prompt the break card','Keep your reaction neutral and brief, no lecture'],['WHAT BACKFIRES','Removing the work','A big reaction, even a calm talk']];
+ return BG+`<div class="shadeT"></div>
+ <div class="col" style="width:1100px;gap:8px"><h1 style="font-size:44px;line-height:1">The function decides <span style="color:var(--gold)">the plan.</span></h1>
+ <p class="lead" style="width:1000px">Here's the same behavior, pushing work off the table, with two different functions. Your response changes completely.</p></div>
+ <div class="cmp"><table><tr><th></th><th>If it's escape</th><th>If it's attention</th></tr>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</table></div>
+ <div style="position:absolute;left:730px;right:60px;top:176px;display:flex;flex-direction:column;gap:10px">
+  <span class="chip">YOUR TURN</span><span style="font-size:16px;line-height:1.45;font-weight:600">${CMPQ.q}</span>
+  <div class="answers one" style="gap:8px">${CMPQ.o.map((t,i)=>`<button class="ans ${p===i?'sel':''} ${st.cmpw.includes(i)?'wrong':''} ${ok&&i!==0?'dim':''}" onclick="pickCmp(${i})" ${ok||st.cmpw.includes(i)?'disabled':''} style="height:60px">${t}</button>`).join('')}</div>
+  ${p!==null?fb(ok,CMPQ.fb[p]):''}</div>`}
+function pickCmp(i){if(st.cmp===0)return;st.cmp=i;if(i!==0&&!st.cmpw.includes(i))st.cmpw.push(i);draw()}
+
+function practiceIntro(){return BGF+`<div class="shade"></div>${win('b/qc_sensory.jpg','Ollie hums and flaps his hands on the rug while his RBT takes data.',true)}
+ <div class="col" style="top:150px;gap:18px"><span class="chip">PRACTICE</span>
+  <h1 style="font-size:58px;line-height:.98">Let's <span style="color:var(--gold)">practice.</span></h1>
+  <p class="lead">You'll meet three new kids. Read what happens, look for the consequence, and pick the function that fits.</p>
+  <p class="lead" style="font-size:15px">Wrong picks are fine here. You'll get a hint and can try again.</p></div>`}
+function finalIntro(){return BG+`<div class="shade"></div>${win('c/sim_08_good_ending.jpg','Camila high-fives her RBT.')}
+ <div class="col" style="top:130px;gap:16px"><span class="chip">FINAL CHECK</span>
+  <h1 style="font-size:54px;line-height:.98">Time to test what you <span style="color:var(--gold)">know.</span></h1>
+  <p class="lead">Five questions written like the real RBT exam, covering everything in this lesson.</p>
+  <div class="steps">
+   <div class="step"><img src="a/ico_clipboard.png" alt=""><div><b>One try per question</b><span>Just like test day. You'll see the answer and why after each one.</span></div></div>
+   <div class="step"><img src="a/ico_correct.png" alt=""><div><b>Score and review</b><span>At the end, see your score and review anything you missed. Retake as often as you want.</span></div></div></div></div>`}
+function quick(n){const q=QC[n],p=st.qc[n],ok=p===q.ans;return BGF+`<div class="shade"></div>${win(q.img,'',true)}
+ <div class="col" style="width:520px"><span class="chip">${q.who.toUpperCase()}</span>
+  <h1 style="font-size:26px;line-height:1.25">${q.text}</h1>
+  <p class="lead">Which function fits best?</p>
+  ${ansGrid(FOUR,p,st.qcw[n],'pickQ'+n,{lock:ok})}
+  ${p?fb(ok,q.why[p]):''}</div>`}
+[0,1,2].forEach(n=>window['pickQ'+n]=v=>{if(st.qc[n]===QC[n].ans)return;st.qc[n]=v;if(v!==QC[n].ans&&!st.qcw[n].includes(v))st.qcw[n].push(v);draw()});
+
+function exam(){const E=st.ex,done=E.picks.length>=EXS.length&&E.i>=EXS.length;
+ if(done&&E.review)return BGF+`<div class="exam" style="bottom:130px"><div style="display:flex;justify-content:space-between;align-items:center"><span class="chip">FINAL CHECK · REVIEW</span><button class="btn light" onclick="st.ex.review=false;draw()">Back to score</button></div>
+  <div class="dlist" style="max-height:none;flex:1;min-height:0">${EXS.map((x,k)=>{const p=E.picks[k],ok=p===x.a;return `<div class="drow" style="grid-template-columns:40px minmax(0,1.3fr) minmax(0,1fr);background:#FFF8E6;border:2px solid ${ok?'#BFE0CB':'#F0C9C6'}"><img src="a/ico_${ok?'correct':'tryagain'}.png" alt="${ok?'Correct':'Missed'}"><div><b>QUESTION ${k+1}</b><span>${x.q}</span></div><div><b>${ok?'YOU ANSWERED':'YOU ANSWERED '+'ABCD'[p]+' · CORRECT: '+'ABCD'[x.a]}</b><span>${ok?'ABCD'[p]+'. '+x.o[p]+'. ':''}${x.why}</span></div></div>`}).join('')}</div></div>`;
+ const dots=`<div class="qdots">${EXS.map((x,k)=>`<i class="${k<E.picks.length?(E.picks[k]===x.a?'r':'w'):k===E.i?'on':''}"></i>`).join('')}</div>`;
+ if(done){const sc=E.picks.filter((p,k)=>p===EXS[k].a).length;return BGF+`<div class="exam" style="top:110px;align-items:flex-start">
+  <span class="chip">FINAL CHECK · RESULTS</span>${dots}<span class="disp" style="font-size:54px">${sc} of ${EXS.length}</span>
+  <p style="margin:0;font-size:18px;line-height:1.5">${sc===EXS.length?'Every one. You\'re reading the consequence, not just the behavior.':sc>=3?'Solid. Review the ones you missed: the consequence in the question is always the clue.':'Worth another pass. Find the consequence in each question first, then ask what it gets the person.'}</p>
+  <div style="display:flex;gap:10px">${sc<EXS.length?`<button class="btn" onclick="st.ex.review=true;draw()">Review my answers</button>`:''}<button class="btn light" onclick="st.ex={i:0,picks:[]};draw()">Retake</button></div></div>`}
+ const q=EXS[E.i],p=E.picks[E.i];const answered=p!==undefined;
+ return BGF+`<div class="exam">
+  <div style="display:flex;justify-content:space-between;align-items:center"><span class="chip">FINAL CHECK · QUESTION ${E.i+1} OF ${EXS.length}</span>${dots}</div>
+  ${E.i===0&&!answered?`<p style="margin:0;font-size:14px;color:#4A3470">Five questions written like the real RBT exam. One try each.</p>`:''}
+  <p style="margin:0;font-size:19px;line-height:1.5;font-weight:600">${q.q}</p>
+  <div class="answers one" style="gap:8px">${q.o.map((t,k)=>`<button class="ans ${answered&&k===q.a?'sel':''} ${answered&&k===p&&p!==q.a?'wrong':''} ${answered&&k!==p&&k!==q.a?'dim':''}" onclick="pickEx(${k})" ${answered?'disabled':''} style="height:58px;justify-content:flex-start;text-align:left;padding:0 40px">${'ABCD'[k]}. ${t}</button>`).join('')}</div>
+  ${answered?`<div style="display:flex;gap:16px;align-items:center">${fb(p===q.a,[p===q.a?'Correct.':'The answer is '+'ABCD'[q.a]+'.',q.why]).replace('class="fb "','class="fb" style="flex:1;background:#FDE7E3;color:var(--ink);border:2px solid #F0B7AF"').replace('class="fb ok"','class="fb ok" style="flex:1;background:#FFF4D2"')}<button class="btn" onclick="exNext()">${E.i<EXS.length-1?'Next question':'See your score'}</button></div>`:''}</div>`}
+function pickEx(k){const E=st.ex;if(E.picks[E.i]!==undefined)return;E.picks[E.i]=k;draw()}
+function exNext(){st.ex.i++;swap()}
+
+function cheat(){return BG+`<div class="shadeT"></div>
+ <div class="col" style="width:1100px;gap:8px"><h1 style="font-size:44px;line-height:1">Your <span style="color:var(--gold)">SEAT</span> cheat sheet</h1>
+ <p class="lead">Before you respond to a behavior, ask: what does this get the person? Next, you'll put it to work in a session with Camila.</p></div>
+ <div class="cheat">${F.map(f=>`<div class="c"><img src="${f.img}" alt="${f.ex}" style="object-position:${f.pos}"><div><span class="disp" style="font-size:23px">${f.k} · ${f.name}</span><span style="font-size:13.5px;line-height:1.4"><b>Gets:</b> ${f.gets}</span><span style="font-size:13.5px;line-height:1.4;color:#4A3470"><b>Plans often:</b> ${f.plan.charAt(0).toLowerCase()+f.plan.slice(1)}</span></div></div>`).join('')}</div>`}
+
+function complete(){const sc=st.ex.picks.filter((p,k)=>p===EXS[k].a).length;
+ const T=[['The ABCs','Look at what happens right before and right after.'],['Reinforcement','Makes behavior more likely. Negative means something was taken away.'],['SEAT','Sensory, escape, attention, tangible.'],['Same behavior, different function','The data tells you why, not the behavior.'],['The function decides the plan','Follow it consistently, every session.']];
+ const C=['#F2BE3C','#FBF1DC','#B79BD9','#6E4A9E','#F08A7E'];let conf='';for(let k=0;k<46;k++){conf+=`<i style="left:${(k*137)%100}%;background:${C[k%5]};animation-duration:${2.6+(k%7)*.35}s;animation-delay:${(k%11)*.12}s;width:${10+(k%4)*4}px;height:${16+(k%3)*6}px;border-radius:${k%3?3:50}px"></i>`}
+ return BG+`<div class="shadeT" style="background:radial-gradient(circle at 50% 40%,rgba(36,18,63,.35),rgba(36,18,63,.9) 70%)"></div>
+ <div style="position:absolute;left:0;right:0;top:40px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+  <div style="position:relative;width:170px;height:170px;border-radius:50%;background:var(--cream);box-shadow:0 14px 34px rgba(20,8,40,.5);display:flex;align-items:center;justify-content:center">
+   <div style="position:absolute;inset:10px;border-radius:50%;background:var(--gold)"></div><div style="position:absolute;inset:22px;border-radius:50%;overflow:hidden"><img src="c/sim_08_good_ending.jpg" alt="Camila high-fives her RBT." style="width:100%;height:100%;object-fit:cover;object-position:68% 30%"></div></div>
+  <span class="chip" style="align-self:center">LESSON 02 · FUNCTIONS OF BEHAVIOR</span>
+  <h1 style="font-size:84px;line-height:.95;letter-spacing:-.02em">Lesson <span style="color:var(--gold)">complete!</span></h1>
+  <p class="lead" style="max-width:640px">You can look at a behavior, find the consequence, and tell what it's getting the person. That's the whole lesson.</p><div style="display:flex;gap:10px;justify-content:center;font:600 13px Inter,sans-serif;color:var(--soft)">
+  <span style="background:var(--purple);border-radius:999px;padding:8px 14px">Simulation: ${st.simWon?(st.simWon===1?'smooth on try 1':'smooth on try '+st.simWon):'done'}</span>
+  <span style="background:var(--purple);border-radius:999px;padding:8px 14px">Final check: ${sc} of ${EXS.length}</span>
+  <span style="background:var(--gold);color:var(--ink);border-radius:999px;padding:8px 14px">Up next: Lesson 03</span></div></div>
+ <div style="position:absolute;left:60px;right:60px;top:552px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px">${T.map(([a,b])=>`<div style="background:rgba(251,241,220,.1);border:1px solid rgba(251,241,220,.18);border-radius:16px;padding:10px 12px"><b style="display:block;font:800 14px 'Bricolage Grotesque',sans-serif;color:var(--gold)">${a}</b><span style="font-size:12.5px;line-height:1.35;color:var(--soft)">${b}</span></div>`).join('')}</div>
+ <div class="confetti">${conf}</div>`}
+
+/* binder modal */
+const TABIMG=['b/tab_0.png','b/tab_1.png','b/tab_2.png','b/tab_3.png'];const TABINK=['#24123F','#2A1648','#FBF1DC','#3A2163'];
+function binderHTML(t){const f=F[t];return `<div class="binder"></div>
+ <div class="tabs">${F.map((x,i)=>`<button class="tab ${i===t?'on':''}" onclick="mTab(${i})" aria-label="${x.name}"><img src="${TABIMG[i]}" alt=""><b style="color:${TABINK[i]}">${x.k}</b></button>`).join('')}</div>
+ <div class="bpage bl"><img src="${f.img}" alt="${f.ex}" style="width:100%;height:100%;object-fit:cover;object-position:${f.pos}"></div>
+ <div class="bpage br">
+  <span class="flabel" style="padding-top:0">FUNCTION ${t+1} OF 4</span><span class="disp" style="font-size:46px;line-height:1">${f.name}</span>
+  <span class="flabel">WHAT IT GETS</span><span class="fval">${f.gets}</span>
+  <span class="flabel">YOU MIGHT SEE</span><span class="fval">${f.see}</span>
+  <span class="flabel">PLANS OFTEN SAY</span><span class="fval">${f.plan}</span>
+  <span style="margin-top:auto;font:400 20px Kalam,cursive;color:#6a5020">${f.note}</span></div>`}
+const PLAN={behavior:'Pushing work materials off the table',fn:'Escape from schoolwork',prev:'First-then board, a choice of pencil, math in small chunks (3 problems)',rep:'Hand over the break card for a 1-minute break, then back to work',resp:'Stay calm, keep talking to a minimum, put the work back, point to the break card. Don\'t remove the task.',reinf:'A token right after each finished chunk. 5 tokens earns tablet time.'};
+function planHTML(){return `<div class="binder" style="width:1010px"></div><div class="bpage" style="left:14px;width:982px;border-radius:14px;padding:26px 34px;display:grid;grid-template-columns:330px minmax(0,1fr);gap:28px">
+ <div style="border-radius:18px;overflow:hidden"><img src="c/sim_01_setup.jpg" alt="Camila at the table with her first-then board and break card." style="width:100%;height:100%;object-fit:cover;object-position:70% 50%"></div>
+ <div style="display:flex;flex-direction:column"><span class="flabel" style="padding-top:0">BEHAVIOR INTERVENTION PLAN</span><span class="disp" style="font-size:36px">Camila, age 7</span>
+ ${[['TARGET BEHAVIOR',PLAN.behavior],['FUNCTION',PLAN.fn],['ANTECEDENT STRATEGIES',PLAN.prev],['REPLACEMENT BEHAVIOR',PLAN.rep],['CONSEQUENCE STRATEGIES',PLAN.resp],['REINFORCEMENT',PLAN.reinf]].map(([a,b])=>`<span class="flabel" style="padding-top:8px">${a}</span><span class="fval" style="font-size:14.5px;padding-bottom:6px">${b}</span>`).join('')}</div></div>`}
+
+/* simulation */
+const IMG={setup:'c/sim_01_setup.jpg',warning:'c/sim_02_warning.jpg',shove:'c/sim_03_shove.jpg',upset:'c/sim_04_upset.jpg',card:'c/sim_05_break_card.jpg',brk:'c/sim_06_break.jpg',work:'c/sim_07_back_to_work.jpg',good:'c/sim_08_good_ending.jpg',sup:'c/sim_09_supervisor.jpg'};
+// choice: [label, fid, upset, planNote, extra]
+const M={
+ m1:{img:'setup',title:'Math time.',text:'Camila is at the table. The worksheet, pencils, first-then board and break card are ready. How do you start?',ch:[
+  ['Show the first-then board ("first math, then tablet") and let her pick a pencil',1,0,'The plan opens with the first-then board and a choice. That\'s prevention.'],
+  ['Set out all 12 problems so she can see exactly how much there is to do',0,1,'Sounds transparent, but the plan says small chunks of 3. A full page is a bigger demand.'],
+  ['Give her a token up front to build momentum before she starts',-1,0,'Tokens are earned after work. Giving one first weakens what it\'s worth.']],next:()=>'m2'},
+ m2:{img:'warning',title:'She\'s starting to slide.',text:'Camila groans, slides the paper a few inches away, and props her head on her fist.',ch:[
+  ['Point to the break card and model it: "You can say, break please"',1,-1,'Prompting the replacement behavior before things build is exactly what the plan asks for.'],
+  ['Give her a quiet minute with the worksheet out of sight so she can reset',-1,0,'It feels kind, but the worksheet left because she groaned. That teaches groaning works.',{gaveIn:true}],
+  ['Say "Let\'s do this one together" and solve the first problem for her',0,0,'Help is fine, but right after the groan it lightens the task. The plan wants the break card here.']],next:()=>'m3'},
+ m3:{img:'shove',title:'The worksheet goes flying.',text:'Camila sweeps the worksheet off the table and turns away.',ch:[
+  ['Pick it up with few words, put it back, and point to the break card',1,0,'Calm, minimal words, task stays, replacement prompted. That\'s the plan.',{abc:'re'}],
+  ['Kneel to her level and calmly explain why we keep work on the table',-1,1,'Gentle, but a talk right after the behavior is a lot of attention, and it delays the work.',{abc:'lecture'}],
+  ['Offer a short break so she can calm down, then try the worksheet again',-1,0,'The shove just earned a break. That\'s escape, reinforced.',{abc:'removed',gaveIn:true}]],next:s=>(s.upset>=2||s.fid<=0)?'m4u':'m4b'},
+ m4b:{img:'card',title:'She hands you the break card.',text:'Camila holds up the break card. This is the skill the plan is teaching.',ch:[
+  ['Take it right away, start the 1-minute timer, and let her go to the beanbag',1,-1,'Honoring the card right away is what makes the replacement behavior worth using.',{after:'brk'}],
+  ['Honor it after one more problem, so the card doesn\'t become an easy out',-1,2,'Sounds strategic, but a delay teaches her the card doesn\'t work. Shoving did.'],
+  ['Honor it, and let the break run until she says she\'s ready',-1,0,'The break got bigger than the plan says, so the work feels even worse after.',{after:'brk'}]],next:()=>'m5'},
+ m4u:{img:'upset',title:'Camila is overwhelmed.',text:'She has pushed her chair back, arms crossed tight, eyes shut. The pencil cup is within reach.',ch:[
+  ['Stay nearby, quietly move the pencils out of reach, and keep your words minimal',1,-1,'Safe and low-key. It gives her space to calm down without adding demands.'],
+  ['Gently remind her she can still earn her tablet if she sits back up',-1,1,'Bargaining mid-escalation adds a demand and a lot of talk. It can make things bigger.'],
+  ['Follow the crisis plan and call your supervisor in',0,0,'Asking for support is a responsible choice when things feel unsafe.',{sup:true}]],next:s=>s.sup||s.upset>=3?'end':'m5'},
+ m5:{img:'work',title:'Back to work.',text:'Camila finishes three problems and looks up at you.',ch:[
+  ['Hand her a token right away: "You finished all three problems!"',1,-1,'Immediate, specific praise plus the token. That\'s the reinforcement in the plan.'],
+  ['Hold the tokens and give all five at the end so she stays focused',0,0,'Delayed reinforcement is weaker. The plan says a token after each chunk.'],
+  ['Say "Good job!" and move straight on to the next set',0,0,'Praise helps, but it\'s vague and the token was skipped.']],next:()=>'end'}};
+const RE={
+ m1_1:['warning','Camila\'s shoulders drop.','She stares at the full page of problems and sighs. That\'s a lot of math all at once.'],
+ m1_2:['warning','The token loses its pull.','Camila turns the token over in her hand. Why work for something she already has?'],
+ m2_1:['setup','Camila relaxes right away.','The worksheet is gone, and so is the groaning. For now. The task still has to come back.'],
+ m2_2:['warning','She leans back and watches.','You solved the first problem. She props her head up and waits for you to do the next one too.'],
+ m3_1:['upset','Camila pulls further away.','She crosses her arms and turns her back to the table. The talk kept the moment going.'],
+ m3_2:['brk','Camila heads for the beanbag.','She settles in right away. The shove just got her out of math.'],
+ m4b_1:['upset','Camila shuts down.','The break card didn\'t work, so she pushes her chair back and crosses her arms. It takes a while before she\'s ready to try again.'],
+ m4b_2:['brk','The break keeps going.','Ten minutes later she\'s still on the beanbag. Getting her back to math is going to be a lot harder.'],
+ m4u_1:['upset','She squeezes her eyes shut.','The talking and the deal are more than she can take in right now. She turns further away.'],
+ m5_1:['warning','Her pace slows down.','Camila glances at the empty token board and drags through the next problem.'],
+ m5_2:['warning','She shrugs it off.','"Good job" without the token doesn\'t mean much to her. She picks up the pencil slowly.']};
+const BEST={m1:0,m2:0,m3:0,m4b:0,m4u:0,m5:0};
+const HINTS={m1:'Before any work, check the plan. What comes first?',m2:'She\'s showing warning signs. What skill does the plan want her to use instead?',m3:'Keep it calm and boring. The task stays.',m4b:'This is the skill you\'ve been teaching. What makes it worth using?',m4u:'Safety first. Fewer words, fewer demands.',m5:'She did the hard thing. When does the plan say the token comes?'};
+const ORDER={m1:[1,0,2],m2:[2,1,0],m3:[0,2,1],m4b:[2,1,0],m4u:[1,0,2],m5:[0,2,1]};
+function order(n,key){return ORDER[key]||[...Array(n).keys()]}
+function newSim(g){const seen=!!(st.sim&&st.sim.planSeen);st.sim={planSeen:seen,note:null,stage:'intro',guided:g,fid:0,upset:0,sup:false,log:[],m:null,react:null,nextM:null,abc:null,abcAns:{},counted:false}}
+function simView(){if(!st.sim)newSim(true);const S=st.sim;const bg=BGF+'<div class="shade"></div>';
+ if(S.stage==='intro')return bg+win(IMG.setup,'Camila sits at the table, ready for math.')+`<div class="col" style="gap:14px"><span class="chip">${st.simRuns?'TRY IT AGAIN':'YOUR TURN'}</span>
+  <h1 style="font-size:38px;line-height:1.05">Now you run the session.</h1>
+  <p class="lead" style="font-size:16px">You're Camila's RBT, and it's math time. Use what you just learned to follow her behavior plan.</p>
+  <div class="steps">
+   <div class="step"><img src="a/ico_binder.png" alt=""><div><b>Check her plan</b><span>It's in your binder, top right. Her behavior is maintained by escape.</span></div></div>
+   <div class="step"><img src="a/ico_clipboard.png" alt=""><div><b>Respond to each moment</b><span>Pick what you'd do. Camila reacts to your choices, so the session can go different ways.</span></div></div>
+   <div class="step"><img src="a/ico_note.png" alt=""><div><b>Get feedback</b><span>Your choices play out. If one drifts from the plan, your supervisor leaves a note afterward.</span></div></div>
+   <div class="step"><img src="a/ico_info.png" alt=""><div><b>Write the ABC data</b><span>At the end, you'll record what happened, just like after a real session.</span></div></div></div>
+  <div>${S.planSeen?`<button class="pill" onclick="simStart()">Start the session</button>`:`<button class="pill" disabled style="opacity:.55;cursor:default">Read the plan to start</button>`}</div></div>
+  ${S.planSeen?'':`<div class="callout"><b>Start here</b>Open your binder and read Camila's behavior plan.</div>`}`;
+ if(S.stage==='moment'){const m=M[S.m];return bg+win(IMG[m.img])+`<div class="col"><span class="chip">MOMENT ${S.log.length+1}</span>
+  <h1 style="font-size:36px;line-height:1.05">${m.title}</h1><p class="lead">${m.text}</p>
+  <div class="answers one">${order(m.ch.length,S.m).map(i=>`<button class="ans" onclick="simPick(${i})">${m.ch[i][0]}</button>`).join('')}</div></div>`}
+ if(S.stage==='react'){const R=S.react;return bg+`<div class="win ${R.off?'off':'on'}"><div class="l1"></div><div class="l2"></div><img src="${IMG[R.img]}" alt="">${R.off?'<span class="offtag">OFF PLAN</span>':''}</div>`+`<div class="col"><span class="chip ${R.off?'off':''}">${R.off?'THAT DIDN\'T GO AS PLANNED':'ON PLAN'}</span><h1 style="font-size:38px;line-height:1.06">${R.title}</h1><p class="lead">${R.text}</p><div><button class="pill" onclick="simContinue()">Continue</button></div></div>`}
+ if(S.stage==='end'){const e=ending();if(!S.counted){S.counted=true;st.simRuns++;if(e.ok&&!st.simWon)st.simWon=st.simRuns}const canDebrief=e.ok||st.simRuns>=2;
+  return bg+win(IMG[e.img])+`<div class="col"><span class="chip">SESSION OVER</span><h1 style="font-size:44px;line-height:1.02">${e.title}</h1><p class="lead">${e.text}</p>
+  <div class="dots">Choices that followed the plan: ${S.log.map(l=>`<span class="dot ${l.best?'on':''}"></span>`).join('')}</div>
+  ${e.ok?'':`<p class="lead" style="font-size:15px">${canDebrief?'You can try once more, or head to the debrief to see what to change.':'Try the session again before writing your data. Your supervisor\'s notes will still help.'}</p>`}
+  <div style="display:flex;gap:10px">${e.ok?`<button class="pill" onclick="simDebrief()">See your debrief</button>`:`<button class="pill" onclick="newSim(true);simStart()">Try the session again</button>${canDebrief?`<button class="btn light" onclick="simDebrief()">Go to the debrief</button>`:''}`}</div></div>`}
+ if(S.stage==='debrief'){const o=(v,t,k)=>`<option value="${v}" ${S.abcAns[k]===v?'selected':''}>${t}</option>`;return bg+`<div style="position:absolute;left:60px;right:60px;top:60px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:26px">
+  <div style="display:flex;flex-direction:column;gap:12px"><h1 style="font-size:36px">Your session, replayed</h1>
+  <div class="dlist">${S.log.map(l=>`<div class="drow"><img src="a/ico_${l.best?'correct':'tryagain'}.png" alt="${l.best?'Followed the plan':'Off plan'}"><div><b>YOU CHOSE</b><span>${l.choice}</span></div><div><b>THE PLAN</b><span>${l.note}</span></div></div>`).join('')}</div></div>
+  <div style="display:flex;flex-direction:column;gap:12px"><h2 style="font-size:28px">Write the ABC data</h2><p class="lead" style="font-size:15px">Record the shove as it happened in <i>your</i> session. Keep it objective.</p>
+  <label class="abcl">ANTECEDENT<select onchange="abcSet('a',this.value)"><option value="">Choose...</option>${o('x1','Camila seemed tired','a')}${o('ok','Worksheet was presented','a')}${o('x2','Tablet time ended','a')}</select></label>
+  <label class="abcl">BEHAVIOR<select onchange="abcSet('b',this.value)"><option value="">Choose...</option>${o('x1','Camila got frustrated and acted out','b')}${o('ok','Swept the worksheet off the table','b')}${o('x2','Camila was noncompliant','b')}</select></label>
+  <label class="abcl">CONSEQUENCE<select onchange="abcSet('c',this.value)"><option value="">Choose...</option>${o('re','Worksheet re-presented, break card prompted','c')}${o('lecture','RBT explained the rule about materials','c')}${o('removed','Short break given, worksheet tried again later','c')}</select></label>
+  ${abcFeedback()}
+  <div><button class="btn light" onclick="newSim(true);draw()">Replay the session</button></div></div></div>`}}
+function simStart(){const S=st.sim;S.stage='moment';S.m='m1';swap()}
+function simPick(i){simCommit(i)}
+function showNote(n){const w=$('#noteWrap');w.innerHTML=`<div class="note"><small>NOTE FROM YOUR SUPERVISOR</small><p>${n.text}</p><span style="font-size:13px;line-height:1.4;color:#6a5020"><b>Next time:</b> ${n.hint}</span><div class="row"><button class="btn" onclick="hideNote()">Got it</button></div></div>`;w.classList.add('on')}
+function hideNote(){$('#noteWrap').classList.remove('on')}
+function simCommit(i){const S=st.sim,m=M[S.m],c=m.ch[i],x=c[4]||{},best=i===BEST[S.m];
+ S.fid+=c[1];S.upset=Math.max(0,S.upset+c[2]);if(x.sup)S.sup=true;if(x.abc)S.abc=x.abc;
+ S.log.push({choice:c[0],note:c[3],best});if(S.guided&&!best)S.note={text:c[3],hint:HINTS[S.m]};const nxt=m.next(S);
+ const re=RE[S.m+'_'+i];
+ if(!best&&re){S.react={img:re[0],title:re[1],text:re[2],off:true};S.nextM=(S.m==='m2'&&x.gaveIn)?'m3':nxt;S.stage='react';return swap()}
+ if(x.after){S.react={img:x.after,title:'Camila takes her break.',text:'The timer runs. She hugs the squishy toy, breathes, and comes back to the table on her own.',on:true};S.nextM=nxt;S.stage='react';return swap()}
+ go2(nxt)}
+function simContinue(){go2(st.sim.nextM)}
+function go2(n){const S=st.sim;if(n==='end')S.stage='end';else{S.stage='moment';S.m=n}swap()}
+function ending(){const S=st.sim,good=S.log.filter(l=>l.best).length;
+ if(S.sup)return {ok:false,img:'sup',title:'You called for support.',text:'Your supervisor comes in, gets down to Camila\'s level, and helps her calm down. Knowing when to ask for help is part of the job. Next time, see if the plan can keep things from getting this far.'};
+ if(good>=4&&S.upset<1)return {ok:true,img:'good',title:'Smooth session!',text:'Camila filled her token board and gave you a high five. You followed her plan, and she used her break card instead of pushing the work away.'};
+ return {ok:false,img:'warning',title:'A rocky session.',text:'Camila finished, but it was a hard day for both of you. A few choices drifted from her plan.'}}
+function simDebrief(){st.sim.stage='debrief';swap()}
+function abcSet(k,v){st.sim.abcAns[k]=v;draw()}
+function abcOk(){const S=st.sim,a=S.abcAns;return a.a==='ok'&&a.b==='ok'&&a.c===(S.abc||'re')}
+function abcFeedback(){const S=st.sim,a=S.abcAns;if(!a.a||!a.b||!a.c)return '';const cOk=a.c===(S.abc||'re'),ok=a.a==='ok'&&a.b==='ok'&&cOk;
+ const t=ok?'Clear, objective and accurate to your session. That\'s data your supervisor can use.':[a.a!=='ok'?'The antecedent is what happened right before: the worksheet. "Seemed tired" is a guess.':'',a.b!=='ok'?'Describe what you saw, not a label like "acted out" or "noncompliant."':'',!cOk?'Check the consequence against what you actually did in your session.':''].filter(Boolean).join(' ');
+ return fb(ok,[ok?'Nice data.':'Almost.',ok?t+' Hit next for the final check.':t])}
+
+/* engine */
+let curBg='',lastSec=-1;
+function render(anim){const s=L[st.i];$('#binderBtn').style.display=s.sim?'block':'none';$('#binderBtn').classList.toggle('pulse',!!(s.sim&&st.sim&&st.sim.stage==='intro'&&!st.sim.planSeen));const tmp=document.createElement('div');tmp.innerHTML=s.r();
+ const bgEls=[...tmp.children].filter(e=>e.matches('.bgimg,.shade,.shadeT,.hero,.heroshade'));
+ const sig=bgEls.map(e=>e.outerHTML).join('');
+ if(sig!==curBg){curBg=sig;const lay=document.createElement('div');lay.className='bglayer'+(anim?' fresh':'');bgEls.forEach(e=>lay.appendChild(e));const wrap=$('#bgwrap');wrap.appendChild(lay);
+  if(anim){requestAnimationFrame(()=>requestAnimationFrame(()=>lay.classList.remove('fresh')));setTimeout(()=>{while(wrap.children.length>1)wrap.firstChild.remove()},500)}else{while(wrap.children.length>1)wrap.firstChild.remove()}}
+ else bgEls.forEach(e=>e.remove());
+ const sc=$('#screen');sc.innerHTML='';[...tmp.children].forEach((e,k)=>{if(anim){e.classList.add('enter');e.style.animationDelay=(k*70)+'ms'}sc.appendChild(e)});
+ sc.classList.remove('leaving');
+ $('#lessonTag').textContent=s.tag;
+ const sec=s.sec;$('#prog').querySelectorAll('.leaf').forEach((d,k)=>{const t=k<sec?'done':k===sec?'now':'todo';d.className='leaf '+t+(t==='now'&&sec!==lastSec&&lastSec>=0?' pop':'');d.style.backgroundImage=`url(b/leaf_${t}.png)`});
+ $('#prog').querySelectorAll('.lbl').forEach((d,k)=>d.className='lbl'+(k===sec?' now':''));lastSec=sec;
+ canNext=s.gate?s.gate():true;
+ const simHide=s.sim&&!(st.sim&&st.sim.stage==='debrief');$('#next').disabled=!canNext||!!s.nonext||simHide;$('#next').style.visibility=simHide?'hidden':'visible';
+ $('#back').disabled=st.i===0||(s.sim&&st.sim&&!['intro','debrief','end'].includes(st.sim.stage));
+ fitText();
+ if(s.sim&&st.sim&&st.sim.note){const n=st.sim.note;st.sim.note=null;setTimeout(()=>showNote(n),anim?650:0)}}
+function draw(){render(false)}
+function fitText(){document.querySelectorAll('#screen .ans').forEach(b=>{let fs=parseFloat(getComputedStyle(b).fontSize);while(b.scrollHeight>b.clientHeight+1&&fs>12){fs-=1;b.style.fontSize=fs+'px'}})}
+let busy=false;
+function swap(fn){if(busy)return;busy=true;hideNote();$('#screen').classList.add('leaving');setTimeout(()=>{fn&&fn();render(true);busy=false},190)}
+function go(i){hideNote();swap(()=>{st.i=i;if(L[i].sim&&!st.sim)newSim(true)})}
+$('#next').onclick=()=>{if(canNext&&st.i<L.length-1)go(st.i+1)};
+$('#back').onclick=()=>{const s=L[st.i];if(s.sim&&st.sim&&st.sim.stage!=='intro'){newSim(true);swap();return}if(st.i>0)go(st.i-1)};
+function openModal(){const s=L[st.i];if(s.sim&&st.sim&&!st.sim.planSeen){st.sim.planSeen=true;$('#closeBtn').dataset.redraw='1'}$('#modalBody').innerHTML=s.sim?planHTML():binderHTML(st.btab);$('#modal').classList.add('on')}
+function mTab(i){st.btab=i;openModal()}
+$('#binderBtn').onclick=()=>{if(L[st.i].sim)openModal()};$('#closeBtn').onclick=closeModal;
+function closeModal(){$('#modal').classList.remove('on');if($('#closeBtn').dataset.redraw){delete $('#closeBtn').dataset.redraw;draw()}}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();hideNote()}});
+LEAFX.forEach((x,k)=>{const d=document.createElement('span');d.className='leaf';d.style.left=(x*100)+'%';$('#prog').appendChild(d);const l=document.createElement('span');l.className='lbl';l.style.left=(x*100)+'%';l.textContent=SECTIONS[k];$('#prog').appendChild(l)});
+function fit(){const s=Math.min(innerWidth/1280,innerHeight/800);$('#stage').style.transform=`scale(${s})`}
+addEventListener('resize',fit);fit();
+['a/hero.jpg','a/bg.jpg','b/abc_0.jpg','b/abc_1.jpg','b/abc_2.jpg',...F.map(f=>f.img),...QC.map(q=>q.img),...Object.values(IMG)].forEach(u=>{const i=new Image();i.src=u});
+draw();
+</script>
+</body>
+</html>

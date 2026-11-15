@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gisselle Echevarria · Learning Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#141a72; --navy-soft:#3a3f8f;
+    --pink:#fdc4e6; --pink-deep:#e77fbb;
+    --lav:#ddd9fe; --blue:#bfe0ff;
+    --paper:#fef9f7; --white:#fff; --grid:#eceaf4;
+    --text:#26285c; --muted:#62658f;
+    --grad:linear-gradient(90deg,var(--pink) 0%,var(--lav) 55%,var(--blue) 100%);
+    --px:3px;
+    --pixel:"Jersey 10",ui-monospace,monospace;
+    --body:"Nunito",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:var(--body);color:var(--text);line-height:1.6;font-size:17px;
+    background:var(--white);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:28px 28px;min-height:100vh;
+  }
+  img{max-width:100%;display:block}
+  a{color:var(--navy)}
+  h1,h2,h3{font-family:var(--pixel);color:var(--navy);line-height:1.05;font-weight:400;letter-spacing:.3px}
+
+  /* window */
+  .win{background:var(--paper);border:var(--px) solid var(--navy);border-radius:10px;
+    box-shadow:0 0 0 var(--px) var(--lav),6px 6px 0 0 rgba(20,26,114,.12);position:relative;overflow:hidden}
+  .win-bar{display:flex;align-items:center;gap:10px;background:var(--grad);border-bottom:var(--px) solid var(--navy);
+    padding:6px 10px 6px 14px;font-family:var(--pixel);font-size:20px;color:var(--navy)}
+  .win-bar .title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .win-btns{display:flex;gap:5px}
+  .win-btns span{width:22px;height:20px;border:2px solid var(--navy);border-radius:4px;background:var(--white);
+    display:grid;place-items:center;font-family:var(--pixel);font-size:12px;line-height:1}
+  .win-btns span:last-child{background:#ffe3f1}
+  .win-body{padding:22px}
+  .addr{display:flex;gap:8px;align-items:center;padding:8px 12px;border-bottom:2px solid var(--navy);background:#f7f4ff}
+  .addr .nav-dot{width:22px;height:22px;border:2px solid var(--navy);border-radius:6px;background:var(--white);font-family:var(--pixel);font-size:12px;display:grid;place-items:center}
+  .addr .bar{flex:1;border:2px solid var(--navy);border-radius:20px;background:var(--white);padding:0 12px;font-size:17px;color:var(--muted);font-family:var(--pixel)}
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--pixel);font-size:21px;color:var(--navy);
+    text-decoration:none;cursor:pointer;padding:9px 20px;border:var(--px) solid var(--navy);border-radius:8px;
+    background:var(--grad);box-shadow:0 4px 0 0 var(--navy);transition:transform .08s,box-shadow .08s}
+  .btn:hover{transform:translateY(2px);box-shadow:0 2px 0 0 var(--navy)}
+  .btn:active{transform:translateY(4px);box-shadow:none}
+  .btn.secondary{background:var(--white)}
+  .btn.small{font-size:18px;padding:3px 14px}
+  .btn-row{display:flex;gap:14px;flex-wrap:wrap}
+
+  /* the little grade/skill line */
+  .meta{font-family:var(--pixel);font-size:17px;letter-spacing:.6px;text-transform:uppercase;color:var(--pink-deep)}
+  /* cartridge-style grade + skill label */
+  .label{display:flex;align-items:stretch;border:var(--px) solid var(--navy);border-radius:4px;overflow:hidden;
+    font-family:var(--pixel);font-size:18px;line-height:1.15;box-shadow:3px 3px 0 0 var(--navy)}
+  .label .g{background:var(--navy);color:var(--white);padding:4px 10px;white-space:nowrap;display:flex;align-items:center}
+  .label .s{background:var(--grad);color:var(--navy);padding:4px 10px;flex:1;display:flex;align-items:center}
+  .label.big{font-size:22px}
+  .label.big .g,.label.big .s{padding:6px 12px}
+
+  /* header + nav */
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(6px);border-bottom:var(--px) solid var(--navy)}
+  .head-inner{max-width:1180px;margin:0 auto;padding:8px 20px;display:flex;align-items:center;gap:20px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+  .brand img{width:42px;height:42px;object-fit:contain}
+  .brand .name{font-family:var(--pixel);font-size:26px;color:var(--navy);line-height:1.1}
+  .brand .role{font-size:13px;color:var(--muted);font-weight:700;line-height:1.2}
+  nav{margin-left:auto}
+  nav ul{list-style:none;display:flex;gap:2px}
+  nav a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;
+    font-family:var(--pixel);font-size:16px;color:var(--navy);padding:4px 8px;min-width:70px;
+    border:2px solid transparent;border-radius:8px;white-space:nowrap}
+  nav a img{width:30px;height:30px;object-fit:contain}
+  nav a:hover{border-color:var(--navy);background:#faf6ff}
+  nav a.active{border-color:var(--navy);background:var(--grad)}
+  .menu-btn{display:none;margin-left:auto}
+
+  /* path bar with back button */
+  .pathbar{max-width:1180px;margin:22px auto 0;padding:0 20px;display:none}
+  .pathbar.show{display:block}
+  .pathbar .inner{display:flex;align-items:center;gap:12px;background:var(--white);border:2px solid var(--navy);border-radius:10px;padding:6px 8px}
+  .pathbar .path{font-family:var(--pixel);font-size:19px;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .pathbar .path a{color:var(--navy);text-decoration:none}
+  .pathbar .path a:hover{text-decoration:underline}
+  .pathbar .path .sep{margin:0 6px;color:var(--pink-deep)}
+
+  /* layout */
+  main{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+  .view{display:none;animation:pop .25s ease-out}
+  .view.active{display:block}
+  @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  section{margin-bottom:56px}
+  .section-title{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+  .section-title img{width:44px;height:44px;object-fit:contain}
+  .section-title h2{font-size:36px}
+  .grid{display:grid;gap:26px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+
+  .ph{background:repeating-linear-gradient(45deg,#f6f0ff 0 12px,#fdf3fa 12px 24px);border:2px dashed var(--navy-soft);
+    border-radius:8px;display:grid;place-items:center;text-align:center;font-family:var(--pixel);color:var(--navy-soft);font-size:19px;padding:12px}
+  .ph.r169{aspect-ratio:16/9}.ph.r43{aspect-ratio:4/3}.ph.page{aspect-ratio:8.5/11}
+  .ph-lines span{display:block;height:11px;border-radius:6px;background:#ebe6fa;margin:9px 0}
+  .ph-lines span:nth-child(2){width:92%}.ph-lines span:nth-child(3){width:78%}
+  .play{width:68px;height:68px;border:var(--px) solid var(--navy);border-radius:50%;background:var(--grad);display:grid;place-items:center;margin:0 auto 10px}
+  .play::after{content:"";border-left:20px solid var(--navy);border-top:13px solid transparent;border-bottom:13px solid transparent;margin-left:6px}
+  .sticker{position:absolute;pointer-events:none;z-index:2}
+  video.reel{width:100%;aspect-ratio:16/9;display:block;border:2px solid var(--navy);border-radius:8px;background:#1d1f40}
+  .thumb{display:block;aspect-ratio:16/10;border:2px solid var(--navy);border-radius:8px;overflow:hidden;background:#f6f0ff}
+  .thumb img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .25s}
+  .thumb:hover img{transform:scale(1.04)}
+  .stage{position:relative;aspect-ratio:16/10;border:var(--px) solid var(--navy);border-radius:8px;overflow:hidden;background:#1d1f40}
+  .stage img{width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(.55) saturate(.9);transition:filter .2s}
+  .stage:hover img{filter:brightness(.68) saturate(1)}
+  .stage iframe{width:100%;height:100%;border:0;display:block;background:#fff}
+  .play-btn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:28px;padding:12px 30px;gap:12px;z-index:2}
+  .play-btn:hover{transform:translate(-50%,calc(-50% + 2px))}
+  .play-btn:active{transform:translate(-50%,calc(-50% + 4px))}
+  .tri{width:0;height:0;border-left:16px solid var(--navy);border-top:10px solid transparent;border-bottom:10px solid transparent}
+  .tri.sm{border-left-width:11px;border-top-width:7px;border-bottom-width:7px}
+  .stage{border-radius:8px 8px 0 0 !important}
+  .stage video{position:absolute;inset:0;width:100%;height:100%;background:#fff;display:block}
+  .stage:fullscreen{border:0;border-radius:0 !important;aspect-ratio:auto}
+  .player-bar{display:flex;gap:6px;align-items:center;border:var(--px) solid var(--navy);border-top:0;border-radius:0 0 8px 8px;background:var(--white);padding:6px 8px}
+  .pbar-btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--pixel);font-size:19px;color:var(--navy);background:none;border:2px solid transparent;
+    border-radius:6px;padding:3px 10px;cursor:pointer;text-decoration:none}
+  .pbar-btn:hover{border-color:var(--navy);background:#faf6ff}
+  .pbar-btn.off{opacity:.55;cursor:default;border-color:transparent;background:none}
+  .stage-note{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:3;background:var(--paper);border:var(--px) solid var(--navy);
+    border-radius:8px;padding:8px 16px;font-family:var(--pixel);font-size:19px;color:var(--navy);box-shadow:0 4px 0 0 var(--navy);white-space:nowrap}
+  .pbar-btn em{font-style:normal;font-size:15px;color:var(--pink-deep);margin-left:2px}
+  .fs-ico{width:16px;height:16px;border:3px solid var(--navy);border-radius:2px;position:relative}
+  .fs-ico::after{content:"";position:absolute;inset:3px -5px;background:var(--white)}
+  .fs-ico::before{content:"";position:absolute;inset:-5px 3px;background:var(--white);z-index:1}
+
+  /* home */
+  .hero{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;position:relative;margin-top:12px}
+  .hero .intro .win-body{display:flex;gap:22px;align-items:center}
+  .hero .avatar{width:140px;flex-shrink:0;background:#f7f2ff;border:2px solid var(--navy);border-radius:10px;padding:8px}
+  .hero .kicker{font-family:var(--pixel);color:var(--pink-deep);font-size:23px}
+  .hero h1{font-size:46px;margin:2px 0 12px}
+  .hero p{margin-bottom:18px;color:var(--muted)}
+
+  /* project card */
+  .proj .win-body{padding:16px;display:flex;flex-direction:column;height:calc(100% - 37px)}
+  .proj .label{margin:16px 0 12px}
+  .proj h3{font-size:28px;margin:0 0 6px}
+  .proj p{font-size:15px;color:var(--muted);margin-bottom:16px;flex:1}
+  .proj .btn{align-self:flex-start}
+  .soon-btn{opacity:.6;cursor:default;pointer-events:none}
+  .proj .soon{position:absolute;top:54px;right:12px;z-index:3;font-family:var(--pixel);font-size:16px;
+    background:#ffe3f1;border:2px solid var(--navy);border-radius:6px;padding:1px 8px}
+
+  .folder-card{text-decoration:none;color:inherit;display:block;transition:transform .12s}
+  .folder-card:hover{transform:translateY(-4px) rotate(-.4deg)}
+  .folder-card .win-body{text-align:center;padding:26px 20px}
+  .folder-card img{width:92px;height:92px;object-fit:contain;margin:0 auto 12px}
+  .folder-card h3{font-size:28px;margin-bottom:6px}
+  .folder-card p{font-size:15px;color:var(--muted)}
+  .folder-card .meta{margin-top:12px;display:block;font-size:18px}
+
+  .divider{height:30px;background:url(assets/deco-heart-divider.png) center/contain no-repeat;margin:10px auto 46px;max-width:620px}
+  .cta .win-body{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+  .cta img{width:80px}
+  .cta h2{font-size:34px}
+  .cta p{color:var(--muted)}
+  .cta .btn-row{margin-left:auto}
+
+  /* section page head */
+  .page-head{display:flex;gap:24px;align-items:center}
+  .page-head img.big{width:104px;flex-shrink:0}
+  .page-head h1{font-size:44px}
+  .page-head p{color:var(--muted);max-width:640px}
+
+  /* case study */
+  .cs-hero h1{font-size:48px;margin:2px 0 8px}
+  .cs-hero .lead{color:var(--muted);margin-bottom:18px;font-size:18px}
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .cs-layout{display:grid;grid-template-columns:270px 1fr;gap:26px;align-items:start;margin-top:28px}
+  .cs-side{position:sticky;top:96px}
+  .cs-side dl{display:grid;gap:12px}
+  .cs-side dt{font-family:var(--pixel);font-size:17px;color:var(--pink-deep);text-transform:uppercase;letter-spacing:.6px}
+  .cs-side dd{font-size:15px}
+  .cs-side .toc{margin-top:18px;border-top:2px dashed var(--lav);padding-top:14px}
+  .cs-side .toc a{display:block;font-family:var(--pixel);font-size:20px;text-decoration:none;padding:3px 0}
+  .cs-side .toc a::before{content:"> ";color:var(--pink-deep)}
+  .cs-main > .win{margin-bottom:24px}
+  .cs-main h2{font-size:30px;margin-bottom:10px}
+  .cs-text p{margin:0 0 12px;max-width:68ch}
+  .cs-text b{color:var(--navy);font-weight:800;background:linear-gradient(transparent 62%,rgba(253,196,230,.75) 62%)}
+  .cs-summary{margin-top:28px}
+  .cs-summary p{font-size:19px;line-height:1.55;max-width:80ch}
+  .flip-stage{position:relative;border:var(--px) solid var(--navy);border-radius:8px 8px 0 0;background:#efe9f7;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;
+    padding:26px 64px;display:flex;justify-content:center;min-height:300px}
+  .flip-spread{display:flex;justify-content:center}
+  .book{--h:min(60vh,580px,calc((100vw - 290px) / 1.6));--w:calc(var(--h) * 0.7727);position:relative;display:flex;perspective:2400px;padding:12px 0 16px}
+  .book .board{position:absolute;top:2px;bottom:4px;left:calc(50% - 10px);right:calc(50% - 10px);background:var(--cover);border-radius:10px;
+    box-shadow:0 18px 30px rgba(20,26,114,.28),inset 0 0 0 3px rgba(0,0,0,.12)}
+  .book .board.hasL{left:-12px}.book .board.hasR{right:-12px}
+  .book .slot{width:var(--w);height:var(--h);position:relative;z-index:1}
+  .book .slot.empty{visibility:hidden}
+  .book .pgwrap{position:absolute;inset:0;background:#fffdf8}
+  .book .slot img,.leaf img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+  .book .slot.L .pgwrap{border-radius:6px 0 0 6px;box-shadow:-2px 2px 0 #f3eee4,-4px 4px 0 #e9e2d5,-6px 6px 0 #ded6c6,-8px 8px 0 #d3cab8}
+  .book .slot.R .pgwrap{border-radius:0 6px 6px 0;box-shadow:2px 2px 0 #f3eee4,4px 4px 0 #e9e2d5,6px 6px 0 #ded6c6,8px 8px 0 #d3cab8}
+  .book .slot .pgwrap::after,.leaf .lf::after{content:"";position:absolute;inset:0;pointer-events:none}
+  .book .slot.L .pgwrap::after,.leaf .backside::after{background:linear-gradient(90deg,rgba(0,0,0,0) 78%,rgba(40,20,10,.10) 92%,rgba(40,20,10,.28))}
+  .book .slot.R .pgwrap::after,.leaf .front::after{background:linear-gradient(90deg,rgba(40,20,10,.28),rgba(40,20,10,.10) 8%,rgba(0,0,0,0) 22%)}
+  .book .slot.L.empty + .slot.R .pgwrap::after{background:linear-gradient(90deg,rgba(40,20,10,.22),rgba(0,0,0,0) 6%)}
+  .book.one .slot.R .pgwrap{border-radius:6px}
+  .book.one .slot.R .pgwrap::after{background:none}
+  .leaf{position:absolute;top:12px;width:var(--w);height:var(--h);z-index:3;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.45,.05,.3,1)}
+  .leaf.fwd{left:50%;transform-origin:left center}
+  .leaf.back{right:50%;transform-origin:right center}
+  .leaf.fwd.go{transform:rotateY(-180deg)}
+  .leaf.back.go{transform:rotateY(180deg)}
+  .leaf .lf{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fffdf8;overflow:hidden}
+  .leaf.fwd .front{border-radius:0 6px 6px 0}
+  .leaf.fwd .backside{transform:rotateY(180deg);border-radius:6px 0 0 6px}
+  .leaf.back .front{border-radius:6px 0 0 6px}
+  .leaf.back .backside{transform:rotateY(180deg);border-radius:0 6px 6px 0}
+  .leaf.back .front::after{background:linear-gradient(90deg,rgba(0,0,0,0) 78%,rgba(40,20,10,.10) 92%,rgba(40,20,10,.28))}
+  .leaf.back .backside::after{background:linear-gradient(90deg,rgba(40,20,10,.28),rgba(40,20,10,.10) 8%,rgba(0,0,0,0) 22%)}
+  .flip-arr{z-index:5;position:absolute;top:50%;transform:translateY(-50%);width:42px;height:56px;border:var(--px) solid var(--navy);border-radius:8px;
+    background:var(--white);color:var(--navy);font-family:var(--pixel);font-size:40px;line-height:1;cursor:pointer;box-shadow:0 4px 0 0 var(--navy)}
+  .flip-arr.l{left:12px}.flip-arr.r{right:12px}
+  .flip-arr:disabled{opacity:.35;cursor:default}
+  .flip-arr:not(:disabled):hover{background:var(--pink)}
+  .flip-bar{justify-content:space-between;font-family:var(--pixel);font-size:19px;color:var(--navy);padding:6px 14px}
+  .flip-tip{color:var(--muted);font-size:17px}
+  .flip-thumbs{display:flex;gap:8px;overflow-x:auto;padding:12px 2px 4px}
+  .flip-thumbs button{flex:0 0 auto;border:2px solid var(--navy);border-radius:4px;padding:0;background:none;cursor:pointer;opacity:.6}
+  .flip-thumbs button.on{opacity:1;outline:3px solid var(--pink-deep);outline-offset:2px}
+  .flip-thumbs img{width:58px;height:auto;display:block;border-radius:2px}
+  .page-zoom{position:fixed;inset:0;z-index:200;background:rgba(20,26,114,.55);display:flex;align-items:center;justify-content:center;padding:18px;outline:none}
+  .pz-box{background:var(--paper);border:var(--px) solid var(--navy);border-radius:10px;overflow:hidden;max-height:100%;display:flex;flex-direction:column;box-shadow:8px 8px 0 rgba(20,26,114,.25)}
+  .pz-box img{max-height:calc(100vh - 110px);max-width:calc(100vw - 50px);width:auto;display:block;object-fit:contain}
+  .pz-bar{display:flex;gap:10px;align-items:center;justify-content:center;padding:8px 10px;border-top:var(--px) solid var(--navy);font-family:var(--pixel);font-size:19px;color:var(--navy)}
+  .pz-bar button{font-family:var(--pixel);font-size:18px;color:var(--navy);background:var(--white);border:2px solid var(--navy);border-radius:6px;padding:2px 10px;cursor:pointer}
+  .pz-bar button:disabled{opacity:.35;cursor:default}
+  .pz-bar .pz-x{margin-left:14px;background:#ffe3f1}
+  .cs-summary .series{margin-top:12px;font-size:16px;color:var(--muted)}
+  .cs-summary .series a{color:var(--navy);font-weight:700}
+  @media (max-width:720px){.flip-stage{padding:16px 46px}.book{--h:min(64vh,calc((100vw - 190px) * 1.294))}.flip-tip{display:none}}
+  .cs-fig{margin:0}
+  .cs-fig img{width:100%;border:2px solid var(--navy);border-radius:8px;display:block}
+  .cs-fig figcaption{font-size:15px;color:var(--muted);margin-top:8px;line-height:1.45}
+  .cs-list{list-style:none;display:grid;gap:12px;max-width:72ch}
+  .cs-list li{padding-left:26px;position:relative}
+  .cs-list li::before{content:"";position:absolute;left:4px;top:.55em;width:10px;height:10px;background:var(--grad);border:2px solid var(--navy)}
+  .cs-list b{color:var(--navy);font-weight:800}
+  .cs-sub{font-size:22px;margin:16px 0 4px;color:var(--pink-deep)}
+  .cs-sub:first-of-type{margin-top:4px}
+  .todo{background:#ffe3f1;border:2px dashed var(--pink-deep);border-radius:6px;padding:0 6px;color:#9d2a6b;font-weight:700}
+
+  /* about / resume / contact */
+  .about-grid{display:grid;grid-template-columns:320px 1fr;gap:26px;align-items:start}
+  .avatar-big{background:#f7f2ff;border:2px solid var(--navy);border-radius:10px;padding:14px}
+  .filelist{list-style:none;columns:2;column-gap:20px}
+  .filelist li{font-size:15px;padding:3px 0;break-inside:avoid}
+  .filelist li::before{content:"> ";font-family:var(--pixel);color:var(--pink-deep)}
+  .timeline{list-style:none;display:grid;gap:14px}
+  .timeline li{display:grid;grid-template-columns:110px 1fr;gap:12px}
+  .timeline .when{font-family:var(--pixel);color:var(--pink-deep);font-size:20px}
+  .contact-list{list-style:none;display:grid;gap:14px}
+  .contact-list li{display:flex;align-items:center;gap:14px}
+  .contact-list .k{font-family:var(--pixel);font-size:21px;width:110px;color:var(--navy)}
+  .contact-list a.v{color:var(--navy);text-decoration:none}
+  .contact-list a.v:hover{text-decoration:underline}
+  .contact-list .v{flex:1;border:2px solid var(--navy);border-radius:8px;background:var(--white);padding:8px 14px;color:var(--muted)}
+
+  .resume{max-width:820px}
+  .resume .r-head{border-bottom:2px dashed var(--lav);padding-bottom:12px;margin-bottom:6px}
+  .resume .r-head h2{font-size:36px}
+  .resume .r-head p{color:var(--muted)}
+  .resume h3{font-size:24px;color:var(--pink-deep);margin:18px 0 6px}
+  .resume .r-item{display:flex;justify-content:space-between;gap:16px;margin-top:10px}
+  .resume .r-item span{font-family:var(--pixel);font-size:19px;color:var(--navy-soft);white-space:nowrap}
+  .resume p{color:var(--muted);font-size:16px;margin:2px 0 0}
+  footer{border-top:var(--px) solid var(--navy);background:rgba(255,255,255,.92);padding:22px 20px;text-align:center;font-family:var(--pixel);color:var(--navy-soft);font-size:19px}
+  footer img{height:22px;display:inline;vertical-align:middle;margin:0 4px}
+
+  @media (max-width:1100px){
+    nav a{min-width:58px;padding:4px 5px;font-size:15px}
+    nav a img{width:26px;height:26px}
+    .brand .role{display:none}
+  }
+  @media (max-width:980px){
+    .g3{grid-template-columns:repeat(2,1fr)}
+    .hero,.cs-layout,.about-grid{grid-template-columns:1fr}
+    .cs-side{position:static}
+  }
+  @media (max-width:820px){
+    .menu-btn{display:inline-flex}
+    .brand .role{display:block}
+    nav{position:absolute;top:100%;left:0;right:0;background:var(--white);border-bottom:var(--px) solid var(--navy);display:none}
+    nav.open{display:block}
+    nav ul{flex-direction:column;padding:10px 16px}
+    nav a{flex-direction:row;gap:12px;font-size:21px;padding:8px 10px}
+  }
+  @media (max-width:720px){
+    body{font-size:16px}
+    .g2,.g3,.gallery{grid-template-columns:1fr}
+    .head-inner{gap:10px;padding:8px 14px}
+    .brand{flex-shrink:1;min-width:0}
+    .brand .name{font-size:18px}.brand .role{font-size:11px}
+    .menu-btn{flex-shrink:0}
+    .hero .intro .win-body{flex-direction:column;text-align:center}
+    .hero h1{font-size:30px}
+    .btn-row{justify-content:center}
+    .page-head{flex-direction:column;text-align:center}
+    .sticker{display:none}
+    .cta .btn-row{margin-left:0}
+    .filelist{columns:1}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <a class="brand" href="#home">
+      <img src="assets/icon-about-me.png" alt="">
+      <div>
+        <div class="name">Gisselle Echevarria</div>
+        <div class="role">Learning Designer</div>
+      </div>
+    </a>
+    <button class="btn secondary small menu-btn" id="menuBtn" aria-label="Open menu">menu</button>
+    <nav id="nav">
+      <ul>
+        <li><a href="#home" data-route="home"><img src="assets/icon-home.png" alt="">Home</a></li>
+        <li><a href="#kids" data-route="kids"><img src="assets/icon-game-controller.png" alt="">Kids' games</a></li>
+        <li><a href="#adult" data-route="adult"><img src="assets/icon-graduation-cap.png" alt="">Adult learning</a></li>
+        <li><a href="#curriculum" data-route="curriculum"><img src="assets/icon-book-pencil.png" alt="">Curriculum</a></li>
+        <li><a href="#about" data-route="about"><img src="assets/icon-about-me.png" alt="">About</a></li>
+        <li><a href="#resume" data-route="resume"><img src="assets/icon-resume.png" alt="">Resume</a></li>
+        <li><a href="#contact" data-route="contact"><img src="assets/icon-envelope.png" alt="">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="pathbar" id="pathbar">
+  <div class="inner">
+    <a class="btn secondary small" id="backBtn" href="#home">&larr; Back</a>
+    <div class="path" id="pathText"></div>
+  </div>
+</div>
+
+<main>
+
+<!-- HOME -->
+<div class="view" id="view-home">
+  <section class="hero">
+    <img class="sticker" src="assets/deco-sparkles.png" alt="" style="width:64px;top:-40px;left:-30px">
+    <div class="win intro">
+      <div class="win-bar"><span class="title">welcome.exe</span><div class="win-btns"><span>_</span><span>□</span><span>x</span></div></div>
+      <div class="win-body">
+        <img class="avatar" src="assets/icon-about-me.png" alt="Pixel portrait">
+        <div>
+          <div class="kicker">Hi, I'm Gigi!</div>
+          <h1>I put the fun back in fundamentals.</h1>
+          <p>I'm a learning designer and former classroom teacher who builds games, eLearning, and materials that learners don't groan at.</p>
+          <div class="btn-row">
+            <a class="btn" href="#home" id="viewWork">View my work</a>
+            <a class="btn secondary" href="#resume">Resume</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="win">
+      <div class="win-bar"><span class="title">demo_reel.mp4</span><div class="win-btns"><span>_</span><span>□</span><span>x</span></div></div>
+      <div class="win-body"><video class="reel" src="assets/reel/demo-reel.mp4" poster="assets/reel/poster.jpg" controls preload="metadata" playsinline></video></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title" id="featuredTitle" style="scroll-margin-top:110px"><img src="assets/deco-star-large.png" alt=""><h2>Featured work</h2></div>
+    <div class="grid g3" id="featured"></div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section style="position:relative">
+    <div class="section-title"><img src="assets/icon-folder.png" alt=""><h2>Browse by section</h2></div>
+    <div class="grid g3" id="folders"></div>
+  </section>
+
+  <section class="win cta">
+    <div class="win-bar"><span class="title">new_message.txt</span><div class="win-btns"><span>_</span><span>□</span><span>x</span></div></div>
+    <div class="win-body">
+      <img src="assets/icon-envelope.png" alt="">
+      <div>
+        <h2>Let's work together</h2>
+        <p>I'm looking for instructional design, curriculum, and learning experience roles. Remote works great.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn" href="#contact">Get in touch</a>
+        <a class="btn secondary" href="#resume">Resume</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SECTION PAGES + PROJECT PAGE are filled in by script -->
+<div class="view" id="view-kids"></div>
+<div class="view" id="view-adult"></div>
+<div class="view" id="view-curriculum"></div>
+<div class="view" id="view-project"></div>
+
+<!-- ABOUT -->
+<div class="view" id="view-about">
+  <div class="about-grid">
+    <div class="win">
+      <div class="win-bar"><span class="title">me.png</span><div class="win-btns"><span>_</span><span>□</span><span>x</span></div></div>
+      <div class="win-body"><img class="avatar-big" src="assets/icon-about-me.png" alt="Pixel portrait of Gigi"></div>
+    </div>
+    <div style="display:grid;gap:26px">
+      <div class="win">
+        <div class="win-bar"><span class="title">about_me.txt</span><div class="win-btns"><span>_</span><span>□</span><span>x</span></div></div>
+        <div class="win-body cs-text">
+          <h1 style="font-size:40px;margin-bottom:12px">Hi, I'm Gigi</h1>
+          <p>I've spent eight years teaching K–5, mostly ELA and math, and six of those years I was also working as an RBT. That mix is a big part of how I design. Teaching taught me what makes kids check out. Behavior analysis taught me to look at what actually happens after someone tries something.</p>
+          <p>I also don't believe in making learning too easy. <b>I think we underestimate kids</b>, and honestly adults too. Give people something real to figure out, help them when they're stuck, and they'll surprise you.</p>
+          <p>These days I make learning games, eLearning, and classroom materials. I have a master's in curriculum and instruction, a bachelor's in psychology, and a UI/UX certificate, so I usually design the whole thing, from the lesson to the screen. I'm also bilingual in English and Spanish.</p>
+        </div>
+      </div>
+      <div class="grid g2">
+        <div class="win">
+          <div class="win-bar"><span class="title">what_i_do.exe</span><div class="win-btns"><span>x</span></div></div>
+          <div class="win-body"><ul class="filelist" style="columns:1">
+            <li>Learning games for kids</li><li>Scenario-based eLearning</li><li>Curriculum and lesson writing</li><li>Assessment and feedback design</li><li>UI and visual design</li><li>Accessible design</li>
+          </ul></div>
+        </div>
+        <div class="win">
+          <div class="win-bar"><span class="title">toolkit.exe</span><div class="win-btns"><span>x</span></div></div>
+          <div class="win-body"><ul class="filelist" style="columns:1">
+            <li>Articulate Storyline & Rise</li><li>Figma</li><li>Canva</li><li>Adobe Creative Cloud</li><li>Procreate</li><li>HTML, CSS & JavaScript</li><li>Microsoft Word, PowerPoint & Excel</li><li>Google Workspace & Classroom</li>
+          </ul></div>
+        </div>
+      </div>
+      <div class="win">
+        <div class="win-bar"><span class="title">experience.log</span><div class="win-btns"><span>_</span><span>□</span><span>x</span></div></div>
+        <div class="win-body">
+          <ul class="timeline">
+            <li><span class="when">2023–now</span><span><b>Curriculum developer & instructional designer</b>, independent</span></li>
+            <li><span class="when">2023–24</span><span><b>Digital learning specialist</b>, CUES. Quality checks on course content with subject matter experts.</span></li>
+            <li><span class="when">2019–26</span><span><b>Lead teacher, K–5</b>, private and charter schools in Miami-Dade. Trained the other teachers.</span></li>
+            <li><span class="when">2020–26</span><span><b>Registered Behavior Technician</b>, Progressive Behavior Science</span></li>
+            <li><span class="when">2025</span><span><b>M.A. Curriculum and Instruction</b>, WGU</span></li>
+            <li><span class="when">2024</span><span><b>UI/UX Design certificate</b>, Avocademy</span></li>
+            <li><span class="when">2022</span><span><b>B.A. Psychology</b>, University of West Florida</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESUME -->
+<div class="view" id="view-resume">
+  <div class="win" style="margin-bottom:26px">
+    <div class="win-bar"><span class="title">resume/</span><div class="win-btns"><span>_</span><span>□</span><span>x</span></div></div>
+    <div class="win-body page-head">
+      <img class="big" src="assets/icon-resume.png" alt="">
+      <div style="flex:1"><h1>Resume</h1><p>The short version is below. The full one is a click away.</p></div>
+      <a class="btn" id="resumePdf" href="assets/resume.pdf" target="_blank" rel="noopener">Download PDF</a>
+    </div>
+  </div>
+  <div class="win">
+    <div class="win-bar"><span class="title">resume.txt</span><div class="win-btns"><span>_</span><span>□</span><span>x</span></div></div>
+    <div class="win-body resume">
+      <div class="r-head"><h2>Gisselle Echevarria</h2><p>Curriculum Developer · Instructional Designer · K–5 Educator · Bilingual (English/Spanish)</p></div>
+      <h3>Experience</h3>
+      <div class="r-item"><div><b>Curriculum Developer and Instructional Designer</b> · Independent</div><span>2023–now</span></div>
+      <p>Design, build, and publish standards-aligned K–5 ELA and math resources and browser-based learning games, from needs analysis to release. Freelance web and UI design for education clients.</p>
+      <div class="r-item"><div><b>Digital Learning Specialist</b> · CUES</div><span>2023–2024</span></div>
+      <p>Edited and tested online course materials and assessments, and partnered with subject matter experts to align content to learning objectives.</p>
+      <div class="r-item"><div><b>Registered Behavior Technician</b> · Progressive Behavior Science and affiliated providers</div><span>2020–2026</span></div>
+      <p>Delivered one-to-one skill acquisition and behavior support programs, and collected and graphed session data.</p>
+      <div class="r-item"><div><b>Lead Teacher, Early Childhood and Elementary</b> · Private and charter schools, Miami-Dade County</div><span>2019–2026</span></div>
+      <p>Planned and taught K–5 classes of 8 to 20 students with original lessons, ran reading intervention, and helped colleagues adopt new strategies.</p>
+      <h3>Education & certifications</h3>
+      <div class="r-item"><div><b>M.A. Curriculum and Instruction</b> · Western Governors University</div><span>2025</span></div>
+      <div class="r-item"><div><b>UI/UX Design Certificate</b> · Avocademy</div><span>2024</span></div>
+      <div class="r-item"><div><b>B.A. Psychology</b> · University of West Florida</div><span>2022</span></div>
+      <div class="r-item"><div><b>Registered Behavior Technician</b> · BACB</div><span>2020–2026</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="view" id="view-contact">
+  <div style="max-width:760px;margin:0 auto;position:relative">
+    <img class="sticker" src="assets/deco-sparkles.png" alt="" style="width:70px;top:-28px;right:-30px">
+    <div class="win">
+      <div class="win-bar"><span class="title">contact.exe</span><div class="win-btns"><span>_</span><span>□</span><span>x</span></div></div>
+      <div class="win-body">
+        <div style="text-align:center;margin-bottom:22px">
+          <img src="assets/icon-envelope.png" alt="" style="width:90px;margin:0 auto 10px">
+          <h1 style="font-size:32px">Want to work together?</h1>
+          <p style="color:var(--muted)">I'm open to instructional design, curriculum, and learning experience roles, plus freelance projects. Say hi!</p>
+        </div>
+        <ul class="contact-list">
+          <li><span class="k">&gt; Email</span><a class="v" href="mailto:gisselle.echevarria97@gmail.com">gisselle.echevarria97@gmail.com</a></li>
+          <li><span class="k">&gt; LinkedIn</span><a class="v" href="https://www.linkedin.com/in/gisselle-echevarria" target="_blank" rel="noopener">linkedin.com/in/gisselle-echevarria</a></li>
+          <li><span class="k">&gt; Location</span><span class="v">South Florida · open to remote</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer><img src="assets/deco-hearts.png" alt="">made with love &amp; pixels · Gisselle Echevarria<img src="assets/deco-sparkles.png" alt=""></footer>
+
+<script>
+/* ---------- content: edit here ---------- */
+const SECTIONS = {
+  kids: { label:"Kids' games", folder:"kids_games", icon:"icon-game-controller.png",
+    title:"Learning games for kids", blurb:"Games for grades 3 to 5, each built around one reading or math skill. I write the content, design the game, and direct the art.",
+    card:"Playable games built around real reading and math skills." },
+  adult: { label:"Adult learning", folder:"adult_learning", icon:"icon-graduation-cap.png",
+    title:"Adult learning", blurb:"Training for adults who need to use a skill at work, usually in a tense moment. Every module ends with practice that feels like the real thing.",
+    card:"Scenario-based eLearning and training simulations." },
+  curriculum: { label:"Curriculum", folder:"curriculum", icon:"icon-book-pencil.png",
+    title:"Curriculum & classroom", blurb:"Workbooks and classroom materials for teachers, aligned to Florida B.E.S.T. Each one follows a consistent structure teachers can plan with, and is designed so students actually want to open it.",
+    card:"Workbooks, worksheets, and interactive lessons for teachers." },
+};
+
+const CS = {
+  "sentence-hospital": {
+    role: "Lesson design, instructional design & art direction",
+    audience: "Grade 3 teachers and students",
+    goal: "Find and fix run-on sentences (ELA.3.C.3.1)",
+    tools: "HTML, CSS & JavaScript",
+    summary: "Sentence Hospital is an interactive lesson that runs in the browser. Teachers put it on the board or share their screen during a 45-minute whole-class grammar lesson, in person or online. Students act as surgeons who diagnose sick sentences and fix run-ons with a period stitch or a comma bandage, then review with a game called ER Rush. Every screen has teacher notes, and it comes with a teacher guide.",
+    problem: ["Students often think a run-on is just a long sentence. So they leave short run-ons alone, or they chop up long sentences that are actually fine.",
+      "A lot of lessons on this skill are a worksheet of sentences to fix, which doesn't teach students how to tell whether a sentence needs fixing in the first place. **The lesson needed to teach students to count complete thoughts, not words.**"],
+    approachParas: ["The hospital story gives every step a concrete action: diagnose, operate, treat. Dr. Dot walks students through a three-step checkup. Find a who or what plus what they did, keep reading to see if there's another one, and if there are two complete thoughts with no stop between them, it's a run-on.",
+      "**The two fixes have names and hand signals students can use from their seats.** A period stitch is a fist, and a comma bandage is two fingers. The whole class answers at once, so the teacher can see who has it at a glance, whether students are in the room or on camera."],
+    shots: [
+      {img:"assets/cs/sh-fixes.jpg", cap:"The two fixes, each with a name and a hand signal students can show from their seats."},
+      {img:"assets/cs/sh-trick.jpg", cap:"The trick case. A long sentence that's actually healthy, which targets the most common misconception."}],
+    process: ["It's built for teachers to run live, so nothing advances on its own. Each click reveals one thing, and the teacher controls the pace. Every screen has teacher notes with what to say, what to watch for, and the answers, so a teacher can pick it up and teach it without extra prep.",
+      "The lesson follows a gradual release: concepts and vocabulary first, then I do, we do, a trick case, and a quick readiness check. **ER Rush picks six patients at random from a pool of fourteen, so it plays differently every time.** Teachers can use Pass the scalpel to call students up to the board.",
+      "The teacher guide covers the lesson flow screen by screen, the common misconceptions and what to try for each one, and the answer key for the game."],
+    processShot: {img:"assets/cs/sh-notes.jpg", cap:"Teacher notes open beside the lesson: what to say, what to watch for, and the answers."},
+    landedTitle: "What I'd hope a teacher notices",
+    landed: "Students checking for two complete thoughts before deciding a sentence is a run-on, and using a comma with the right helper word instead of a comma alone.",
+    nextTitle: "What I'd look at next",
+    next: "Which ER Rush patients students miss most often, and whether the trick case changes how they judge long sentences."
+  },
+  "read-and-roam": {
+    role: "Curriculum writing, instructional design & art direction",
+    audience: "Grade 3 students and teachers",
+    goal: "Compare and contrast how two texts present the same topic (ELA.3.R.3.3)",
+    tools: "Print workbook layout",
+    series: {id:"count-and-cruise", name:"Count & Cruise"},
+    summary: "Read & Roam is a Grade 3 reading comprehension workbook I developed for teachers, aligned to Florida B.E.S.T. This is Unit 4, Comparing Texts. Students read an informational article and a personal journal about octopuses, then compare them using a Venn diagram, text evidence questions, and a short written response.",
+    problem: ["The benchmark asks third graders to compare how two texts present information on the same topic. In practice, a lot of students retell both texts one after the other instead of actually comparing them.",
+      "Many of the paired passages available for this skill are two informational articles written almost the same way, which doesn't give students much to compare. **The unit needed two texts with the same facts but clearly different structures and purposes.**"],
+    approachParas: ["I wrote both texts for the unit. Text A is an informational article with headings, a labeled diagram, captions, and a Words to Know box. Text B is a first-person dive journal. **Both texts include the same key facts, like octopuses having no bones and squeezing into small spaces, so students can see how structure and author's purpose change the way information is presented.** Octopuses are a high-interest topic for this age, and the content works naturally in both genres.",
+      "The mini-lesson gives students four questions to ask about both texts: key points, details, text features, and author's purpose. It also introduces signal words for comparing, like both, also, but, and unlike. That language is built into every activity after it, from the sentence frames under the Venn diagram to the sentence starters on the writing page."],
+    shots: [
+      {img:"assets/cs/rr-lesson.jpg", cap:"The mini-lesson. Four questions to ask about both texts, and the signal words students use for the rest of the unit."},
+      {img:"assets/cs/rr-venn.jpg", cap:"The Venn diagram, with sentence frames underneath so students put their comparison into words."}],
+    process: ["Read & Roam is designed as a series, so every unit follows the same structure: an \"I can\" statement with the B.E.S.T. benchmark, a mini-lesson, the texts, a compare activity, Show What You Know, and a written response. Teachers can plan with it the same way every week, and students know what's expected on each page.",
+      "The assessment pages move from multiple choice to short answer to text evidence, so a teacher can see where a student's understanding breaks down. **The writing page ends with a student checklist tied to the success criteria:** name both texts, use a detail from each, and use a signal word.",
+      "Visually, I used a paper-craft style and kept the octopus as a recurring character, so the workbook feels inviting while the layout stays clean and readable for third graders."],
+    processShot: {img:"assets/cs/rr-write.jpg", cap:"The written response asks for at least one detail from each text, with sentence starters for students who need support getting started."},
+    landedTitle: "What I'd hope a teacher notices",
+    landed: "Students using the signal words on their own, and citing where in each text they found information instead of retelling both texts.",
+    nextTitle: "What I'd look at next",
+    next: "Which evidence questions students miss most often, and whether the sentence frames support their writing or become something they rely on."
+  },
+  "count-and-cruise": {
+    role: "Curriculum writing, instructional design & art direction",
+    audience: "Grade 3 students and teachers",
+    goal: "Understand fractions as equal parts of a whole and build fractions from unit fractions (MA.3.FR.1.1, MA.3.FR.1.2)",
+    tools: "Print workbook layout",
+    series: {id:"read-and-roam", name:"Read & Roam"},
+    summary: "Count & Cruise is a Grade 3 math workbook I developed for teachers, aligned to Florida B.E.S.T. This is the Fractions unit. It's set in Abuela's bakery, where students learn fractions as equal parts of a whole, build fractions from unit fractions, solve word problems, and place fractions on a number line.",
+    problem: ["Fractions are one of the first places in math where a lot of students start to struggle. Many learn numerator and denominator as labels, top number and bottom number, without understanding that a fraction depends on equal parts.",
+      "Word problems for this skill often jump between unrelated contexts from one problem to the next. **The unit needed one consistent setting where equal sharing already makes sense to students.**"],
+    approachParas: ["The whole unit takes place in Abuela's bakery, with her grandson Mateo helping on his first day. Pies, brownies, and loaves of bread are things students already cut and share, and the story gives every word problem the same setting. Abuela's rule, \"everyone pays the same, so everyone gets the same,\" introduces equal parts in a way students can explain in their own words.",
+      "**The sequence starts with equal and not equal parts before students name a single fraction.** The worked example then builds 3/6 from unit fractions, one slice at a time. The number line is introduced as a loaf of bread cut into equal slices, so it connects to the pie and brownie models students have already been using."],
+    shots: [
+      {img:"assets/cs/cc-equal.jpg", cap:"Equal and not equal parts, side by side, before students name any fractions."},
+      {img:"assets/cs/cc-numberline.jpg", cap:"The number line as a loaf of bread. Each slice is one jump."}],
+    process: ["Count & Cruise is the math companion to Read & Roam, so it uses the same unit structure: an \"I can\" statement with the B.E.S.T. benchmarks, a mini-lesson, a worked example, guided practice, Show What You Know, and a final task. **A teacher using both workbooks can plan reading and math with the same routine.**",
+      "Practice moves from shading and writing fractions to number lines, then to a mixed review. The unit ends with an Explain Your Thinking task where Mateo shares one pie with three friends, so students draw the partition and justify why the shares are equal instead of filling in a fraction that's already given."],
+    processShot: {img:"assets/cs/cc-shares.jpg", cap:"The final task. Students draw the cuts, name each share, and explain why it's fair."},
+    landedTitle: "What I'd hope a teacher notices",
+    landed: "Students checking whether parts are equal before naming a fraction, and using the number line to compare fractions instead of guessing.",
+    nextTitle: "What I'd look at next",
+    next: "How students handle the equal shares task when no fraction is given, and whether the bakery context helps them with the word problems."
+  },
+  "rbt-course": {
+    role: "Course design, instructional design, writing & art direction",
+    audience: "People studying for the RBT exam",
+    goal: "Identify the function of a behavior and respond the way the behavior plan says to",
+    tools: "HTML, CSS & JavaScript",
+    summary: "Lesson 2 of my RBT exam prep course, from the Behavior Reduction module. Learners figure out why a behavior happens using the ABCs and the four functions, then run a session with a 7-year-old named Camila where they have to follow her behavior plan.",
+    problem: ["I was an RBT, and functions of behavior is the part I see people struggle with the most. On the exam it's a lot of memorizing four words. In a real session, you have a few seconds to figure out why a kid is doing something and respond the right way.",
+      "**The mistakes that happen in sessions usually come from kindness.** Giving a break so the kid can calm down, or sitting down to explain the rule. Those feel right, and they can make the behavior worse."],
+    approachParas: ["The lesson starts with a gut check. Camila pushes her worksheet off the table and the learner guesses why, with no feedback. Then they test that guess with the ABCs and the four functions, and come back to Camila at the end of that section.",
+      "**Every wrong answer in the simulation sounds reasonable,** because that's what real mistakes look like. If a learner goes off the plan, Camila reacts to it and their supervisor leaves a note. Afterwards they write the ABC data for their own session, the same way you would after a real one."],
+    shots: [
+      {img:"assets/cs/rbt-same.jpg", cap:"Same behavior, three different consequences. Learners see why the function can't be guessed from the behavior alone."},
+      {img:"assets/cs/rbt-note.jpg", cap:"An off-plan choice in the simulation. Camila reacts, and the supervisor leaves a note."}],
+    process: ["The course follows the sections of the RBT exam, and every lesson uses the same pattern: a gut check, short learning chunks, practice, a simulation, and exam-style questions at the end. That way learners always know what's coming, and the simulations get harder as the course goes on.",
+      "This lesson's first version jumped too fast. It went from the four functions straight to exam questions, and it used words like negative reinforcement before explaining them. So I added a short reinforcement lesson, a screen showing the same behavior with three different functions, and a comparison of how the plan changes for escape versus attention.",
+      "I also wanted the kids to look like real kids. **No cartoon meltdowns.** The art shows the build-up, like groaning and sliding the paper away, which is respectful and is also the moment an RBT needs to catch."],
+    processShot: {img:"assets/cs/rbt-debrief.jpg", cap:"The debrief. Each choice next to what the plan says, then the ABC data for that session."},
+    landedTitle: "What I'd hope a supervisor notices",
+    landed: "New RBTs reading the consequence before they react, and writing ABC data that describes what happened instead of labels like \"acted out.\"",
+    nextTitle: "What I'd look at next",
+    next: "I'd have a few practicing RBTs go through it and see which simulation moments trip them up the most."
+  },
+  "wordbrew-shop": {
+    role: "Concept, curriculum, game design & art direction",
+    audience: "Grades 3–5",
+    goal: "Use prefixes, suffixes, and base words to figure out new words",
+    tools: "HTML, CSS & JavaScript",
+    summary: "Kids run a potion shop and brew words by mixing prefixes, suffixes, and base words. Customers describe what they need, and kids figure out which ingredients make the right word. It's for grades 3–5.",
+    problem: ["I love teaching prefixes and suffixes. Once you know your prefixes, suffixes, and Greek and Latin roots, **vocabulary gets so much easier**, especially when you come across a word you don't know.",
+      "But every time I look for resources on it, it's just memorizing. I kind of understand why. I just don't see why it has to be boring when it could be fun."],
+    approachParas: ["Adding a prefix or suffix to a word felt like adding ingredients, so I thought it'd be cool to mix them into a potion. Customers come into the shop and describe what they need, like \"My soup got cold. I need to heat it again,\" and kids pick the bottles that make the word.",
+      "**My favorite part is the equation at the top.** As kids drop in bottles, it fills in (re + heat = reheat), so they can see exactly how the word goes together. Every word they brew also gets saved in a recipe book they can go back to."],
+    shots: [
+      {img:"assets/cs/wordbrew-equation.jpg", cap:"The equation fills in as kids add bottles, so they can see how the word is built."},
+      {img:"assets/cs/wordbrew-book.jpg", cap:"Every word they brew goes into the recipe book with its parts and meaning."}],
+    process: ["The customers only give the meaning of the word, and the orders get harder as you go. When I played it, I noticed it could get a little too difficult, and **I didn't want kids getting completely discouraged**.",
+      "So I added hints. When a kid asks for help, the game tells them what the prefix means first, then helps more from there if they're still stuck."],
+    processShot: {img:"assets/cs/wordbrew-hint.jpg", cap:"A hint after a kid taps Help me. It explains the prefix and leaves the base word for them to find."},
+    landedTitle: "What I'd hope a teacher notices",
+    landed: "Kids thinking about what each part of a word means, and going back to the recipe book on their own.",
+    nextTitle: "What I'd look at next",
+    next: "Which hints kids reach for the most, and whether they start recognizing affixes without needing them."
+  },
+  "wheres-biscuit": {
+    role: "Concept, curriculum, game design & art direction",
+    audience: "Grades 3–4",
+    goal: "Make inferences and back them up with evidence from the text",
+    tools: "HTML, CSS & JavaScript",
+    summary: "Kids solve the mystery of Room 12's missing class hamster by finding clues in the story, searching the classroom, and interviewing witnesses. It's for grades 3–4, and every answer has to be backed up by evidence.",
+    problem: ["Inferring can be really boring to teach. It's usually a worksheet, and kids can tell.",
+      "When I taught it, the same things kept happening. Some kids didn't care about what they were reading, some just guessed which clues mattered, and a lot of them **got distracted by sentences that had nothing to do with the situation**."],
+    approachParas: ["I always taught inferring by comparing it to being a detective, since detectives have to use clues to figure out what happened. **When you actually want to solve the case, looking for clues gets a lot easier.**",
+      "Some veteran teachers say work is work, and kids need to learn that not everything is fun. But they're still kids. And honestly, I'm an adult and I don't want to do boring things either.",
+      "The hamster was partly because I thought it was cute, and partly because I wanted the case to happen somewhere kids already know, at school."],
+    shots: [
+      {img:"assets/cs/biscuit-clues.jpg", cap:"Kids read the story and tap the sentences that are real clues. Each one becomes a sticky note in their case file."},
+      {img:"assets/cs/biscuit-interview.jpg", cap:"Kids choose what to ask each witness, then hear their answer. It's kind of like working backwards."}],
+    process: ["I don't like making things too easy. A lot of educational games are so afraid of kids making mistakes that they assume kids can't handle much. **I think we underestimate them.**",
+      "So when I played through it, I looked for spots where the game was doing the thinking for them. Ms. Park was explaining what happened after the timeline, so now she asks the kids instead. The witnesses shared their theories without being asked, so now kids have to ask.",
+      "The ending used to be just the report. Now kids actually go find Biscuit first."],
+    processShot: {img:"assets/cs/biscuit-find.jpg", cap:"The new ending. Kids pick where Biscuit is hiding, back it up with two clues, then follow his seed trail."},
+    landedTitle: "What I'd hope a teacher notices",
+    landed: "That their kids are engaged and working hard to find the clues, and that they're getting less distracted by the ones that don't matter.",
+    nextTitle: "What I'd look at next",
+    next: "Whether kids can explain their thinking in the report without help, and which chapter sends them to Ms. Park the most."
+  },
+  "pips-pond": {
+    role: "Concept, curriculum, game design & visual design",
+    audience: "Ages 8–10",
+    goal: "Place fractions on a number line and spot equivalent fractions",
+    tools: "HTML, CSS & JavaScript",
+    summary: "Kids help Pip the frog hop across a pond and land on the right fraction. The pond is a number line, so they can see and count every part. It's for 8 to 10 year olds who get nervous about math.",
+    problem: ["Teaching fractions to kids who think they're bad at math is an interesting experience. They shut down right away and assume they can't do it.",
+      "But **there's no such thing as a kid who's bad at math**, just one who hasn't been taught in a way that meets their needs."],
+    approachParas: ["I wanted to use a number line, and I wanted it to be visually engaging. So the pond is split into equal parts between 0 and 1, and Pip hops across it.",
+      "**Every time Pip hops, kids can follow along.** If the fraction is 3/4, they watch him hop three times. Each hop makes a little arch, like the ones you draw when you're using a number line. Honestly, those little arches are what I like most about this game."],
+    shots: [
+      {img:"assets/cs/pips-hops.jpg", cap:"Pip's three hops to 3/4, shown frame by frame. Each hop is an arch, like the ones kids draw on a number line."},
+      {img:"assets/cs/pips-miss.jpg", cap:"When kids pick the wrong spot, Pip tells them where he landed and how many hops he's off by."}],
+    process: ["This was a quick little game, and I kept it simple. There's no timer and no score, and the \"Pip, show me\" button is always there if a kid needs help. Every pond you finish lights up a lantern.",
+      "The first version didn't have any sound, so I added it. Each hop plays a note a little higher than the last, so kids can hear the count too."],
+    processShot: {img:"assets/cs/pips-lantern.jpg", cap:"A right answer lights one of the lanterns across the top."},
+    landedTitle: "What I'd hope a teacher notices",
+    landed: "Kids who usually shut down during fractions trying again after a wrong answer.",
+    nextTitle: "What I'd look at next",
+    next: "Whether kids start counting the hops on their own, or wait for Pip to show them."
+  },
+  "mainframe": {
+    role: "Concept, curriculum, game design & art direction",
+    audience: "Grades 3–5",
+    goal: "Identify the main idea and the key details that support it",
+    tools: "HTML, CSS & JavaScript",
+    summary: "Kids play cyber agents protecting a computer system from a virus, and each mission practices a different part of finding the main idea and key details. It's for grades 3–5.",
+    problem: ["Main idea usually gets practiced with a worksheet or a book. We teach strategies like checking the first or last paragraph, which are important, but I feel like we can go beyond that.",
+      "**I want kids to actually understand what they read and be able to tell the main idea apart from the key details.**"],
+    approachParas: ["Kids love computers and technology, and they love feeling like they're on a secret assignment. So they log in as agents, and Byte, the cat mascot, asks for their help because a virus called Corruptus is taking over the system's files.",
+      "In Virus Scanner, they find the sentences that don't belong. In Decoder, **they have to pick out the sentence that's actually the main idea** while the rest is scrambled code. This is the mini-game I'm most excited about, because it makes them tell the main idea and the details apart."],
+    shots: [
+      {img:"assets/cs/mainframe-scanner.jpg", cap:"Virus Scanner: Byte asks kids to find the detail that doesn't relate to the main idea."},
+      {img:"assets/cs/mainframe-decoder.jpg", cap:"Decoder: kids read the passage, then find the main idea hidden in the scrambled code."}],
+    process: ["While I was playing, I noticed something about my passages. Kids learn that the main idea is usually at the beginning or the end, so I'd written them that way, and **it was way too obvious**.",
+      "So I mixed it up. The main idea moves around now, and kids have to read the whole passage to find it."],
+    processShot: null,
+    landedTitle: "What I'd hope a teacher notices",
+    landed: "Kids reading the whole passage carefully and catching the details that don't belong.",
+    nextTitle: "What I'd look at next",
+    next: "Two missions are playable and three more are planned. I'd use how kids do in these two to decide which one to build next."
+  },
+};
+
+/* type decides the hero area and the buttons on the project page */
+const TYPES = {
+  game:      { hero:"embed",   media:"Playable game goes here",        buttons:["Play the game","Watch a walkthrough"] },
+  elearning: { hero:"embed",   media:"eLearning module goes here",     buttons:["Launch the module","Watch a walkthrough"] },
+  book:      { hero:"gallery", media:"Sample spread",                  buttons:["Flip through a sample"] },
+  printable: { hero:"gallery", media:"Sample page",                    buttons:["See all sample pages"] },
+  slides:    { hero:"embed",   media:"Interactive lesson goes here",    buttons:["Launch the lesson","Watch a walkthrough"] },
+};
+
+const PROJECTS = [
+  { id:"wordbrew-shop", section:"kids", file:"wordbrew_shop.exe", name:"The Wordbrew Shop", type:"game", featured:false, play:"projects/wordbrew-shop/index.html", preview:"https://claude.ai/artifact/LduSxcZBCyyKn56aiFcRR2", thumb:"assets/thumbs/wordbrew-shop.jpg",
+    grade:"GR 3–5", skill:"Prefixes & suffixes", blurb:"Kids run a fantasy potion shop, adding prefixes and suffixes to root words to brew the exact word each customer orders." },
+  { id:"wheres-biscuit", section:"kids", file:"wheres_biscuit.exe", name:"Where's Biscuit?", type:"game", featured:true, play:"projects/wheres-biscuit/index.html", preview:"https://claude.ai/artifact/LbEL9xc91WUnM4bdTiLNpg", thumb:"assets/thumbs/wheres-biscuit.jpg",
+    grade:"GR 3–4", skill:"Making inferences", blurb:"A pixel-art mystery where readers make inferences from clues, then write up the case to find a missing pet." },
+  { id:"pips-pond", section:"kids", file:"pips_pond.exe", name:"Pip's Pond", type:"game", play:"projects/pips-pond/index.html", preview:"https://claude.ai/artifact/SmE1XLZyEKpeA3Txy5ANSa", thumb:"assets/thumbs/pips-pond.jpg",
+    grade:"GR 3–4", skill:"Fractions", blurb:"A pond-themed game where kids build and compare fractions, with visuals and sounds that show what the numbers mean." },
+  { id:"mainframe", section:"kids", file:"mainframe.exe", name:"Mainframe", type:"game", play:"projects/mainframe/index.html", thumb:"assets/thumbs/mainframe.jpg",
+    grade:"GR 3–5", skill:"Main idea", blurb:"Students find the main idea of a text by sorting the key details from the ones that don't matter." },
+  { id:"rbt-course", section:"adult", file:"rbt_exam_prep.exe", name:"RBT Exam Prep, Lesson 2: Why did that happen?", type:"elearning", featured:true, play:"projects/rbt-course/index.html", preview:"https://claude.ai/artifact/XupRkWD6erFUYjChz8PrVZ", thumb:"assets/thumbs/rbt-course.jpg",
+    grade:"ADULT", skill:"Functions of behavior", blurb:"A lesson from my RBT exam prep course. Learners figure out why a behavior happens, then run a session where every choice has to follow the behavior plan." },
+  { id:"harborline", section:"adult", file:"harborline.exe", name:"Harborline", type:"elearning", play:"projects/harborline/index.html", preview:"https://claude.ai/artifact/7AuV27wNbq7gu5qepjHkSk", thumb:"assets/thumbs/harborline.jpg",
+    grade:"ADULT", skill:"De-escalation", blurb:"Front desk staff practice de-escalating an upset guest in the first 60 seconds of a complaint." },
+  { id:"tuesday-night", section:"adult", file:"tuesday_night.exe", name:"Tuesday Night", type:"elearning", play:"projects/tuesday-night/index.html", preview:"https://claude.ai/artifact/GZUJ5FceQYhBQ3574Papsx", thumb:"assets/thumbs/tuesday-night.jpg",
+    grade:"NEW TEACHERS", skill:"Parent communication", blurb:"First-year teachers answer a tense parent email in a branching scenario with four possible endings." },
+  { id:"read-and-roam", section:"curriculum", file:"read_and_roam.pdf", name:"Read & Roam: Two texts, one topic", type:"book", featured:false,
+    thumb:"assets/thumbs/read-and-roam.jpg", pages:11, cover:"#2f9fae", grade:"GR 3", skill:"Comparing texts",
+    blurb:"A reading comprehension workbook unit where kids compare two texts about octopuses, an article and a diver's journal, using a Venn diagram and evidence from both." },
+  { id:"count-and-cruise", section:"curriculum", file:"count_and_cruise.pdf", name:"Count & Cruise: Understanding fractions", type:"book", featured:true,
+    thumb:"assets/thumbs/count-and-cruise.jpg", pages:10, cover:"#e27993", grade:"GR 3", skill:"Fractions",
+    blurb:"A math workbook unit set in Abuela's bakery, where kids learn fractions as equal parts by cutting pies, sharing brownies, and slicing bread on a number line." },
+  { id:"sentence-hospital", section:"curriculum", file:"sentence_hospital.exe", name:"Sentence Hospital", type:"slides", featured:false,
+    play:"projects/sentence-hospital/index.html", thumb:"assets/thumbs/sentence-hospital.jpg", grade:"GR 3", skill:"Run-on sentences",
+    blurb:"An interactive whole-class grammar lesson that runs in the browser. Students diagnose sick sentences and fix run-ons with a period stitch or a comma bandage, then play ER Rush." },
+  { id:"worksheets", section:"curriculum", file:"worksheets/", name:"Worksheets", type:"printable", soon:true,
+    thumb:"assets/thumbs/worksheets-soon.jpg", grade:"GR 3", skill:"Printables", blurb:"Printable practice pages for the classroom. I'm putting these together now." },
+];
+
+/* ---------- rendering ---------- */
+const bar = t => `<div class="win-bar"><span class="title">${t}</span><div class="win-btns"><span>_</span><span>□</span><span>x</span></div></div>`;
+
+const label = (p,big) => `<div class="label ${big?'big':''}"><span class="g">${p.grade}</span><span class="s">${p.skill}</span></div>`;
+function card(p, big){
+  return `<div class="win proj">${bar(p.file)}
+    <div class="win-body">
+      ${p.thumb && p.soon ? `<div class="thumb"><img src="${p.thumb}" alt="${p.name}, coming soon" loading="lazy"></div>` : p.thumb ? `<a class="thumb" href="#${p.id}"><img src="${p.thumb}" alt="${p.name} screenshot" loading="lazy"></a>` : '<div class="ph" style="aspect-ratio:16/10">Thumbnail</div>'}
+      ${label(p,big)}
+      <h3>${p.name}</h3>
+      <p>${p.blurb}</p>
+      ${p.soon ? `<span class="btn small secondary soon-btn" aria-disabled="true">Coming soon</span>` : `<a class="btn small" href="#${p.id}">View project</a>`}
+    </div></div>`;
+}
+
+document.getElementById("featured").innerHTML = PROJECTS.filter(p=>p.featured).map(p=>card(p,true)).join("");
+document.getElementById("folders").innerHTML = Object.entries(SECTIONS).map(([k,s]) => {
+  const n = PROJECTS.filter(p=>p.section===k && !p.soon).length;
+  return `<a class="win folder-card" href="#${k}">${bar(s.folder + "/")}
+    <div class="win-body"><img src="assets/${s.icon}" alt=""><h3>${s.title}</h3><p>${s.card}</p>
+    <span class="meta">${n} projects</span></div></a>`;
+}).join("");
+
+for (const [k,s] of Object.entries(SECTIONS)) {
+  document.getElementById("view-"+k).innerHTML = `
+    <div class="win" style="margin-bottom:28px">${bar(s.folder + "/")}
+      <div class="win-body page-head"><img class="big" src="assets/${s.icon}" alt="">
+        <div><h1>${s.title}</h1><p>${s.blurb}</p></div></div></div>
+    <div class="grid ${PROJECTS.filter(p=>p.section===k).length===4 ? "g2" : "g3"}">${PROJECTS.filter(p=>p.section===k).map(p=>card(p)).join("")}</div>`;
+}
+
+const WALK = ["wheres-biscuit","wordbrew-shop","mainframe","pips-pond","rbt-course","sentence-hospital"];
+function renderProject(p){
+  const t = TYPES[p.type];
+  const siblings = PROJECTS.filter(x=>x.section===p.section);
+  const i = siblings.indexOf(p);
+  const prev = siblings[(i-1+siblings.length)%siblings.length], next = siblings[(i+1)%siblings.length];
+  const hero = p.pages
+    ? `<div class="flip" id="flip">
+        <div class="flip-stage"><button class="flip-arr l" id="flipPrev" aria-label="Previous pages">&lsaquo;</button>
+          <div class="flip-spread" id="flipSpread"></div>
+          <button class="flip-arr r" id="flipNext" aria-label="Next pages">&rsaquo;</button></div>
+        <div class="player-bar flip-bar"><span class="flip-count" id="flipCount"></span><span class="flip-tip">Click a page to zoom in</span></div>
+        <div class="flip-thumbs" id="flipThumbs">${Array.from({length:p.pages},(_,k)=>`<button data-pg="${k}" aria-label="Page ${k+1}"><img src="assets/pages/${p.id}/t${String(k+1).padStart(2,"0")}.jpg" alt="" loading="lazy"></button>`).join("")}</div>
+      </div>`
+    : t.hero === "gallery"
+    ? `<div class="gallery">${[1,2,3].map(n=>`<div class="ph page">${t.media} ${n}</div>`).join("")}</div>`
+    : p.play
+      ? `<div class="player">
+          <div class="stage" id="stage"><img src="${p.thumb}" alt="">
+            <button class="btn play-btn" id="stagePlay"><span class="tri"></span>${t.buttons[0]}</button></div>
+          <div class="player-bar">
+            <button class="pbar-btn" id="fsBtn"><span class="fs-ico"></span>Full screen</button>
+            ${WALK.includes(p.id) ? `<button class="pbar-btn" id="walkBtn"><span class="tri sm"></span>Watch walkthrough</button>` : ""}
+          </div></div>`
+      : `<div class="ph r169"><div><div class="play"></div>${t.media}</div></div>`;
+  const buttons = (p.play || p.pages) ? "" : t.buttons.map((b,j)=>`<a class="btn ${j?'secondary':''}" href="#${p.id}">${b}</a>`).join("");
+  const c = CS[p.id];
+  const ph = (n=3) => `<div class="ph-lines">${'<span></span>'.repeat(n)}</div>`;
+  const md = t => String(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+  const paras = arr => arr.map(x=>`<p>${md(x)}</p>`).join("");
+  const shot = (x, r="r43") => typeof x === "string"
+    ? `<div class="ph ${r}">${x}</div>`
+    : `<figure class="cs-fig"><img src="${x.img}" alt="" loading="lazy"><figcaption>${x.cap}</figcaption></figure>`;
+  const sec = (id,file,h,body) => `<div class="win" id="${id}">${bar(file)}<div class="win-body cs-text"><h2>${h}</h2>${body}</div></div>`;
+  const problem = c ? paras(c.problem) : ph();
+  const approach = c && c.approachParas
+    ? paras(c.approachParas) + `<div class="grid g2" style="margin-top:18px">${c.shots.map(x=>shot(x)).join("")}</div>`
+    : c
+    ? `<ul class="cs-list">${c.approach.map(([b,t])=>`<li><b>${b}</b> ${t}</li>`).join("")}</ul>
+       <div class="grid g2" style="margin-top:18px">${c.shots.map(x=>shot(x)).join("")}</div>`
+    : ph() + '<div class="grid g2" style="margin-top:16px"><div class="ph r43">Image</div><div class="ph r43">Image</div></div>';
+  const process = c ? paras(c.process) + (c.processShot ? `<div style="margin-top:18px">${shot(c.processShot,"r169")}</div>` : "")
+    : ph() + '<div class="ph r169" style="margin-top:16px">Storyboard, sketches, or iterations</div>';
+  const outcome = c ? `<h3 class="cs-sub">${c.landedTitle || "Where it landed"}</h3><p>${md(c.landed)}</p><h3 class="cs-sub">${c.nextTitle || "What I'd test next"}</h3><p>${md(c.next)}</p>` : ph();
+  const info = c || {role:"[Your role]",audience:"[Who it's for]",goal:"[Target skill or standard]",tools:"[Tools used]"};
+  document.getElementById("view-project").innerHTML = `
+    <div class="win cs-hero">${bar(p.file)}
+      <div class="addr"><span class="nav-dot">&lt;</span><span class="nav-dot">&gt;</span><span class="bar">portfolio/${SECTIONS[p.section].folder}/${p.id}</span></div>
+      <div class="win-body">
+        <div style="display:inline-flex;margin-bottom:12px">${label(p,true)}</div>
+        <h1>${p.name}</h1>
+        <p class="lead">${p.blurb}</p>
+        ${hero}
+        ${buttons ? `<div class="btn-row" style="margin-top:18px">${buttons}</div>` : ""}
+      </div></div>
+    ${c && c.summary ? `<div class="win cs-summary">${bar("in_short.txt")}<div class="win-body"><p>${md(c.summary)}</p>${c.series ? `<p class="series">Part of the same Grade 3 workbook series as <a href="#${c.series.id}">${c.series.name}</a>.</p>` : ""}</div></div>` : ""}
+    <div class="cs-layout">
+      <aside class="win cs-side">${bar("info.txt")}
+        <div class="win-body">
+          <dl>
+            <div><dt>Role</dt><dd>${info.role}</dd></div>
+            <div><dt>Audience</dt><dd>${info.audience}</dd></div>
+            <div><dt>Learning goal</dt><dd>${info.goal}</dd></div>
+            <div><dt>Tools</dt><dd>${info.tools}</dd></div>
+          </dl>
+          <div class="toc">
+            <a href="#${p.id}" data-jump="cs-problem">The problem</a>
+            <a href="#${p.id}" data-jump="cs-approach">Design approach</a>
+            <a href="#${p.id}" data-jump="cs-process">Process</a>
+            <a href="#${p.id}" data-jump="cs-outcome">Outcome</a>
+          </div>
+        </div></aside>
+      <div class="cs-main">
+        ${sec("cs-problem","01_problem.txt","The problem",problem)}
+        ${sec("cs-approach","02_approach.txt","Design approach",approach)}
+        ${sec("cs-process","03_process.txt","Process",process)}
+        ${sec("cs-outcome","04_outcome.txt","Outcome",outcome)}
+        <div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap">
+          <a class="btn secondary" href="#${prev.id}">&larr; ${prev.name}</a>
+          <a class="btn" href="#${next.id}">${next.name} &rarr;</a>
+        </div>
+      </div>
+    </div>`;
+  const stage = document.getElementById("stage");
+  if (stage) {
+    const sp = document.getElementById("stagePlay"), fs = document.getElementById("fsBtn");
+    const load = () => { if (!stage.querySelector("iframe"))
+      { stage.innerHTML = `<iframe src="${p.play}" title="${p.name}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+        const w = document.getElementById("walkBtn"); if (w) w.innerHTML = `<span class="tri sm"></span>Watch walkthrough`; } };
+    sp.addEventListener("click", load);
+    const wb = document.getElementById("walkBtn"), home = stage.innerHTML;
+    if (wb) wb.addEventListener("click", () => {
+      if (stage.querySelector("video")) {
+        stage.innerHTML = home;
+        document.getElementById("stagePlay").addEventListener("click", load);
+        wb.innerHTML = `<span class="tri sm"></span>Watch walkthrough`;
+      } else {
+        stage.innerHTML = `<video src="assets/walkthroughs/${p.id}.mp4" controls autoplay playsinline></video>`;
+        wb.innerHTML = `<span class="tri sm"></span>Back to the ${p.type==="slides"?"lesson":p.type==="elearning"?"course":"game"}`;
+      }
+    });
+    fs.addEventListener("click", () => {
+      load();
+      try { const r = (stage.requestFullscreen || stage.webkitRequestFullscreen).call(stage); if (r && r.catch) r.catch(()=>{}); } catch(e) {}
+    });
+    // This preview doesn't hold the game files: send people to the saved game instead
+    fetch(p.play, {method:"HEAD"}).then(r => { if (!r.ok) throw 0; }).catch(() => {
+      if (p.preview) {
+        sp.outerHTML = `<a class="btn play-btn" href="${p.preview}" target="_blank" rel="noopener"><span class="tri"></span>${t.buttons[0]}</a>`;
+        fs.outerHTML = `<a class="pbar-btn" href="${p.preview}" target="_blank" rel="noopener"><span class="fs-ico"></span>Open in a new tab ↗</a>`;
+      } else {
+        const note = () => {
+          if (stage.querySelector(".stage-note")) return;
+          const n = document.createElement("div"); n.className = "stage-note";
+          n.textContent = "This one plays on the live site. This preview doesn't have its game files yet.";
+          stage.appendChild(n); setTimeout(() => n.remove(), 3200);
+        };
+        const sp2 = sp.cloneNode(true); sp.replaceWith(sp2); sp2.addEventListener("click", note);
+        const fs2 = fs.cloneNode(true); fs.replaceWith(fs2); fs2.addEventListener("click", note);
+      }
+    });
+  }
+  if (p.pages) initFlip(p);
+  document.querySelectorAll("[data-jump]").forEach(a => a.addEventListener("click", e => {
+    e.preventDefault(); document.getElementById(a.dataset.jump).scrollIntoView({behavior:"smooth",block:"start"});
+  }));
+}
+
+document.getElementById("viewWork").addEventListener("click", e => {
+  e.preventDefault(); document.getElementById("featuredTitle").scrollIntoView({behavior:"smooth", block:"start"});
+});
+function initFlip(p){
+  const n = p.pages, src = k => `assets/pages/${p.id}/p${String(k+1).padStart(2,"0")}.jpg`;
+  // load every page now so spreads never wait on the network
+  const imgs = Array.from({length:n}, (_,k) => { const i = new Image(); i.src = src(k); return i; });
+  const ready = ks => Promise.all(ks.filter(k=>k!=null).map(k => imgs[k].decode ? imgs[k].decode().catch(()=>{}) : Promise.resolve()));
+  const single = () => matchMedia("(max-width:720px)").matches;
+  // like a real book: cover on the right, then left/right pairs
+  const spreads = () => single() ? Array.from({length:n},(_,k)=>[k]) :
+    [[null,0], ...Array.from({length:Math.ceil((n-1)/2)},(_,k)=>[1+2*k, 2+2*k < n ? 2+2*k : null])];
+  const box = document.getElementById("flipSpread");
+  let at = 0, busy = false;
+  const face = k => k==null ? "" : `<img src="${src(k)}" alt="Page ${k+1} of ${p.name}" data-pg="${k}">`;
+  const book = (L, R, boardL, boardR) => single()
+    ? `<div class="book one" style="--cover:${p.cover}"><div class="slot R"><div class="pgwrap">${face(L)}</div></div></div>`
+    : `<div class="book" style="--cover:${p.cover}"><div class="board ${boardL?'hasL':''} ${boardR?'hasR':''}"></div>
+        <div class="slot L ${L==null?'empty':''}"><div class="pgwrap">${face(L)}</div></div>
+        <div class="slot R ${R==null?'empty':''}"><div class="pgwrap">${face(R)}</div></div></div>`;
+  const label = () => {
+    const S = spreads(), pg = S[at].filter(k=>k!=null);
+    document.getElementById("flipCount").textContent = pg.length > 1 ? `Pages ${pg[0]+1}–${pg[1]+1} of ${n}` : `Page ${pg[0]+1} of ${n}`;
+    document.getElementById("flipPrev").disabled = at === 0; document.getElementById("flipNext").disabled = at === S.length-1;
+    document.querySelectorAll("#flipThumbs button").forEach(b => b.classList.toggle("on", pg.includes(+b.dataset.pg)));
+  };
+  const wire = () => box.querySelectorAll("img[data-pg]").forEach(i => i.addEventListener("click", () => zoomPage(+i.dataset.pg)));
+  const draw = () => {
+    const S = spreads(); at = Math.max(0, Math.min(at, S.length-1)); const sp = S[at];
+    box.innerHTML = single() ? book(sp[0]) : book(sp[0], sp[1], sp[0]!=null, sp[1]!=null); wire(); label();
+  };
+  const turn = async dir => {
+    const S = spreads(), to = at + dir;
+    if (busy || to < 0 || to >= S.length) return;
+    const from = S[at], nx = S[to];
+    if (single() || matchMedia("(prefers-reduced-motion: reduce)").matches) { await ready(nx); at = to; draw(); return; }
+    busy = true; await ready(nx);
+    const fwd = dir > 0;
+    // pages that stay put under the turning leaf
+    const L = fwd ? from[0] : nx[0], R = fwd ? nx[1] : from[1];
+    box.innerHTML = book(L, R, from[0]!=null || nx[0]!=null, from[1]!=null || nx[1]!=null);
+    const bk = box.querySelector(".book");
+    const leaf = document.createElement("div");
+    leaf.className = "leaf " + (fwd ? "fwd" : "back");
+    leaf.innerHTML = `<div class="lf front">${face(fwd ? from[1] : from[0])}</div><div class="lf backside">${face(fwd ? nx[0] : nx[1])}</div>`;
+    bk.appendChild(leaf);
+    at = to; label();
+    requestAnimationFrame(() => requestAnimationFrame(() => leaf.classList.add("go")));
+    setTimeout(() => { draw(); busy = false; }, 720);
+  };
+  document.getElementById("flipPrev").addEventListener("click", () => turn(-1));
+  document.getElementById("flipNext").addEventListener("click", () => turn(1));
+  document.querySelectorAll("#flipThumbs button").forEach(b => b.addEventListener("click", async () => {
+    const k = +b.dataset.pg, i = spreads().findIndex(s => s.includes(k));
+    if (i === at + 1) return turn(1); if (i === at - 1) return turn(-1);
+    await ready(spreads()[i]); at = i; draw();
+  }));
+  let zk = 0;
+  const zoomPage = k => {
+    zk = k; let z = document.getElementById("pageZoom");
+    if (!z) { z = document.createElement("div"); z.id = "pageZoom"; z.className = "page-zoom"; document.body.appendChild(z);
+      z.addEventListener("click", e => { if (e.target === z || e.target.closest(".pz-x")) z.remove(); }); z.tabIndex = -1; }
+    z.innerHTML = `<div class="pz-box"><img src="${src(zk)}" alt="Page ${zk+1} of ${p.name}"><div class="pz-bar"><button class="pz-nav" data-d="-1" ${zk===0?"disabled":""}>&lsaquo; Prev</button><span>Page ${zk+1} of ${n}</span><button class="pz-nav" data-d="1" ${zk===n-1?"disabled":""}>Next &rsaquo;</button><button class="pz-x">Close ✕</button></div></div>`;
+    z.querySelectorAll(".pz-nav").forEach(b => b.addEventListener("click", () => zoomPage(zk + +b.dataset.d)));
+    z.focus();
+  };
+  if (window._flipKeys) document.removeEventListener("keydown", window._flipKeys);
+  window._flipKeys = e => {
+    if (!document.getElementById("flip")) return;
+    const z = document.getElementById("pageZoom");
+    if (e.key === "Escape" && z) z.remove();
+    if (e.key === "ArrowRight") { if (z) { if (zk < n-1) zoomPage(zk+1); } else turn(1); }
+    if (e.key === "ArrowLeft") { if (z) { if (zk > 0) zoomPage(zk-1); } else turn(-1); }
+  };
+  document.addEventListener("keydown", window._flipKeys);
+  let mode = single();
+  addEventListener("resize", () => { if (single() !== mode) { mode = single(); const k = spreads()[0] && at; at = 0; draw(); } });
+  draw();
+}
+
+/* ---------- routing, path bar, back button ---------- */
+const PAGES = { about:"about_me.txt", resume:"resume/", contact:"contact.exe" };
+const sep = '<span class="sep">\\</span>';
+const link = (href,txt) => `<a href="#${href}">${txt}</a>`;
+
+function show(){
+  const h = location.hash.slice(1);
+  const proj = PROJECTS.find(p=>p.id===h);
+  if (proj && proj.soon) { location.replace("#" + proj.section); return; }
+  let view = "home", back = null, path = "";
+  if (proj) {
+    view = "project"; renderProject(proj);
+    const s = SECTIONS[proj.section];
+    back = proj.section;
+    path = link("home","C:") + sep + link(proj.section, s.folder) + sep + proj.file;
+  } else if (SECTIONS[h]) {
+    view = h; back = "home"; path = link("home","C:") + sep + SECTIONS[h].folder;
+  } else if (PAGES[h]) {
+    view = h; back = "home"; path = link("home","C:") + sep + PAGES[h];
+  }
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === "view-"+view));
+  const active = proj ? proj.section : view;
+  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("active", a.dataset.route === active));
+  document.getElementById("pathbar").classList.toggle("show", !!back);
+  if (back) {
+    document.getElementById("backBtn").href = "#" + back;
+    document.getElementById("pathText").innerHTML = path;
+  }
+  document.getElementById("nav").classList.remove("open");
+  window.scrollTo({top:0,behavior:"instant"});
+}
+fetch("assets/resume.pdf",{method:"HEAD"}).then(r=>{if(!r.ok)throw 0}).catch(()=>{const b=document.getElementById("resumePdf");if(b)b.style.display="none"});
+window.addEventListener("hashchange", show);
+show();
+document.getElementById("menuBtn").addEventListener("click", () => document.getElementById("nav").classList.toggle("open"));
+</script>
+</body>
+</html>
